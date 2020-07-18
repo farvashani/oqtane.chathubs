@@ -6,11 +6,11 @@ using Oqtane.Blogs.Models;
 
 namespace Oqtane.Blogs.Repository
 {
-    public class BlogContext : DBContextBase, IService
+    public class StreamHubContext : DBContextBase, IService
     {
-        public virtual DbSet<Blog> Blog { get; set; }
+        public virtual DbSet<StreamHub> StreamHub { get; set; }
 
-        public BlogContext(ITenantResolver tenantResolver, IHttpContextAccessor accessor) : base(tenantResolver, accessor)
+        public StreamHubContext(ITenantResolver tenantResolver, IHttpContextAccessor accessor) : base(tenantResolver, accessor)
         {
             // ContextBase handles multi-tenant database connections
         }

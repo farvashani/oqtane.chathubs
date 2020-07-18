@@ -7,8 +7,8 @@ namespace Oqtane.Blogs
     {
         public ModuleDefinition ModuleDefinition => new ModuleDefinition
         {
-            Name = "Blog",
-            Description = "Blog",
+            Name = "StreamHubs",
+            Description = "StreamHubs",
             Version = "1.0.0",
             ServerManagerType = "Oqtane.Blogs.Manager.BlogManager, Oqtane.Blogs.Server.Oqtane",
             ReleaseVersions = "1.0.0",

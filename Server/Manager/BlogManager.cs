@@ -12,10 +12,10 @@ namespace Oqtane.Blogs.Manager
 {
     public class BlogManager : IInstallable, IPortable
     {
-        private IBlogRepository _Blogs;
+        private IStreamHubRepository _Blogs;
         private ISqlRepository _sql;
 
-        public BlogManager(IBlogRepository Blogs, ISqlRepository sql)
+        public BlogManager(IStreamHubRepository Blogs, ISqlRepository sql)
         {
             _Blogs = Blogs;
             _sql = sql;
@@ -34,7 +34,7 @@ namespace Oqtane.Blogs.Manager
         public string ExportModule(Module module)
         {
             string content = "";
-            List<Blog> Blogs = _Blogs.GetBlogs(module.ModuleId).ToList();
+            List<StreamHub> Blogs = _Blogs.GetBlogs(module.ModuleId).ToList();
             if (Blogs != null)
             {
                 content = JsonSerializer.Serialize(Blogs);
@@ -44,16 +44,16 @@ namespace Oqtane.Blogs.Manager
 
         public void ImportModule(Module module, string content, string version)
         {
-            List<Blog> Blogs = null;
+            List<StreamHub> Blogs = null;
             if (!string.IsNullOrEmpty(content))
             {
-                Blogs = JsonSerializer.Deserialize<List<Blog>>(content);
+                Blogs = JsonSerializer.Deserialize<List<StreamHub>>(content);
             }
             if (Blogs != null)
             {
-                foreach(Blog Blog in Blogs)
+                foreach(StreamHub Blog in Blogs)
                 {
-                    Blog _Blog = new Blog();
+                    StreamHub _Blog = new StreamHub();
                     _Blog.ModuleId = module.ModuleId;
                     _Blog.Title = Blog.Title;
                     _Blog.Content = Blog.Content;

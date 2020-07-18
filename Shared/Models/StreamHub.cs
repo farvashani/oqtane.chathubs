@@ -4,9 +4,9 @@ using Oqtane.Models;
 
 namespace Oqtane.Blogs.Models
 {
-    public class Blog : IAuditable
+    public class StreamHub : IAuditable
     {
-        public int BlogId { get; set; }
+        public int StreamHubId { get; set; }
         public int ModuleId { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }

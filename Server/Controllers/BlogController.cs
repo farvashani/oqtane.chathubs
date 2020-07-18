@@ -12,10 +12,10 @@ namespace Oqtane.Blogs.Controllers
     [Route("{site}/api/[controller]")]
     public class BlogController : Controller
     {
-        private readonly IBlogRepository _Blogs;
+        private readonly IStreamHubRepository _Blogs;
         private readonly ILogManager _logger;
 
-        public BlogController(IBlogRepository Blogs, ILogManager logger)
+        public BlogController(IStreamHubRepository Blogs, ILogManager logger)
         {
             _Blogs = Blogs;
             _logger = logger;
@@ -24,7 +24,7 @@ namespace Oqtane.Blogs.Controllers
         // GET: api/<controller>?moduleid=x
         [HttpGet]
         [Authorize(Roles = Constants.RegisteredRole)]
-        public IEnumerable<Blog> Get(string moduleid)
+        public IEnumerable<StreamHub> Get(string moduleid)
         {
             return _Blogs.GetBlogs(int.Parse(moduleid));
         }
@@ -32,7 +32,7 @@ namespace Oqtane.Blogs.Controllers
         // GET api/<controller>/5
         [HttpGet("{id}")]
         [Authorize(Roles = Constants.RegisteredRole)]
-        public Blog Get(int id)
+        public StreamHub Get(int id)
         {
             return _Blogs.GetBlog(id);
         }
@@ -40,7 +40,7 @@ namespace Oqtane.Blogs.Controllers
         // POST api/<controller>
         [HttpPost]
         [Authorize(Roles = Constants.AdminRole)]
-        public Blog Post([FromBody] Blog Blog)
+        public StreamHub Post([FromBody] StreamHub Blog)
         {
             if (ModelState.IsValid)
             {
@@ -53,7 +53,7 @@ namespace Oqtane.Blogs.Controllers
         // PUT api/<controller>/5
         [HttpPut("{id}")]
         [Authorize(Roles = Constants.AdminRole)]
-        public Blog Put(int id, [FromBody] Blog Blog)
+        public StreamHub Put(int id, [FromBody] StreamHub Blog)
         {
             if (ModelState.IsValid)
             {
