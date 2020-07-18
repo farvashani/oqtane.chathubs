@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Oqtane.Blogs.Models;
+using Oqtane.StreamHubs.Models;
 
-namespace Oqtane.Blogs.Repository
+namespace Oqtane.StreamHubs.Repository
 {
     public interface IStreamHubRepository
     {

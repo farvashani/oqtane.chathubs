@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Collections.Generic;
 using Oqtane.Modules;
-using Oqtane.Blogs.Models;
+using Oqtane.StreamHubs.Models;
 
-namespace Oqtane.Blogs.Repository
+namespace Oqtane.StreamHubs.Repository
 {
     public class StreamHubRepository : IStreamHubRepository, IService
     {

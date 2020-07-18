@@ -5,17 +5,17 @@ using Oqtane.Modules;
 using Oqtane.Models;
 using Oqtane.Infrastructure;
 using Oqtane.Repository;
-using Oqtane.Blogs.Models;
-using Oqtane.Blogs.Repository;
+using Oqtane.StreamHubs.Models;
+using Oqtane.StreamHubs.Repository;
 
-namespace Oqtane.Blogs.Manager
+namespace Oqtane.StreamHubs.Manager
 {
-    public class BlogManager : IInstallable, IPortable
+    public class StreamHubManager : IInstallable, IPortable
     {
         private IStreamHubRepository _Blogs;
         private ISqlRepository _sql;
 
-        public BlogManager(IStreamHubRepository Blogs, ISqlRepository sql)
+        public StreamHubManager(IStreamHubRepository Blogs, ISqlRepository sql)
         {
             _Blogs = Blogs;
             _sql = sql;
@@ -23,12 +23,12 @@ namespace Oqtane.Blogs.Manager
 
         public bool Install(Tenant tenant, string version)
         {
-            return _sql.ExecuteScript(tenant, GetType().Assembly, "Oqtane.Blogs." + version + ".sql");
+            return _sql.ExecuteScript(tenant, GetType().Assembly, "Oqtane.StreamHubs." + version + ".sql");
         }
 
         public bool Uninstall(Tenant tenant)
         {
-            return _sql.ExecuteScript(tenant, GetType().Assembly, "Oqtane.Blogs.Uninstall.sql");
+            return _sql.ExecuteScript(tenant, GetType().Assembly, "Oqtane.StreamHubs.Uninstall.sql");
         }
 
         public string ExportModule(Module module)

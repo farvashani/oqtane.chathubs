@@ -1,7 +1,7 @@
-@using Oqtane.Blogs.Services
-@using Oqtane.Blogs.Models
+@using Oqtane.StreamHubs.Services
+@using Oqtane.StreamHubs.Models
 
-@namespace Oqtane.Blogs
+@namespace Oqtane.StreamHubs
 @inherits ModuleBase
 @inject IStreamHubService BlogService
 @inject NavigationManager NavigationManager
@@ -90,12 +90,12 @@
         try
         {
             await BlogService.DeleteBlogAsync(id);
-            await logger.LogInformation("Blog Deleted {BlogId}", id);
+            await logger.LogInformation("Blog Deleted {StreamHubId}", id);
             NavigationManager.NavigateTo(NavigateUrl());
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Deleting Blog {BlogId} {Error}", id, ex.Message);
+            await logger.LogError(ex, "Error Deleting Blog {StreamHubId} {Error}", id, ex.Message);
             ModuleInstance.AddModuleMessage("Error Deleting Blog", MessageType.Error);
         }
     }

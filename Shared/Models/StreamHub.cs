@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Oqtane.Models;
 
-namespace Oqtane.Blogs.Models
+namespace Oqtane.StreamHubs.Models
 {
     public class StreamHub : IAuditable
     {

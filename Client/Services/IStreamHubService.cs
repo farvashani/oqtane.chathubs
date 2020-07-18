@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Oqtane.Blogs.Models;
+using Oqtane.StreamHubs.Models;
 
-namespace Oqtane.Blogs.Services
+namespace Oqtane.StreamHubs.Services
 {
     public interface IStreamHubService 
     {

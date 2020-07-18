@@ -1,8 +1,8 @@
 @using Oqtane.Modules.Controls
-@using Oqtane.Blogs.Services
-@using Oqtane.Blogs.Models
+@using Oqtane.StreamHubs.Services
+@using Oqtane.StreamHubs.Models
 
-@namespace Oqtane.Blogs
+@namespace Oqtane.StreamHubs
 @inherits ModuleBase
 @inject IStreamHubService BlogService
 @inject NavigationManager NavigationManager
@@ -65,14 +65,14 @@
                 }
                 else
                 {
-                    await logger.LogError("Error Loading Blog {BlogId} {Error}", _id);
+                    await logger.LogError("Error Loading Blog {StreamHubId} {Error}", _id);
                     ModuleInstance.AddModuleMessage("Error Loading Blog", MessageType.Error);
                 }
             }
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Loading Blog {BlogId} {Error}", _id, ex.Message);
+            await logger.LogError(ex, "Error Loading Blog {StreamHubId} {Error}", _id, ex.Message);
             ModuleInstance.AddModuleMessage("Error Loading Blog", MessageType.Error);
         }
     }
@@ -106,7 +106,7 @@
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Saving Blog {BlogId} {Error}", _id, ex.Message);
+            await logger.LogError(ex, "Error Saving Blog {StreamHubId} {Error}", _id, ex.Message);
             ModuleInstance.AddModuleMessage("Error Saving Blog", MessageType.Error);
         }
     }

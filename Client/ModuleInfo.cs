@@ -1,7 +1,7 @@
 using Oqtane.Models;
 using Oqtane.Modules;
 
-namespace Oqtane.Blogs
+namespace Oqtane.StreamHubs
 {
     public class ModuleInfo : IModule
     {
@@ -10,9 +10,9 @@ namespace Oqtane.Blogs
             Name = "StreamHubs",
             Description = "StreamHubs",
             Version = "1.0.0",
-            ServerManagerType = "Oqtane.Blogs.Manager.BlogManager, Oqtane.Blogs.Server.Oqtane",
+            ServerManagerType = "Oqtane.StreamHubs.Manager.StreamHubManager, Oqtane.StreamHubs.Server.Oqtane",
             ReleaseVersions = "1.0.0",
-            Dependencies = "Oqtane.Blogs.Shared.Oqtane"
+            Dependencies = "Oqtane.StreamHubs.Shared.Oqtane"
         };
     }
 }

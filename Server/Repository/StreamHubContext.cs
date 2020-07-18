@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Oqtane.Modules;
 using Oqtane.Repository;
-using Oqtane.Blogs.Models;
+using Oqtane.StreamHubs.Models;
 
-namespace Oqtane.Blogs.Repository
+namespace Oqtane.StreamHubs.Repository
 {
     public class StreamHubContext : DBContextBase, IService
     {

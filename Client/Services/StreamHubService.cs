@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Oqtane.Modules;
 using Oqtane.Services;
 using Oqtane.Shared;
-using Oqtane.Blogs.Models;
+using Oqtane.StreamHubs.Models;
 
-namespace Oqtane.Blogs.Services
+namespace Oqtane.StreamHubs.Services
 {
     public class StreamHubService : ServiceBase, IStreamHubService, IService
     {
@@ -18,7 +18,7 @@ namespace Oqtane.Blogs.Services
             _siteState = siteState;
         }
 
-         private string Apiurl=> CreateApiUrl(_siteState.Alias, "Blog");
+         private string Apiurl=> CreateApiUrl(_siteState.Alias, "StreamHub");
 
         public async Task<List<StreamHub>> GetBlogsAsync(int ModuleId)
         {
