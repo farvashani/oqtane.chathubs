@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Oqtane.Modules;
 using Oqtane.Repository;
-using Oqtane.StreamHubs.Models;
+using Oqtane.ChatHubs.Models;
 
-namespace Oqtane.StreamHubs.Repository
+namespace Oqtane.ChatHubs.Repository
 {
     public class ChatHubContext : DBContextBase, IService
     {

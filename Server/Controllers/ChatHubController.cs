@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using Oqtane.Shared;
 using Oqtane.Enums;
 using Oqtane.Infrastructure;
-using Oqtane.StreamHubs.Models;
-using Oqtane.StreamHubs.Repository;
+using Oqtane.ChatHubs.Models;
+using Oqtane.ChatHubs.Repository;
 
-namespace Oqtane.StreamHubs.Controllers
+namespace Oqtane.ChatHubs.Controllers
 {
     [Route("{site}/api/[controller]")]
     public class ChatHubController : Controller

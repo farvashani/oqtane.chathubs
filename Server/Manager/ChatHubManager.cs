@@ -5,10 +5,10 @@ using Oqtane.Modules;
 using Oqtane.Models;
 using Oqtane.Infrastructure;
 using Oqtane.Repository;
-using Oqtane.StreamHubs.Models;
-using Oqtane.StreamHubs.Repository;
+using Oqtane.ChatHubs.Models;
+using Oqtane.ChatHubs.Repository;
 
-namespace Oqtane.StreamHubs.Manager
+namespace Oqtane.ChatHubs.Manager
 {
     public class ChatHubManager : IInstallable, IPortable
     {

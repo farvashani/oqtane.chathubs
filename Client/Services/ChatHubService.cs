@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Oqtane.Modules;
 using Oqtane.Services;
 using Oqtane.Shared;
-using Oqtane.StreamHubs.Models;
+using Oqtane.ChatHubs.Models;
 
-namespace Oqtane.StreamHubs.Services
+namespace Oqtane.ChatHubs.Services
 {
     public class ChatHubService : ServiceBase, IChatHubService, IService
     {

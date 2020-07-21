@@ -1,7 +1,7 @@
 using Oqtane.Models;
 using Oqtane.Modules;
 
-namespace Oqtane.StreamHubs
+namespace Oqtane.ChatHubs
 {
     public class ModuleInfo : IModule
     {
@@ -10,9 +10,9 @@ namespace Oqtane.StreamHubs
             Name = "ChatHub",
             Description = "ChatHub",
             Version = "1.0.0",
-            ServerManagerType = "Oqtane.StreamHubs.Manager.ChatHubManager, Oqtane.StreamHubs.Server.Oqtane",
+            ServerManagerType = "Oqtane.ChatHubs.Manager.ChatHubManager, Oqtane.ChatHubs.Server.Oqtane",
             ReleaseVersions = "1.0.0",
-            Dependencies = "Oqtane.StreamHubs.Shared.Oqtane"
+            Dependencies = "Oqtane.ChatHubs.Shared.Oqtane"
         };
     }
 }

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Oqtane.StreamHubs.Models;
+using Oqtane.ChatHubs.Models;
 
-namespace Oqtane.StreamHubs.Services
+namespace Oqtane.ChatHubs.Services
 {
     public interface IChatHubService 
     {

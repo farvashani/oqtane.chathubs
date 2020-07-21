@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Collections.Generic;
 using Oqtane.Modules;
-using Oqtane.StreamHubs.Models;
+using Oqtane.ChatHubs.Models;
 
-namespace Oqtane.StreamHubs.Repository
+namespace Oqtane.ChatHubs.Repository
 {
     public class ChatHubRepository : IChatHubRepository, IService
     {
