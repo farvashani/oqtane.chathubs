@@ -7,9 +7,9 @@
     <Authors>Benjamin Strohmann</Authors>
     <Company>Benjamin Strohmann</Company>
     <Description>A Blog Module for the Oqtane Framework</Description>
-    <Product>Oqtane.StreamHubs</Product>
+    <Product>Oqtane.ChatHubs</Product>
     <Copyright>Benjamin Strohmann</Copyright>
-    <AssemblyName>Oqtane.StreamHubs.Client.Oqtane</AssemblyName>
+    <AssemblyName>Oqtane.ChatHubs.Client.Oqtane</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\Oqtane.StreamHubs.Shared.csproj" />
+    <ProjectReference Include="..\Shared\Oqtane.ChatHubs.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

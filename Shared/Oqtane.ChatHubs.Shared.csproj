@@ -1,15 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>    
     <LangVersion>7.3</LangVersion>
     <Version>1.0.0</Version>
-    <Product>Oqtane.StreamHubs</Product>
+    <Product>Oqtane.ChatHubs</Product>
     <Authors>Benjamin Strohmann</Authors>
     <Company>Benjamin Strohmann</Company>
     <Description>A Blog Module for the Oqtane Framework</Description>
     <Copyright>Benjamin Strohmann</Copyright>
-    <AssemblyName>Oqtane.StreamHubs.Shared.Oqtane</AssemblyName>
+    <AssemblyName>Oqtane.ChatHubs.Shared.Oqtane</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client\Oqtane.StreamHubs.Client.csproj" />
-    <ProjectReference Include="..\Server\Oqtane.StreamHubs.Server.csproj" />
-    <ProjectReference Include="..\Shared\Oqtane.StreamHubs.Shared.csproj" />
+    <ProjectReference Include="..\Client\Oqtane.ChatHubs.Client.csproj" />
+    <ProjectReference Include="..\Server\Oqtane.ChatHubs.Server.csproj" />
+    <ProjectReference Include="..\Shared\Oqtane.ChatHubs.Shared.csproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
