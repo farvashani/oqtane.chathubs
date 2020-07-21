@@ -3,7 +3,7 @@
 
 @namespace Oqtane.StreamHubs
 @inherits ModuleBase
-@inject IStreamHubService BlogService
+@inject IChatHubService BlogService
 @inject NavigationManager NavigationManager
 @inject ISettingService SettingService
 
@@ -30,7 +30,7 @@
             <Row>
                 <div class="col">
                     <br />
-                    <a href="@NavigateUrl(PageState.Page.Path, "id=" + context.StreamHubId.ToString())">
+                    <a href="@NavigateUrl(PageState.Page.Path, "id=" + context.ChatHubId.ToString())">
                         <h2>@context.Title</h2>
                     </a>
                     <p>
@@ -45,8 +45,8 @@
                             @((MarkupString)@context.Content)
                         }
                     </p>
-                    <ActionLink Action="Edit" Parameters="@($"id=" + context.StreamHubId.ToString())" />
-                    <ActionDialog Header="Delete Blog" Message="@("Are You Sure You Wish To Delete This Blog?")" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await DeleteBlog(context.StreamHubId))" />
+                    <ActionLink Action="Edit" Parameters="@($"id=" + context.ChatHubId.ToString())" />
+                    <ActionDialog Header="Delete Blog" Message="@("Are You Sure You Wish To Delete This Blog?")" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await DeleteBlog(context.ChatHubId))" />
                 </div>
             </Row>
         </Pager>
@@ -55,7 +55,7 @@
 }
 
 @code {
-    private List<StreamHub> _blogs;
+    private List<ChatHub> _blogs;
     private int _maxblogs;
     private int _summarylength;
 
@@ -69,7 +69,7 @@
 
             if (PageState.QueryString.ContainsKey("blogid"))
             {
-                _blogs = new List<StreamHub>();
+                _blogs = new List<ChatHub>();
                 _blogs.Add(await BlogService.GetBlogAsync(int.Parse(PageState.QueryString["blogid"])));
             }
             else
@@ -90,12 +90,12 @@
         try
         {
             await BlogService.DeleteBlogAsync(id);
-            await logger.LogInformation("Blog Deleted {StreamHubId}", id);
+            await logger.LogInformation("Blog Deleted {ChatHubId}", id);
             NavigationManager.NavigateTo(NavigateUrl());
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Deleting Blog {StreamHubId} {Error}", id, ex.Message);
+            await logger.LogError(ex, "Error Deleting Blog {ChatHubId} {Error}", id, ex.Message);
             ModuleInstance.AddModuleMessage("Error Deleting Blog", MessageType.Error);
         }
     }

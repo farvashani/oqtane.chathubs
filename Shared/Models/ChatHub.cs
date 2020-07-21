@@ -4,9 +4,9 @@ using Oqtane.Models;
 
 namespace Oqtane.StreamHubs.Models
 {
-    public class StreamHub : IAuditable
+    public class ChatHub : IAuditable
     {
-        public int StreamHubId { get; set; }
+        public int ChatHubId { get; set; }
         public int ModuleId { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }

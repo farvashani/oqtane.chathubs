@@ -7,10 +7,10 @@ namespace Oqtane.StreamHubs
     {
         public ModuleDefinition ModuleDefinition => new ModuleDefinition
         {
-            Name = "StreamHubs",
-            Description = "StreamHubs",
+            Name = "ChatHub",
+            Description = "ChatHub",
             Version = "1.0.0",
-            ServerManagerType = "Oqtane.StreamHubs.Manager.StreamHubManager, Oqtane.StreamHubs.Server.Oqtane",
+            ServerManagerType = "Oqtane.StreamHubs.Manager.ChatHubManager, Oqtane.StreamHubs.Server.Oqtane",
             ReleaseVersions = "1.0.0",
             Dependencies = "Oqtane.StreamHubs.Shared.Oqtane"
         };

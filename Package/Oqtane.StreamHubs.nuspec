@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>Oqtane.StreamHubs</id>
+    <id>Oqtane.ChatHubs</id>
     <version>1.0.0</version>
     <authors>Benjamin Strohmann</authors>
     <owners>Benjamin Strohmann</owners>
-    <title>StreamHubs</title>
+    <title>ChatHubs</title>
     <description>StreamHubs</description>
     <copyright>Benjamin Strohmann</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

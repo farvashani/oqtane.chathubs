@@ -10,12 +10,12 @@ using Oqtane.StreamHubs.Repository;
 
 namespace Oqtane.StreamHubs.Manager
 {
-    public class StreamHubManager : IInstallable, IPortable
+    public class ChatHubManager : IInstallable, IPortable
     {
-        private IStreamHubRepository _Blogs;
+        private IChatHubRepository _Blogs;
         private ISqlRepository _sql;
 
-        public StreamHubManager(IStreamHubRepository Blogs, ISqlRepository sql)
+        public ChatHubManager(IChatHubRepository Blogs, ISqlRepository sql)
         {
             _Blogs = Blogs;
             _sql = sql;
@@ -23,18 +23,18 @@ namespace Oqtane.StreamHubs.Manager
 
         public bool Install(Tenant tenant, string version)
         {
-            return _sql.ExecuteScript(tenant, GetType().Assembly, "Oqtane.StreamHubs." + version + ".sql");
+            return _sql.ExecuteScript(tenant, GetType().Assembly, "Oqtane.ChatHubs." + version + ".sql");
         }
 
         public bool Uninstall(Tenant tenant)
         {
-            return _sql.ExecuteScript(tenant, GetType().Assembly, "Oqtane.StreamHubs.Uninstall.sql");
+            return _sql.ExecuteScript(tenant, GetType().Assembly, "Oqtane.ChatHubs.Uninstall.sql");
         }
 
         public string ExportModule(Module module)
         {
             string content = "";
-            List<StreamHub> Blogs = _Blogs.GetBlogs(module.ModuleId).ToList();
+            List<ChatHub> Blogs = _Blogs.GetBlogs(module.ModuleId).ToList();
             if (Blogs != null)
             {
                 content = JsonSerializer.Serialize(Blogs);
@@ -44,16 +44,16 @@ namespace Oqtane.StreamHubs.Manager
 
         public void ImportModule(Module module, string content, string version)
         {
-            List<StreamHub> Blogs = null;
+            List<ChatHub> Blogs = null;
             if (!string.IsNullOrEmpty(content))
             {
-                Blogs = JsonSerializer.Deserialize<List<StreamHub>>(content);
+                Blogs = JsonSerializer.Deserialize<List<ChatHub>>(content);
             }
             if (Blogs != null)
             {
-                foreach(StreamHub Blog in Blogs)
+                foreach(ChatHub Blog in Blogs)
                 {
-                    StreamHub _Blog = new StreamHub();
+                    ChatHub _Blog = new ChatHub();
                     _Blog.ModuleId = module.ModuleId;
                     _Blog.Title = Blog.Title;
                     _Blog.Content = Blog.Content;

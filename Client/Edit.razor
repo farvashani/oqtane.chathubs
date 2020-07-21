@@ -4,7 +4,7 @@
 
 @namespace Oqtane.StreamHubs
 @inherits ModuleBase
-@inject IStreamHubService BlogService
+@inject IChatHubService BlogService
 @inject NavigationManager NavigationManager
 
 <table class="table table-borderless">
@@ -53,7 +53,7 @@
             if (PageState.QueryString.ContainsKey("id"))
             {
                 _id = Int32.Parse(PageState.QueryString["id"]);
-                StreamHub blog = await BlogService.GetBlogAsync(_id);
+                ChatHub blog = await BlogService.GetBlogAsync(_id);
                 if (blog != null)
                 {
                     _title = blog.Title;
@@ -65,14 +65,14 @@
                 }
                 else
                 {
-                    await logger.LogError("Error Loading Blog {StreamHubId} {Error}", _id);
+                    await logger.LogError("Error Loading Blog {ChatHubId} {Error}", _id);
                     ModuleInstance.AddModuleMessage("Error Loading Blog", MessageType.Error);
                 }
             }
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Loading Blog {StreamHubId} {Error}", _id, ex.Message);
+            await logger.LogError(ex, "Error Loading Blog {ChatHubId} {Error}", _id, ex.Message);
             ModuleInstance.AddModuleMessage("Error Loading Blog", MessageType.Error);
         }
     }
@@ -83,7 +83,7 @@
         {
             if (_id == -1)
             {
-                StreamHub blog = new StreamHub();
+                ChatHub blog = new ChatHub();
                 blog.ModuleId = ModuleState.ModuleId;
                 blog.Title = _title;
                 blog.Content = _content;
@@ -93,7 +93,7 @@
             }
             else
             {
-                StreamHub blog = await BlogService.GetBlogAsync(_id);
+                ChatHub blog = await BlogService.GetBlogAsync(_id);
                 if (blog != null)
                 {
                     blog.Title = _title;
@@ -106,7 +106,7 @@
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Saving Blog {StreamHubId} {Error}", _id, ex.Message);
+            await logger.LogError(ex, "Error Saving Blog {ChatHubId} {Error}", _id, ex.Message);
             ModuleInstance.AddModuleMessage("Error Saving Blog", MessageType.Error);
         }
     }
