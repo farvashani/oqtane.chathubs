@@ -1,0 +1,73 @@
+﻿@namespace Oqtane.ChatHubs
+
+@using Oqtane.Enums
+@using Oqtane.Modules
+@using Oqtane.Shared.Enums
+@using Oqtane.Shared.Models
+
+@foreach (ChatHubMessage message in Messages)
+{
+
+    var messageType = (ChatHubMessageType)Enum.ToObject(typeof(ChatHubMessageType) , message.Type);
+    @switch (messageType)
+    {
+        case ChatHubMessageType.Guest:
+            @GuestTemplate(message)
+            break;
+        case ChatHubMessageType.User:
+            @UserTemplate(message)
+            break;
+        case ChatHubMessageType.Admin:
+            @AdminTemplate(message)
+            break;
+        case ChatHubMessageType.System:
+            @SystemTemplate(message)
+            break;
+        case ChatHubMessageType.Whisper:
+            @WhisperTemplate(message)
+            break;
+        case ChatHubMessageType.Me:
+            @MeTemplate(message)
+            break;
+        case ChatHubMessageType.JoinEnterLeaveExit:
+            @JoinEnterLeaveExitTemplate(message)
+            break;
+        case ChatHubMessageType.Image:
+            @ImageTemplate(message)
+            break;
+        default:
+            @GuestTemplate(message)
+            break;
+    }
+}
+
+@code {
+
+    [Parameter]
+    public RenderFragment<ChatHubMessage> GuestTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<ChatHubMessage> UserTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<ChatHubMessage> AdminTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<ChatHubMessage> SystemTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<ChatHubMessage> WhisperTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<ChatHubMessage> MeTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<ChatHubMessage> JoinEnterLeaveExitTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<ChatHubMessage> ImageTemplate { get; set; }
+
+    [Parameter]
+    public ICollection<ChatHubMessage> Messages { get; set; }
+
+}

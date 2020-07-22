@@ -5,7 +5,7 @@ using Oqtane.Modules;
 using Oqtane.Models;
 using Oqtane.Infrastructure;
 using Oqtane.Repository;
-using Oqtane.ChatHubs.Models;
+using Oqtane.Shared.Models;
 using Oqtane.ChatHubs.Repository;
 
 namespace Oqtane.ChatHubs.Manager
@@ -34,7 +34,7 @@ namespace Oqtane.ChatHubs.Manager
         public string ExportModule(Module module)
         {
             string content = "";
-            List<ChatHub> Blogs = _Blogs.GetBlogs(module.ModuleId).ToList();
+            List<ChatHubRoom> Blogs = _Blogs.GetChatHubRooms(module.ModuleId).ToList();
             if (Blogs != null)
             {
                 content = JsonSerializer.Serialize(Blogs);
@@ -44,20 +44,20 @@ namespace Oqtane.ChatHubs.Manager
 
         public void ImportModule(Module module, string content, string version)
         {
-            List<ChatHub> Blogs = null;
+            List<ChatHubRoom> Blogs = null;
             if (!string.IsNullOrEmpty(content))
             {
-                Blogs = JsonSerializer.Deserialize<List<ChatHub>>(content);
+                Blogs = JsonSerializer.Deserialize<List<ChatHubRoom>>(content);
             }
             if (Blogs != null)
             {
-                foreach(ChatHub Blog in Blogs)
+                foreach(ChatHubRoom Blog in Blogs)
                 {
-                    ChatHub _Blog = new ChatHub();
+                    ChatHubRoom _Blog = new ChatHubRoom();
                     _Blog.ModuleId = module.ModuleId;
                     _Blog.Title = Blog.Title;
                     _Blog.Content = Blog.Content;
-                    _Blogs.AddBlog(_Blog);
+                    _Blogs.AddChatHubRoom(_Blog);
                 }
             }
         }

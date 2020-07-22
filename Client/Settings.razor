@@ -1,38 +1,75 @@
-@namespace Oqtane.ChatHubs
+﻿@namespace Oqtane.ChatHubs
+
 @inherits ModuleBase
+
+@using System.Text.RegularExpressions
+
+@inject NavigationManager NavigationManager
+@inject HttpClient http
 @inject ISettingService SettingService
 
-<table class="table table-borderless">
+<table class="table table-sm form-group">
     <tr>
         <td>
-            <Label For="maxblogs" HelpText="Enter the maximum number of blogs to display on a page">Maximum Blog Entries: </Label>
+            <label for="Setting" class="control-label">Maximum Username Characters: </label>
         </td>
         <td>
-            <input id="maxblogs" type="text" class="form-control" @bind="_maxblogs" />
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <Label For="summarylength" HelpText="Enter the maximum length of the blog to display in the summary view">Summary Length (Characters): </Label>
-        </td>
-        <td>
-            <input id="summarylength" type="text" class="form-control" @bind="_summarylength" />
+            <input type="text" class="form-control" @bind="maxUserNameCharacters" />
         </td>
     </tr>
 </table>
 
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>
+                Regular Expression
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in regularExpressions)
+        {
+            <tr>
+                <td>
+                    <small>@item</small>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-link" @onclick="@(async() => await RemoveRegularExpression_ClickedAsync(item))">Remove</button>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td>
+                <div class="form-group">
+                    <input type="text" class="form-control" @bind="regularExpression" placeholder="Type your regular expression.." />
+                    <small class="form-text text-muted">Try this regex for youtube links: <br />(?:http?s?:\/\/)?(?:www.)?(?:m.)?(?:music.)?youtu(?:\.?be)(?:\.com)?(?:(?:\w*.?:\/\/)?\w*.?\w*-?.?\w*\/(?:embed|e|v|watch|.*\/)?\??(?:feature=\w*\.?\w*)?&?(?:v=)?\/?)([\w\d_-]{11})(?:\S+)?</small>
+                </div>
+            </td>
+            <td>
+                <button type="button" class="btn btn-link" @onclick="@(async() => await AddRegularExpression_ClickedAsync())">Add</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
 @code {
-    private string _maxblogs;
-    private string _summarylength;
+
+    public string maxUserNameCharacters;
+    public string regularExpression;
+    public List<string> regularExpressions = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            Dictionary<string, string>
-            settings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
-            _maxblogs = SettingService.GetSetting(settings, "MaxBogs", "20");
-            _summarylength = SettingService.GetSetting(settings, "SummaryLength", "500");
+            Dictionary<string, string> settings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
+
+            maxUserNameCharacters = SettingService.GetSetting(settings, "MaxUserNameCharacters", "20");
+            regularExpressions = SettingService.GetSetting(settings, "RegularExpression", "").Split(";delimiter;", StringSplitOptions.RemoveEmptyEntries).ToList();
         }
         catch (Exception ex)
         {
@@ -44,10 +81,12 @@
     {
         try
         {
-            Dictionary<string, string>
-            settings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
-            SettingService.SetSetting(settings, "MaxBlogs", _maxblogs);
-            SettingService.SetSetting(settings, "SummaryLength", _summarylength);
+            Dictionary<string, string> settings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
+
+            SettingService.SetSetting(settings, "MaxUserNameCharacters", maxUserNameCharacters);
+            await SettingService.UpdateModuleSettingsAsync(settings, ModuleState.ModuleId);
+
+            SettingService.SetSetting(settings, "RegularExpression", string.Join(";delimiter;", regularExpressions));
             await SettingService.UpdateModuleSettingsAsync(settings, ModuleState.ModuleId);
         }
         catch (Exception ex)
@@ -55,4 +94,30 @@
             ModuleInstance.AddModuleMessage(ex.Message, MessageType.Error);
         }
     }
+
+    public async Task AddRegularExpression_ClickedAsync()
+    {
+        try
+        {
+            this.regularExpressions.Add(regularExpression);
+            this.regularExpression = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            ModuleInstance.AddModuleMessage(ex.Message, MessageType.Error);
+        }
+    }
+
+    public async Task RemoveRegularExpression_ClickedAsync(string item)
+    {
+        try
+        {
+            this.regularExpressions.Remove(item);
+        }
+        catch (Exception ex)
+        {
+            ModuleInstance.AddModuleMessage(ex.Message, MessageType.Error);
+        }
+    }
+
 }
