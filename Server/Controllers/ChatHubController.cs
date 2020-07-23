@@ -276,7 +276,7 @@ namespace Oqtane.ChatHubs.Controllers
                 var maxFileSize = 10;
                 var maxFileCount = 3;
 
-                string folderName = "chathub/images/selfies";
+                string folderName = "modules/oqtane.chathubs/chathub/images/selfies";
                 string webRootPath = string.Concat(this.webHostEnvironment.ContentRootPath, "\\wwwroot");
                 string newPath = Path.Combine(webRootPath, folderName);
                 if (!Directory.Exists(newPath))
@@ -386,7 +386,7 @@ namespace Oqtane.ChatHubs.Controllers
                 var maxFileSize = 10;
                 var maxFileCount = 3;
 
-                string folderName = "chathub/images/rooms";
+                string folderName = "modules/oqtane.chathubs/chathub/images/rooms";
                 string webRootPath = string.Concat(this.webHostEnvironment.ContentRootPath, "\\wwwroot");
                 string newPath = Path.Combine(webRootPath, folderName);
                 if (!Directory.Exists(newPath))

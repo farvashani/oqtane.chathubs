@@ -395,7 +395,7 @@ namespace Oqtane.ChatHubs.Services
 
         public string apiurl
         {
-            get { return CreateApiUrl(SiteState.Alias, NavigationManager.Uri, "ChatHub"); }
+            get { return CreateApiUrl(SiteState.Alias, "ChatHub"); }
         }
 
         public async Task<List<ChatHubRoom>> GetChatHubRoomsAsync(int ModuleId)

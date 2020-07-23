@@ -148,7 +148,7 @@ namespace Oqtane.ChatHubs
                     content.Headers.Add("roomId", this.ChatHubRoomId);
                     content.Headers.Add("moduleId", this.ModuleId);
 
-                    var url = this.ChatHubService.apiurl + "/PostImageUpload";
+                    var url = string.Concat(NavigationManager.BaseUri.Substring(0, NavigationManager.BaseUri.LastIndexOf('/')), this.ChatHubService.apiurl, "/PostImageUpload");
                     var result = httpClient.PostAsync(url, content).Result;
                     var remotePath = await result.Content.ReadAsStringAsync();
                 }

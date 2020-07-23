@@ -12,12 +12,12 @@ namespace Oqtane.ChatHubs.Manager
 {
     public class ChatHubManager : IInstallable, IPortable
     {
-        private IChatHubRepository _Blogs;
+        private IChatHubRepository _chatHubRepository;
         private ISqlRepository _sql;
 
-        public ChatHubManager(IChatHubRepository Blogs, ISqlRepository sql)
+        public ChatHubManager(IChatHubRepository chatHubRepository, ISqlRepository sql)
         {
-            _Blogs = Blogs;
+            _chatHubRepository = chatHubRepository;
             _sql = sql;
         }
 
@@ -34,7 +34,7 @@ namespace Oqtane.ChatHubs.Manager
         public string ExportModule(Module module)
         {
             string content = "";
-            List<ChatHubRoom> Blogs = _Blogs.GetChatHubRooms(module.ModuleId).ToList();
+            List<ChatHubRoom> Blogs = _chatHubRepository.GetChatHubRooms(module.ModuleId).ToList();
             if (Blogs != null)
             {
                 content = JsonSerializer.Serialize(Blogs);
@@ -44,20 +44,20 @@ namespace Oqtane.ChatHubs.Manager
 
         public void ImportModule(Module module, string content, string version)
         {
-            List<ChatHubRoom> Blogs = null;
+            List<ChatHubRoom> chatHubs = null;
             if (!string.IsNullOrEmpty(content))
             {
-                Blogs = JsonSerializer.Deserialize<List<ChatHubRoom>>(content);
+                chatHubs = JsonSerializer.Deserialize<List<ChatHubRoom>>(content);
             }
-            if (Blogs != null)
+            if (chatHubs != null)
             {
-                foreach(ChatHubRoom Blog in Blogs)
+                foreach(ChatHubRoom chatHubRoom in chatHubs)
                 {
-                    ChatHubRoom _Blog = new ChatHubRoom();
-                    _Blog.ModuleId = module.ModuleId;
-                    _Blog.Title = Blog.Title;
-                    _Blog.Content = Blog.Content;
-                    _Blogs.AddChatHubRoom(_Blog);
+                    ChatHubRoom room = new ChatHubRoom();
+                    room.ModuleId = module.ModuleId;
+                    room.Title = chatHubRoom.Title;
+                    room.Content = chatHubRoom.Content;
+                    _chatHubRepository.AddChatHubRoom(room);
                 }
             }
         }

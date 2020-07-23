@@ -47,7 +47,7 @@
     @if (UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions))
     {
         <div class="form-group">
-            <button type="button" class="btn btn-sm btn-link bg-white border border-light" @onclick="@(async() => await FixCorruptConnections_ClickedAsync())">Clear App Connections</button>
+            <button type="button" class="btn btn-sm btn-link bg-white border border-light" @onclick="@(async() => await FixCorruptConnections_ClickedAsync())">Clear all active user connections.</button>
         </div>
     }
 
@@ -106,69 +106,69 @@
                                     <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="Add Room" />
 
                                     @*
-                                        <Oqtane.Modules.Controls.Pager Format="Table" Items="@ChatHubService.Lobbies" DisplayPages="5" PageSize="5" Class="table table-sm">
-                                            <Header>
-                                                <th>Image</th>
-                                                <th>Title</th>
-                                                <th>Created</th>
-                                                <th>Content</th>
-                                                <th>Type</th>
-                                                <th>Status</th>
-                                                <th>User Counter</th>
-                                                <th class="@(ChatHubService.Connection?.State == HubConnectionState.Connected ? "d-table-cell" : "d-none")">Enter</th>
-                                                <th class="@(UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions) ? "d-table-cell" : "d-none")">Edit</th>
-                                                <th class="@(UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions) ? "d-table-cell" : "d-none")">Delete</th>
-                                            </Header>
-                                            <Row>
+        <Oqtane.Modules.Controls.Pager Format="Table" Items="@ChatHubService.Lobbies" DisplayPages="5" PageSize="5" Class="table table-sm">
+            <Header>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Created</th>
+                <th>Content</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>User Counter</th>
+                <th class="@(ChatHubService.Connection?.State == HubConnectionState.Connected ? "d-table-cell" : "d-none")">Enter</th>
+                <th class="@(UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions) ? "d-table-cell" : "d-none")">Edit</th>
+                <th class="@(UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions) ? "d-table-cell" : "d-none")">Delete</th>
+            </Header>
+            <Row>
 
-                                                <td class="align-middle">
-                                                    <img height="56" src="@string.Format("{0}/chathub/images/rooms/{1}", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "d-none" : "")" />
-                                                    <img height="56" src="@string.Format("{0}/chathub/images/chat-room-image.png", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "" : "d-none")" />
-                                                </td>
-                                                <td class="align-middle">
-                                                    <a href="@NavigateUrl(PageState.Page.Path, "moduleid=" + context.ModuleId.ToString() + "&" + "roomid=" + context.ChatHubRoomId.ToString())">
-                                                        <h6>@context.Title</h6>
-                                                    </a>
-                                                </td>
-                                                <td class="align-middle">
-                                                    <b>Posted by</b> @context.CreatedBy <b>on</b> @context.CreatedOn.ToShortDateString()
-                                                </td>
-                                                <td class="align-middle">
-                                                    @((MarkupString)@context.Content)
-                                                </td>
-                                                <td class="align-middle">
-                                                    @((ChatHubRoomType)context.Type)
-                                                </td>
-                                                <td class="align-middle">
-                                                    @((ChatHubRoomStatus)context.Status)
-                                                </td>
-                                                <td class="align-middle">
-                                                    @context.Users?.Count()
-                                                </td>
-                                                <td class="align-middle @(ChatHubService.Connection?.State == HubConnectionState.Connected ? "d-table-cell" : "d-none")">
-                                                    <div class="form-group">
-                                                        <button type="button" class="btn btn-sm btn-link bg-white border border-light" @onclick="@(async () => await EnterRoom_Clicked(context.ChatHubRoomId, context.ModuleId))">Enter Room</button>
-                                                    </div>
-                                                </td>
-                                                <td class="align-middle @(UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions) ? "d-table-cell" : "d-none")">
-                                                    <ActionLink Action="Edit" Parameters="@($"moduleid=" + context.ModuleId.ToString() + "&" + "roomid=" + context.ChatHubRoomId.ToString())" />
-                                                </td>
-                                                <td class="align-middle @(UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions) ? "d-table-cell" : "d-none")">
-                                                    <ActionDialog Header="Delete Room" Message="@("Are You Sure You Wish To Delete This Room?")" Action="Delete" Security="SecurityAccessLevel.Anonymous" Class="btn btn-danger" OnClick="@(async () => await DeleteRoom(context.ChatHubRoomId))" />
-                                                </td>
+                <td class="align-middle">
+                    <img height="56" src="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/rooms/{1}", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "d-none" : "")" />
+                    <img height="56" src="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/chat-room-image.png", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "" : "d-none")" />
+                </td>
+                <td class="align-middle">
+                    <a href="@NavigateUrl(PageState.Page.Path, "moduleid=" + context.ModuleId.ToString() + "&" + "roomid=" + context.ChatHubRoomId.ToString())">
+                        <h6>@context.Title</h6>
+                    </a>
+                </td>
+                <td class="align-middle">
+                    <b>Posted by</b> @context.CreatedBy <b>on</b> @context.CreatedOn.ToShortDateString()
+                </td>
+                <td class="align-middle">
+                    @((MarkupString)@context.Content)
+                </td>
+                <td class="align-middle">
+                    @((ChatHubRoomType)context.Type)
+                </td>
+                <td class="align-middle">
+                    @((ChatHubRoomStatus)context.Status)
+                </td>
+                <td class="align-middle">
+                    @context.Users?.Count()
+                </td>
+                <td class="align-middle @(ChatHubService.Connection?.State == HubConnectionState.Connected ? "d-table-cell" : "d-none")">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-sm btn-link bg-white border border-light" @onclick="@(async () => await EnterRoom_Clicked(context.ChatHubRoomId, context.ModuleId))">Enter Room</button>
+                    </div>
+                </td>
+                <td class="align-middle @(UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions) ? "d-table-cell" : "d-none")">
+                    <ActionLink Action="Edit" Parameters="@($"moduleid=" + context.ModuleId.ToString() + "&" + "roomid=" + context.ChatHubRoomId.ToString())" />
+                </td>
+                <td class="align-middle @(UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions) ? "d-table-cell" : "d-none")">
+                    <ActionDialog Header="Delete Room" Message="@("Are You Sure You Wish To Delete This Room?")" Action="Delete" Security="SecurityAccessLevel.Anonymous" Class="btn btn-danger" OnClick="@(async () => await DeleteRoom(context.ChatHubRoomId))" />
+                </td>
 
-                                            </Row>
-                                        </Oqtane.Modules.Controls.Pager>
+            </Row>
+        </Oqtane.Modules.Controls.Pager>
                                     *@
 
-                                    <Table TableItem="ChatHubRoom" Items="@ChatHubService.Lobbies" PageSize="5" class="table table-sm table-dark">
+                                    <Table TableItem="ChatHubRoom" Items="@ChatHubService.Lobbies" PageSize="5" class="table table-sm table-light">
 
                                         <Column TableItem="ChatHubRoom" Title="Id" Field="@(x => x.ChatHubRoomId)" Sortable="false" Filterable="false" DefaultSortColumn="false" DefaultSortDescending="false" Width="7%"></Column>
 
                                         <Column TableItem="ChatHubRoom" Title="Image" Field="@(x => x.ImageUrl)" Sortable="false" Filterable="false">
                                             <Template>
-                                                <img height="56" src="@string.Format("{0}/chathub/images/rooms/{1}", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "d-none" : "")" />
-                                                <img height="56" src="@string.Format("{0}/chathub/images/chat-room-image.png", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "" : "d-none")" />
+                                                <img height="56" src="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/rooms/{1}", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "d-none" : "")" />
+                                                <img height="56" src="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/chat-room-image.png", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "" : "d-none")" />
                                             </Template>
                                         </Column>
 
@@ -559,7 +559,7 @@
                 {
                     <MatCard class="chat-hub-photo-mat-card">
                         <MatCardContent>
-                            <MatCardMedia Wide="true" ImageUrl="@string.Format("{0}/chathub/images/selfies/{1}", NavigationManager.BaseUri, photo.Source)" Style="@string.Format("height: {0}px", photo.Height.ToString())"></MatCardMedia>
+                            <MatCardMedia Wide="true" ImageUrl="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/selfies/{1}", NavigationManager.BaseUri, photo.Source)" Style="@string.Format("height: {0}px", photo.Height.ToString())"></MatCardMedia>
                             <div class="chat-hub-photo-mat-card-content">
                                 <MatHeadline6 class="chat-hub-photo-mat-card-clean-margin">
                                     Posted by @photo.Caption
