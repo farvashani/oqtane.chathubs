@@ -90,7 +90,7 @@ namespace Oqtane.ChatHubs
                     else
                     {
                         await logger.LogError("Error Loading Room {ChatHubRoomId} {Error}", roomId);
-                        ModuleInstance.AddModuleMessage("Error Loading Blog", MessageType.Error);
+                        ModuleInstance.AddModuleMessage("Error Loading ChatHub", MessageType.Error);
                     }
                 }
             }
