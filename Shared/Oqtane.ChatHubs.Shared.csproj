@@ -7,7 +7,7 @@
     <Product>Oqtane.ChatHubs</Product>
     <Authors>Benjamin Strohmann</Authors>
     <Company>Benjamin Strohmann</Company>
-    <Description>A Blog Module for the Oqtane Framework</Description>
+    <Description>Just another ChatHub Module for the Oqtane Framework</Description>
     <Copyright>Benjamin Strohmann</Copyright>
     <AssemblyName>Oqtane.ChatHubs.Shared.Oqtane</AssemblyName>
   </PropertyGroup>

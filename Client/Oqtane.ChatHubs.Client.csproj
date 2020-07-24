@@ -6,7 +6,7 @@
     <Version>1.0.0</Version>
     <Authors>Benjamin Strohmann</Authors>
     <Company>Benjamin Strohmann</Company>
-    <Description>A Blog Module for the Oqtane Framework</Description>
+    <Description>Just another ChatHub Module for the Oqtane Framework</Description>
     <Product>Oqtane.ChatHubs</Product>
     <Copyright>Benjamin Strohmann</Copyright>
     <AssemblyName>Oqtane.ChatHubs.Client.Oqtane</AssemblyName>
