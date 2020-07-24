@@ -12,10 +12,11 @@
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/oqtane/oqtane.framework</projectUrl>
     <iconUrl>https://www.oqtane.org/Portals/0/icon.jpg</iconUrl>
-    <tags>oqtane module</tags>
+    <tags>oqtane module chat signalr</tags>
     <releaseNotes></releaseNotes>
     <summary></summary>
     <dependencies>
+		
         <dependency id="Oqtane.Framework" version="1.0.0" />
 		
 		<!--
