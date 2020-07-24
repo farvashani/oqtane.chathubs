@@ -1,6 +1,6 @@
 # Oqtane ChatHub Module
 
-The Oqtane CMS allows developers to create external modules which are rendered by the framework dynamically at run-time.
+The Oqtane Framework allows developers to create external modules.
 
 # Example Screenshots
 
