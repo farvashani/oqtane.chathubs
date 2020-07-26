@@ -1,5 +1,5 @@
 /*  
-Create tables
+Create ChatHub Tables
 */
 
 CREATE TABLE [dbo].[ChatHubRoom](
