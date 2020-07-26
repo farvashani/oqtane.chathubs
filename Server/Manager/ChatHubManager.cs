@@ -57,6 +57,9 @@ namespace Oqtane.ChatHubs.Manager
                     room.ModuleId = module.ModuleId;
                     room.Title = chatHubRoom.Title;
                     room.Content = chatHubRoom.Content;
+                    room.ImageUrl = chatHubRoom.ImageUrl;
+                    room.Type = chatHubRoom.Type;
+                    room.Status = chatHubRoom.Status;
                     _chatHubRepository.AddChatHubRoom(room);
                 }
             }
