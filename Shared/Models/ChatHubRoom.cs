@@ -14,8 +14,8 @@ namespace Oqtane.Shared.Models
         public string Title { get; set; }
         public string Content { get; set; }
         public string ImageUrl { get; set; }
-        public int Type { get; set; }
-        public int Status { get; set; }
+        public string Type { get; set; }
+        public string Status { get; set; }
 
         public string CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }

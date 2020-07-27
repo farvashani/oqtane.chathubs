@@ -112,8 +112,8 @@ namespace Oqtane.ChatHubs
                         ModuleId = ModuleState.ModuleId,
                         Title = title,
                         Content = content,
-                        Type = (int)ChatHubRoomType.Public,
-                        Status = (int)ChatHubRoomStatus.Active,
+                        Type = Enum.GetName(typeof(ChatHubRoomType), ChatHubRoomType.Public),
+                        Status = Enum.GetName(typeof(ChatHubRoomStatus), ChatHubRoomStatus.Active),
                         ImageUrl = string.Empty
                     };
 

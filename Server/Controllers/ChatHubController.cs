@@ -181,7 +181,7 @@ namespace Oqtane.ChatHubs.Controllers
                     {
                         foreach (ChatHubConnection connection in user.Connections)
                         {
-                            connection.Status = (int)ChatHubConnectionStatus.Inactive;
+                            connection.Status = Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Inactive);
                             chatHubRepository.UpdateChatHubConnection(connection);
 
                             logger.Log(LogLevel.Information, this, LogFunction.Delete, "ChatHubConnection Deleted {ChatHubConnection}", connection);
@@ -265,7 +265,7 @@ namespace Oqtane.ChatHubs.Controllers
             {
                 ChatHubRoomId = chatHubRoom.ChatHubRoomId,
                 ChatHubUserId = user.UserId,
-                Type = (int)ChatHubMessageType.Image,
+                Type = Enum.GetName(typeof(ChatHubMessageType), ChatHubMessageType.Image),
                 Content = content,
                 User = user
             };

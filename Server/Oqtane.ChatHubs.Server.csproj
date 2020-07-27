@@ -14,13 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Interfaces\**" />
-    <Content Remove="Interfaces\**" />
-    <EmbeddedResource Remove="Interfaces\**" />
-    <None Remove="Interfaces\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Scripts\Oqtane.ChatHubs.1.0.0.sql" />
     <EmbeddedResource Include="Scripts\Oqtane.ChatHubs.Uninstall.sql" />
   </ItemGroup>

@@ -4,6 +4,7 @@ using Oqtane.Modules;
 using Oqtane.Repository;
 using Oqtane.Shared.Enums;
 using Oqtane.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -121,8 +122,8 @@ namespace Oqtane.ChatHubs.Services
         {
             var list = new List<ChatHubUser>();
 
-            var ignoredUsers = this.chatHubRepository.GetIgnoredApplicationUsers(user).Where(x => x.Connections.Any(c => c.Status == (int)ChatHubConnectionStatus.Active)).ToList();
-            var ignoredByUsers = this.chatHubRepository.GetIgnoredByApplicationUsers(user).Where(x => x.Connections.Any(c => c.Status == (int)ChatHubConnectionStatus.Active)).ToList();
+            var ignoredUsers = this.chatHubRepository.GetIgnoredApplicationUsers(user).Where(x => x.Connections.Any(c => c.Status == Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active))).ToList();
+            var ignoredByUsers = this.chatHubRepository.GetIgnoredByApplicationUsers(user).Where(x => x.Connections.Any(c => c.Status == Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active))).ToList();
 
             list.AddRange(ignoredUsers);
             list.AddRange(ignoredByUsers);

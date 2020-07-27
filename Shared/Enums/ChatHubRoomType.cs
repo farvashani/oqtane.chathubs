@@ -6,9 +6,9 @@ namespace Oqtane.Shared.Enums
 {
     public enum ChatHubRoomType
     {
-        Public = 0,
-        Protected = 1,
-        Private = 2,
-        Separee = 3
+        Public,
+        Protected,
+        Private,
+        Separee
     }
 }

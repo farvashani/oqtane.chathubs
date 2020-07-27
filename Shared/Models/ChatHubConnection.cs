@@ -14,7 +14,7 @@ namespace Oqtane.Shared.Models
         public string ConnectionId { get; set; }
         public string UserAgent { get; set; }
         public string IpAddress { get; set; }
-        public int Status { get; set; }
+        public string Status { get; set; }
 
         public string CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }

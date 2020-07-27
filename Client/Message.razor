@@ -8,7 +8,7 @@
 @foreach (ChatHubMessage message in Messages)
 {
 
-    var messageType = (ChatHubMessageType)Enum.ToObject(typeof(ChatHubMessageType) , message.Type);
+    var messageType = (ChatHubMessageType)Enum.ToObject(typeof(ChatHubMessageType), Enum.Parse(typeof(ChatHubMessageType), message.Type));
     @switch (messageType)
     {
         case ChatHubMessageType.Guest:
@@ -29,8 +29,11 @@
         case ChatHubMessageType.Me:
             @MeTemplate(message)
             break;
-        case ChatHubMessageType.JoinEnterLeaveExit:
-            @JoinEnterLeaveExitTemplate(message)
+        case ChatHubMessageType.Enter_Leave:
+            @EnterLeaveTemplate(message)
+            break;
+        case ChatHubMessageType.Connect_Disconnect:
+            @ConnectDisconnectTemplate(message)
             break;
         case ChatHubMessageType.Image:
             @ImageTemplate(message)
@@ -62,7 +65,10 @@
     public RenderFragment<ChatHubMessage> MeTemplate { get; set; }
 
     [Parameter]
-    public RenderFragment<ChatHubMessage> JoinEnterLeaveExitTemplate { get; set; }
+    public RenderFragment<ChatHubMessage> EnterLeaveTemplate { get; set; }
+    
+    [Parameter]
+    public RenderFragment<ChatHubMessage> ConnectDisconnectTemplate { get; set; }
 
     [Parameter]
     public RenderFragment<ChatHubMessage> ImageTemplate { get; set; }

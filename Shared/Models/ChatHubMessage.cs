@@ -14,7 +14,7 @@ namespace Oqtane.Shared.Models
         public int ChatHubRoomId { get; set; }
         public int ChatHubUserId { get; set; }
         public string Content { get; set; }
-        public int Type { get; set; }
+        public string Type { get; set; }
 
         public string CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }

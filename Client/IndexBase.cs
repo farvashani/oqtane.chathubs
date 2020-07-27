@@ -53,6 +53,8 @@ namespace Oqtane.ChatHubs
         [Parameter]
         public string UserlistWindowHeight { get; set; }
 
+        public static string ChatWindowDatePattern = @"HH:mm:ss";
+
         public IndexBase()
         {
             

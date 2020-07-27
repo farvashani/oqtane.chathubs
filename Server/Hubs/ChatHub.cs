@@ -117,7 +117,7 @@ namespace Oqtane.ChatHubs.Hubs
                 ConnectionId = Context.ConnectionId,
                 IpAddress = Context.GetHttpContext().Connection.RemoteIpAddress.ToString(),
                 UserAgent = Context.GetHttpContext().Request.Headers["User-Agent"].ToString(),
-                Status = (int)ChatHubConnectionStatus.Active
+                Status = Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active)
             };
             ChatHubConnection = this.chatHubRepository.AddChatHubConnection(ChatHubConnection);
 
@@ -134,12 +134,12 @@ namespace Oqtane.ChatHubs.Hubs
             {
                 foreach(var connection in guest.Connections)
                 {
-                    connection.Status = (int)ChatHubConnectionStatus.Inactive;
+                    connection.Status = Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Inactive);
                     chatHubRepository.UpdateChatHubConnection(connection);
                 }
                 
                 var rooms = chatHubRepository.GetChatHubRoomsByUser(guest).Active();
-                foreach (var room in rooms.Where(room => room.Type == (int)ChatHubRoomType.Public))
+                foreach (var room in rooms.Where(room => room.Type == Enum.GetName(typeof(ChatHubRoomType), ChatHubRoomType.Public)))
                 {
                     await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.ChatHubRoomId.ToString());                    
                     if(guest.Connections.Active().Count() <= 1)
@@ -215,7 +215,7 @@ namespace Oqtane.ChatHubs.Hubs
                     ChatHubUserId = guest.UserId,
                     User = guest,
                     Content = content ?? string.Empty,
-                    Type = (int)ChatHubMessageType.Guest
+                    Type = Enum.GetName(typeof(ChatHubMessageType), ChatHubMessageType.Guest)
                 };
                 this.chatHubRepository.AddChatHubMessage(chatHubMessage);
 

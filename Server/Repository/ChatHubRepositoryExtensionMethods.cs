@@ -14,17 +14,17 @@ namespace Oqtane.ChatHubs.Repository
 
         public static IQueryable<ChatHubRoom> Active(this IQueryable<ChatHubRoom> rooms)
         {
-            return rooms.Where(r => r.Status == (int)ChatHubRoomStatus.Active);
+            return rooms.Where(r => r.Status == Enum.GetName(typeof(ChatHubRoomStatus), ChatHubRoomStatus.Active));
         }
 
         public static IQueryable<ChatHubConnection> Active(this IQueryable<ChatHubConnection> connections)
         {
-            return connections.Where(c => c.Status == (int)ChatHubConnectionStatus.Active);
+            return connections.Where(c => c.Status == Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active));
         }
 
         public static IEnumerable<ChatHubConnection> Active(this ICollection<ChatHubConnection> connections)
         {
-            return connections.Where(c => c.Status == (int)ChatHubConnectionStatus.Active);
+            return connections.Where(c => c.Status == Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active));
         }
 
     }

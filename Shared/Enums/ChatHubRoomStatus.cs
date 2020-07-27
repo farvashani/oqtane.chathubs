@@ -6,7 +6,7 @@ namespace Oqtane.Shared.Enums
 {
     public enum ChatHubRoomStatus
     {
-        Active = 0,
-        Inactive = 1
+        Active,
+        Inactive
     }
 }

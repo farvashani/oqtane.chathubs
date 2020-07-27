@@ -105,62 +105,6 @@
 
                                     <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="Add Room" />
 
-                                    @*
-        <Oqtane.Modules.Controls.Pager Format="Table" Items="@ChatHubService.Lobbies" DisplayPages="5" PageSize="5" Class="table table-sm">
-            <Header>
-                <th>Image</th>
-                <th>Title</th>
-                <th>Created</th>
-                <th>Content</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th>User Counter</th>
-                <th class="@(ChatHubService.Connection?.State == HubConnectionState.Connected ? "d-table-cell" : "d-none")">Enter</th>
-                <th class="@(UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions) ? "d-table-cell" : "d-none")">Edit</th>
-                <th class="@(UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions) ? "d-table-cell" : "d-none")">Delete</th>
-            </Header>
-            <Row>
-
-                <td class="align-middle">
-                    <img height="56" src="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/rooms/{1}", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "d-none" : "")" />
-                    <img height="56" src="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/chat-room-image.png", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "" : "d-none")" />
-                </td>
-                <td class="align-middle">
-                    <a href="@NavigateUrl(PageState.Page.Path, "moduleid=" + context.ModuleId.ToString() + "&" + "roomid=" + context.ChatHubRoomId.ToString())">
-                        <h6>@context.Title</h6>
-                    </a>
-                </td>
-                <td class="align-middle">
-                    <b>Posted by</b> @context.CreatedBy <b>on</b> @context.CreatedOn.ToShortDateString()
-                </td>
-                <td class="align-middle">
-                    @((MarkupString)@context.Content)
-                </td>
-                <td class="align-middle">
-                    @((ChatHubRoomType)context.Type)
-                </td>
-                <td class="align-middle">
-                    @((ChatHubRoomStatus)context.Status)
-                </td>
-                <td class="align-middle">
-                    @context.Users?.Count()
-                </td>
-                <td class="align-middle @(ChatHubService.Connection?.State == HubConnectionState.Connected ? "d-table-cell" : "d-none")">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-sm btn-link bg-white border border-light" @onclick="@(async () => await EnterRoom_Clicked(context.ChatHubRoomId, context.ModuleId))">Enter Room</button>
-                    </div>
-                </td>
-                <td class="align-middle @(UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions) ? "d-table-cell" : "d-none")">
-                    <ActionLink Action="Edit" Parameters="@($"moduleid=" + context.ModuleId.ToString() + "&" + "roomid=" + context.ChatHubRoomId.ToString())" />
-                </td>
-                <td class="align-middle @(UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions) ? "d-table-cell" : "d-none")">
-                    <ActionDialog Header="Delete Room" Message="@("Are You Sure You Wish To Delete This Room?")" Action="Delete" Security="SecurityAccessLevel.Anonymous" Class="btn btn-danger" OnClick="@(async () => await DeleteRoom(context.ChatHubRoomId))" />
-                </td>
-
-            </Row>
-        </Oqtane.Modules.Controls.Pager>
-                                    *@
-
                                     <Table TableItem="ChatHubRoom" Items="@ChatHubService.Lobbies" PageSize="5" class="table table-sm table-light">
 
                                         <Column TableItem="ChatHubRoom" Title="Id" Field="@(x => x.ChatHubRoomId)" Sortable="false" Filterable="false" DefaultSortColumn="false" DefaultSortDescending="false" Width="7%"></Column>
@@ -190,12 +134,12 @@
                                         <Column TableItem="ChatHubRoom" Title="Content" Field="@(x => x.Content)" Sortable="false" Filterable="false" Width="15%"></Column>
                                         <Column TableItem="ChatHubRoom" Title="Type" Field="@(x => x.Type)" Sortable="false" Filterable="false" Width="10%">
                                             <Template>
-                                                @((ChatHubRoomType)context.Type)
+                                                @context.Type
                                             </Template>
                                         </Column>
                                         <Column TableItem="ChatHubRoom" Title="Status" Field="@(x => x.Status)" Sortable="false" Filterable="false" Width="10%">
                                             <Template>
-                                                @((ChatHubRoomStatus)context.Status)
+                                                @context.Status
                                             </Template>
                                         </Column>
                                         <Column TableItem="ChatHubRoom" Title="Users" Field="@(x => x.Users)" Sortable="false" Filterable="false" Width="10%">
@@ -261,26 +205,45 @@
                                                 <Message Messages="@room.Messages" Context="item">
                                                     <SystemTemplate>
                                                         <div>
-
+                                                            @item.ChatHubMessageId
                                                         </div>
                                                     </SystemTemplate>
                                                     <AdminTemplate>
                                                         <div>
-                                                            @item.ChatHubMessageId
+                                                            <span class="text-muted">
+                                                                @string.Format("[{0}]", item.CreatedOn.ToLocalTime().ToString(ChatWindowDatePattern))
+                                                            </span>
+                                                            <span>
+                                                                <strong>@item.User.DisplayName:</strong>
+                                                            </span>
+                                                            <span>
+                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
+                                                            </span>
                                                         </div>
                                                     </AdminTemplate>
                                                     <UserTemplate>
                                                         <div>
-                                                            @item.ChatHubMessageId
+                                                            <span class="text-muted">
+                                                                @string.Format("[{0}]", item.CreatedOn.ToLocalTime().ToString(ChatWindowDatePattern))
+                                                            </span>
+                                                            <span>
+                                                                <strong>@item.User.DisplayName:</strong>
+                                                            </span>
+                                                            <span>
+                                                                @(HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
+                                                            </span>
                                                         </div>
                                                     </UserTemplate>
                                                     <GuestTemplate>
                                                         <div>
-                                                            <span>
-                                                                @item.User.DisplayName:&nbsp;
+                                                            <span class="text-muted">
+                                                                @string.Format("[{0}]", item.CreatedOn.ToLocalTime().ToString(ChatWindowDatePattern))
                                                             </span>
                                                             <span>
-                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
+                                                                <strong>@item.User.DisplayName:</strong>
+                                                            </span>
+                                                            <span>
+                                                                @(HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
                                                             </span>
                                                         </div>
                                                     </GuestTemplate>
@@ -294,11 +257,16 @@
                                                             @item.ChatHubMessageId
                                                         </div>
                                                     </MeTemplate>
-                                                    <JoinEnterLeaveExitTemplate>
+                                                    <EnterLeaveTemplate>
                                                         <div>
                                                             @item.ChatHubMessageId
                                                         </div>
-                                                    </JoinEnterLeaveExitTemplate>
+                                                    </EnterLeaveTemplate>
+                                                    <ConnectDisconnectTemplate>
+                                                        <div>
+                                                            @item.ChatHubMessageId
+                                                        </div>
+                                                    </ConnectDisconnectTemplate>
                                                     <ImageTemplate>
                                                         @if (item.Photos != null)
                                                         {

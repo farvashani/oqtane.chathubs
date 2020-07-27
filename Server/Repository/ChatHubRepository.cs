@@ -181,13 +181,13 @@ namespace Oqtane.ChatHubs.Repository
 
         public IQueryable<ChatHubUser> GetOnlineUsers()
         {
-            return db.ChatHubUser.Include(u => u.Connections).Where(u => u.Connections.Any(c => c.Status == (int)ChatHubConnectionStatus.Active));
+            return db.ChatHubUser.Include(u => u.Connections).Where(u => u.Connections.Any(c => c.Status == Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active)));
         }
         public IQueryable<ChatHubUser> GetOnlineUsers(ChatHubRoom room)
         {
             //IQueryable<ChatHubUser> users = db.ChatHubRoomChatHubUser.Where(x => x.Room_User_ChatHubRoomId == room.ChatHubRoomId).Include(x => x.User).ThenInclude(x => x.Connections).Select(x => x.User).Where(u => u.Connections.Any(c => c.ConnectionStatus == (int)ChatHubConnectionStatus.Active));
             //IQueryable<ChatHubUser> users = db.ChatHubUser.Where(user => user.UserRooms.Any(user_room => user_room.Room_User_ChatHubRoomId == room.ChatHubRoomId)).Include(x => x.Connections).Where(u => u.Connections.Any(c => c.ConnectionStatus == (int)ChatHubConnectionStatus.Active));
-            IQueryable<ChatHubUser> users = db.Entry(room).Collection(r => r.RoomUsers).Query().Include(ru => ru.User).ThenInclude(u => u.Connections).Select(ru => ru.User).Where(u => u.Connections.Any(c => c.Status == (int)ChatHubConnectionStatus.Active));
+            IQueryable<ChatHubUser> users = db.Entry(room).Collection(r => r.RoomUsers).Query().Include(ru => ru.User).ThenInclude(u => u.Connections).Select(ru => ru.User).Where(u => u.Connections.Any(c => c.Status == Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active)));
 
             return users;
         }
@@ -377,7 +377,7 @@ namespace Oqtane.ChatHubs.Repository
                             .Select(u => new
                             {
                                 User = u,
-                                Connections = u.Connections.OrderByDescending(c => c.Status == (int)ChatHubConnectionStatus.Active).Take(100),
+                                Connections = u.Connections.OrderByDescending(c => c.Status == Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active)).Take(100),
                             })
                             .FirstOrDefaultAsync();
 
