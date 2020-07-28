@@ -209,8 +209,8 @@ namespace Oqtane.ChatHubs
 
         private void SetChatTabElementsHeight()
         {
-            MessageWindowHeight = 550 + "px";
-            UserlistWindowHeight = 600 + "px";
+            MessageWindowHeight = 520 + "px";
+            UserlistWindowHeight = 570 + "px";
         }
 
         private async void OnAddChatHubMessageExecute(object sender, ChatHubMessage message)

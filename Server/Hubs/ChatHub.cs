@@ -69,9 +69,11 @@ namespace Oqtane.ChatHubs.Hubs
                 throw new HubException("No valid username.");
             }
 
-            string username = this.CreateGuestUsername(guestname);
-            string email = "invalidemail@oqtane.com";
-            string password = "$D33F4ULT";
+            string username = this.CreateUsername(guestname);
+            string displayname = this.CreateDisplaynameFromUsername(username);
+
+            string email = "noreply@chathub.tv";
+            string password = "§PasswordPolicy42";
 
             /*
             IdentityUser identityuser = await this.identityUserManager.FindByNameAsync(username);
@@ -90,7 +92,7 @@ namespace Oqtane.ChatHubs.Hubs
             {
                 SiteId = 1,
                 Username = username,
-                DisplayName = guestname,
+                DisplayName = displayname,
                 Email = email,
                 LastIPAddress = Context.GetHttpContext().Connection.RemoteIpAddress.ToString(),
             };
@@ -346,13 +348,20 @@ namespace Oqtane.ChatHubs.Hubs
             }
         }
 
-        private string CreateGuestUsername(string guestName)
+        private string CreateUsername(string guestname)
         {
             string base64Guid = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
             string id = Regex.Replace(base64Guid, "[/+=]", "");
-            string userName = string.Concat(guestName, "-", new Random().Next(6000, 6999), "-", id);
+            string userName = string.Concat(guestname, "-", new Random().Next(1000, 9999), "-", id);
 
             return userName;
+        }
+        private string CreateDisplaynameFromUsername(string username)
+        {
+            var name = username.Substring(0, username.IndexOf('-'));
+            var numbers = username.Substring(username.IndexOf('-') + 1, 4);
+            var displayname = string.Concat(name, "-", numbers);
+            return displayname;
         }
 
         private bool IsValidGuestUsername(string guestName)

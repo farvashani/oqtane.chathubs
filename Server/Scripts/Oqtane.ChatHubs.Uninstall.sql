@@ -2,6 +2,13 @@
 Remove ChatHub Table
 */
 
+IF COL_LENGTH('dbo.User', 'UserType') IS NOT NULL
+BEGIN
+    ALTER TABLE [dbo].[User] DROP COLUMN [UserType]
+END
+
+GO
+
 DROP TABLE [dbo].[ChatHubRoom]
 GO
 
@@ -31,8 +38,3 @@ GO
 
 DROP TABLE [dbo].[ChatHubRoom]
 GO
-
-IF COL_LENGTH('dbo.User', 'UserType') IS NOT NULL
-BEGIN
-    ALTER TABLE [dbo].[User] DROP COLUMN [UserType]
-END

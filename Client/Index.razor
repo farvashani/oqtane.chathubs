@@ -25,10 +25,16 @@
         border: 1px solid #dddddd;
     }
 
+    .visibility-collapse {
+        visibility: collapse;
+    }
+
     .chat-hub-photo-mat-card {
         color: #1a1a1a !important;
+        background-color: white !important;
         max-width: 400px;
         border-radius: 0px !important;
+        box-shadow: none !important;
     }
 
     .chat-hub-photo-mat-card-content {
@@ -101,57 +107,40 @@
                         <BSTabContent>
 
                             <section class="d-flex flex-wrap flex-lg-nowrap align-content-lg-start p-sm-3 bg-white">
-                                <div class="flex-fill" style="max-width: 1200px;">
+                                <div class="flex-fill" style="max-width: 1200px; height: @MessageWindowHeight; overflow: auto;">
 
                                     <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="Add Room" />
 
-                                    <Table TableItem="ChatHubRoom" Items="@ChatHubService.Lobbies" PageSize="5" class="table table-sm table-light">
+                                    <Table TableItem="ChatHubRoom" Items="@ChatHubService.Lobbies" PageSize="4" TableClass="table table-sm table-light" TableHeadClass="visibility-collapse" ShowSearchBar="false">
 
-                                        <Column TableItem="ChatHubRoom" Title="Id" Field="@(x => x.ChatHubRoomId)" Sortable="false" Filterable="false" DefaultSortColumn="false" DefaultSortDescending="false" Width="7%"></Column>
-
-                                        <Column TableItem="ChatHubRoom" Title="Image" Field="@(x => x.ImageUrl)" Sortable="false" Filterable="false">
+                                        <Column TableItem="ChatHubRoom" Title="Image" Field="@(x => x.ImageUrl)" Sortable="false" Filterable="false" Class="align-middle" Width="20%">
                                             <Template>
-                                                <img height="56" src="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/rooms/{1}", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "d-none" : "")" />
-                                                <img height="56" src="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/chat-room-image.png", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "" : "d-none")" />
+
+                                                <MatCard class="chat-hub-photo-mat-card">
+                                                    <MatCardContent>
+                                                        <MatCardMedia Wide="true" ImageUrl="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/rooms/{1}", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "d-none" : "img-fuid bg-light")"></MatCardMedia>
+                                                        <MatCardMedia Wide="true" ImageUrl="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/chat-room-image.png", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "img-fluid bg-light" : "d-none")"></MatCardMedia>
+                                                    </MatCardContent>
+                                                </MatCard>
+                                                
                                             </Template>
                                         </Column>
 
-                                        <Column TableItem="ChatHubRoom" Title="Title" Field="@(x => x.Title)" Sortable="false" Filterable="false" Width="15%">
+                                        <Column TableItem="ChatHubRoom" Title="Content" Field="@(x => x.Content)" Sortable="false" Filterable="false">
                                             <Template>
-                                                <a href="@NavigateUrl(PageState.Page.Path, "moduleid=" + context.ModuleId.ToString() + "&" + "roomid=" + context.ChatHubRoomId.ToString())">
-                                                    <h6>@context.Title</h6>
-                                                </a>
-                                            </Template>
-                                        </Column>
-
-                                        <Column TableItem="ChatHubRoom" Title="Created" Field="@(x => x.CreatedOn)" Sortable="false" Filterable="false">
-                                            <Template>
-                                                <b>Posted by</b> @context.CreatedBy
-                                                <b>on</b> @context.CreatedOn.ToShortDateString()
-                                            </Template>
-                                        </Column>
-
-                                        <Column TableItem="ChatHubRoom" Title="Content" Field="@(x => x.Content)" Sortable="false" Filterable="false" Width="15%"></Column>
-                                        <Column TableItem="ChatHubRoom" Title="Type" Field="@(x => x.Type)" Sortable="false" Filterable="false" Width="10%">
-                                            <Template>
-                                                @context.Type
-                                            </Template>
-                                        </Column>
-                                        <Column TableItem="ChatHubRoom" Title="Status" Field="@(x => x.Status)" Sortable="false" Filterable="false" Width="10%">
-                                            <Template>
-                                                @context.Status
-                                            </Template>
-                                        </Column>
-                                        <Column TableItem="ChatHubRoom" Title="Users" Field="@(x => x.Users)" Sortable="false" Filterable="false" Width="10%">
-                                            <Template>
-                                                @context.Users.Count()
-                                            </Template>
-                                        </Column>
-
-                                        <Column TableItem="ChatHubRoom" Title="Enter" Sortable="false" Filterable="false" Width="10%">
-                                            <Template>
-                                                <div class="form-group">
-                                                    <button type="button" class="btn btn-sm btn-link bg-white border border-light" @onclick="@(async () => await EnterRoom_Clicked(context.ChatHubRoomId, context.ModuleId))">Enter Room</button>
+                                                <div class="px-1 py-2">
+                                                    <a href="@NavigateUrl(PageState.Page.Path, "moduleid=" + context.ModuleId.ToString() + "&" + "roomid=" + context.ChatHubRoomId.ToString())">
+                                                        <h6>@context.Title</h6>
+                                                    </a>
+                                                    <p class="text-muted">
+                                                        <span>@context.Content</span>
+                                                        &nbsp;(<b>Posted by</b> @context.CreatedBy <b>on</b> @context.CreatedOn.ToShortDateString())
+                                                        <br />
+                                                        Online Users: @context.Users.Count()
+                                                    </p>
+                                                    <div class="form-group">
+                                                        <button type="button" class="btn btn-sm btn-link bg-light border-0" @onclick="@(async () => await EnterRoom_Clicked(context.ChatHubRoomId, context.ModuleId))">Enter Room</button>
+                                                    </div>
                                                 </div>
                                             </Template>
                                         </Column>
