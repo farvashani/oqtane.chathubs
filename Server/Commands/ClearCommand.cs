@@ -7,7 +7,7 @@ using Oqtane.Shared;
 namespace Oqtane.ChatHubs.Commands
 {
     [Export("ICommand", typeof(ICommand))]
-    [Command(new string[] { "clear", "recycle", "free", "erase", "eliminate", "brighten" }, "clear", Constants.AllUsersRole , "Usage: /clear | /recycle")]
+    [Command("clear", "args[]", Constants.AllUsersRole , "Usage: /clear | /recycle")]
     public class ClearCommand : BaseCommand
     {
         public override async Task Execute(CommandServicesContext context, CommandCallerContext callerContext, string[] args, ChatHubUser caller)

@@ -118,13 +118,12 @@ namespace Oqtane.ChatHubs.Commands
         public ICommand MatchCommand(string commandName)
         {
             ICommand command = null;
-            if (_commandCache == null)
-            {
-                var commands = _commands.Value.Where(x => x.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault() != null)
-                                        .Select(y => new { Names = y.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault().Names, Command = y });
 
-                _commandCache = commands.ToDictionary(c => string.Join('|', c.Names), c => c.Command, StringComparer.OrdinalIgnoreCase);
-            }
+                var commands = _commands.Value.Where(x => x.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault() != null)
+                                        .Select(y => new { Commands = y.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault().Commands, Command = y });
+
+                _commandCache = commands.ToDictionary(c => string.Join('|', c.Commands), c => c.Command, StringComparer.OrdinalIgnoreCase);
+            
 
             IList<string> candidates = null;
             foreach (string key in _commandCache.Keys)
@@ -137,16 +136,19 @@ namespace Oqtane.ChatHubs.Commands
                     candidates = exactMatches;
                 }
 
-                switch (candidates.Count)
+                if(candidates != null)
                 {
-                    case 1:
-                        _commandCache.TryGetValue(key, out command);
-                        commandName = candidates[0];
-                        break;
-                    case 0:
-                        throw new CommandNotFoundException();
-                    default:
-                        throw new CommandAmbiguityException(candidates);
+                    switch (candidates.Count)
+                    {
+                        case 1:
+                            _commandCache.TryGetValue(key, out command);
+                            commandName = candidates[0];
+                            break;
+                        case 0:
+                            throw new CommandNotFoundException();
+                        default:
+                            throw new CommandAmbiguityException(candidates);
+                    }
                 }
             }
 
@@ -155,7 +157,6 @@ namespace Oqtane.ChatHubs.Commands
 
         private static IList<ICommand> GetCommands()
         {
-            // Use MEF -> System.Compostion nuget package
             var configuration = new ContainerConfiguration().WithAssembly(typeof(CommandManager).Assembly);
             var container = configuration.CreateContainer();
             IList<ICommand> iCommands = container.GetExports<ICommand>("ICommand").ToList();
@@ -165,7 +166,7 @@ namespace Oqtane.ChatHubs.Commands
         {
             var commandsMetaData = _commands.Value.Where(x => x.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault() != null)
                                         .Select(y => new CommandMetaData {
-                                            Names = y.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault().Names,
+                                            Commands = y.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault().Commands,
                                             Arguments = y.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault().Arguments,
                                             Roles = y.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault().Roles,
                                             Usage = y.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault().Usage

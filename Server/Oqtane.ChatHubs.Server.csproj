@@ -44,4 +44,24 @@
     <PackageReference Include="Oqtane.Shared" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Resources\CommandResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CommandResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\CommandResources.de-DE.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <CustomToolNamespace>Oqtane.ChatHubs.Server.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\CommandResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>CommandResources.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Oqtane.ChatHubs.Server.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+	
 </Project>

@@ -17,6 +17,7 @@
 @using Oqtane.Shared.Models
 @using BlazorStrap
 @using BlazorTable
+@using System.Globalization
 
 <style type="text/css">
 
@@ -62,7 +63,7 @@
     {
         <div class="form-group">
             <label for="guestUsernameInput-@ModuleState.ModuleId.ToString()">Choose your desired username:</label>
-            <input type="text" id="guestUsernameInput-@ModuleState.ModuleId.ToString()" class="form-control" @bind-value="@GuestUsername" placeholder="Username" />
+            <input type="text" id="guestUsernameInput-@ModuleState.ModuleId.ToString()" class="form-control" @bind-value="@GuestUsername" placeholder="Username-@CultureInfo.CurrentCulture" />
         </div>
 
         <div class="form-group">
