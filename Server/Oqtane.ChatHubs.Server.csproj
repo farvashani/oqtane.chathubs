@@ -53,10 +53,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Resources\CommandResources.de-DE.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <CustomToolNamespace>Oqtane.ChatHubs.Server.Resources</CustomToolNamespace>
-    </EmbeddedResource>
     <EmbeddedResource Update="Resources\CommandResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>CommandResources.Designer.cs</LastGenOutput>

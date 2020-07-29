@@ -118,12 +118,13 @@ namespace Oqtane.ChatHubs.Commands
         public ICommand MatchCommand(string commandName)
         {
             ICommand command = null;
-
+            if (_commands == null) 
+            {
                 var commands = _commands.Value.Where(x => x.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault() != null)
                                         .Select(y => new { Commands = y.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault().Commands, Command = y });
 
                 _commandCache = commands.ToDictionary(c => string.Join('|', c.Commands), c => c.Command, StringComparer.OrdinalIgnoreCase);
-            
+            }
 
             IList<string> candidates = null;
             foreach (string key in _commandCache.Keys)
