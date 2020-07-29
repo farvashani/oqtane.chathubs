@@ -10,6 +10,7 @@ using Oqtane.ChatHubs.Hubs;
 using Oqtane.ChatHubs.Services;
 using Oqtane.ChatHubs.Repository;
 using Oqtane.Modules;
+using System.Dynamic;
 
 namespace Oqtane.ChatHubs.Commands
 {
@@ -23,7 +24,7 @@ namespace Oqtane.ChatHubs.Commands
         private readonly IChatHubRepository _repository;
         private readonly UserManager<IdentityUser> _userManager;
 
-        private static Dictionary<string, ICommand> _commandCache;
+        private static Dictionary<string, dynamic> _commandCache = new Dictionary<string, dynamic>();
         private static readonly Lazy<IList<ICommand>> _commands = new Lazy<IList<ICommand>>(GetCommands);
 
         public CommandManager(int userId, 
@@ -118,18 +119,25 @@ namespace Oqtane.ChatHubs.Commands
         public ICommand MatchCommand(string commandName)
         {
             ICommand command = null;
-            if (_commands == null) 
+            if (!_commandCache.Any())
             {
                 var commands = _commands.Value.Where(x => x.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault() != null)
-                                        .Select(y => new { Commands = y.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault().Commands, Command = y });
+                                        .Select(y => new { ResourceName = y.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault().ResourceName, Commands = y.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault().Commands, Command = y });
 
-                _commandCache = commands.ToDictionary(c => string.Join('|', c.Commands), c => c.Command, StringComparer.OrdinalIgnoreCase);
+                foreach(var c in commands)
+                {
+                    dynamic dictionnaryValue = new ExpandoObject();
+                    dictionnaryValue.Commands = c.Commands;
+                    dictionnaryValue.Command = c.Command;
+
+                    _commandCache.Add(c.ResourceName, dictionnaryValue);
+                }
             }
 
             IList<string> candidates = null;
-            foreach (string key in _commandCache.Keys)
+            foreach (var commandCacheItem in _commandCache)
             {
-                string[] commandNames = key.Split('|');
+                string[] commandNames = commandCacheItem.Value.Commands;
                 var exactMatches = commandNames.Where(x => x.Equals(commandName, StringComparison.OrdinalIgnoreCase)).ToList();
 
                 if (exactMatches.Count == 1)
@@ -142,7 +150,7 @@ namespace Oqtane.ChatHubs.Commands
                     switch (candidates.Count)
                     {
                         case 1:
-                            _commandCache.TryGetValue(key, out command);
+                            command = commandCacheItem.Value.Command;
                             commandName = candidates[0];
                             break;
                         case 0:
