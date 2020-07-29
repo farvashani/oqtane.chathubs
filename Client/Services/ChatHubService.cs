@@ -45,6 +45,7 @@ namespace Oqtane.ChatHubs.Services
         public event EventHandler<ChatHubUser> OnRemoveIgnoredUserEvent;
         public event EventHandler<ChatHubUser> OnAddIgnoredByUserEvent;
         public event EventHandler<ChatHubUser> OnRemoveIgnoredByUserEvent;
+        public event EventHandler<int> OnClearHistoryEvent;
 
         private Timer GetLobbyRoomsTimer = new Timer();
 
@@ -65,6 +66,7 @@ namespace Oqtane.ChatHubs.Services
             this.OnRemoveIgnoredUserEvent += OnRemoveIgnoredUserExecute;
             this.OnAddIgnoredByUserEvent += OnAddIgnoredByUserExecute;
             this.OnRemoveIgnoredByUserEvent += OnRemoveIgnoredByUserExecute;
+            this.OnClearHistoryEvent += OnClearHistoryExecute;
 
             GetLobbyRoomsTimer.Elapsed += new ElapsedEventHandler(OnGetLobbyRoomsTimerElapsed);
             GetLobbyRoomsTimer.Interval = 10000;
@@ -117,6 +119,7 @@ namespace Oqtane.ChatHubs.Services
             Connection.On("RemoveIgnoredUser", (ChatHubUser ignoredUser) => OnRemoveIgnoredUserEvent(this, ignoredUser));
             Connection.On("AddIgnoredByUser", (ChatHubUser ignoredUser) => OnAddIgnoredByUserExecute(this, ignoredUser));
             Connection.On("RemoveIgnoredByUser", (ChatHubUser ignoredUser) => OnRemoveIgnoredByUserExecute(this, ignoredUser));
+            Connection.On("ClearHistory", (int roomId) => OnClearHistoryEvent(this, roomId));
         }
 
         public async Task ConnectAsync()
@@ -313,6 +316,10 @@ namespace Oqtane.ChatHubs.Services
         {
             this.RemoveIgnoredByUser(user);
             this.UpdateUI();
+        }
+        private void OnClearHistoryExecute(object sender, int roomId)
+        {
+            this.ClearHistory(roomId);
         }
 
         public void AddRoom(ChatHubRoom room)

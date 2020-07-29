@@ -21,7 +21,7 @@
   <ItemGroup>    
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.4" />    
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.4" />       
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />
 	  
@@ -32,6 +32,7 @@
 	<PackageReference Include="MatBlazor" Version="2.3.0" />
     <PackageReference Include="Tewr.Blazor.FileReader" Version="1.4.0.20072" />
 	<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+	<PackageReference Include="Microsoft.Composition" Version="1.0.31" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,4 +43,5 @@
     <PackageReference Include="Oqtane.Server" Version="1.0.0" />
     <PackageReference Include="Oqtane.Shared" Version="1.0.0" />
   </ItemGroup>
+
 </Project>

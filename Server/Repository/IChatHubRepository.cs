@@ -50,6 +50,7 @@ namespace Oqtane.ChatHubs.Repository
         ChatHubIgnore UpdateChatHubIgnore(ChatHubIgnore chatHubIgnore);
         void DeleteChatHubIgnore(ChatHubIgnore chatHubIgnore);
 
+        Task<ChatHubUser> GetUserByIdAsync(int id);
         Task<ChatHubUser> GetUserByUserNameAsync(string username);
 
     }

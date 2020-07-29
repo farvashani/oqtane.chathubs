@@ -16,6 +16,7 @@ using Oqtane.Modules;
 using Oqtane.ChatHubs.Services;
 using Oqtane.ChatHubs.Repository;
 using Microsoft.AspNetCore.Http;
+using Oqtane.ChatHubs.Commands;
 
 namespace Oqtane.ChatHubs.Hubs
 {
@@ -27,7 +28,7 @@ namespace Oqtane.ChatHubs.Hubs
         private readonly IChatHubRepository chatHubRepository;
         private readonly IChatHubService chatHubService;
         private readonly IUserRepository userRepository;
-        private readonly UserManager<IdentityUser> identityUserManager;
+        private readonly UserManager<IdentityUser> userManager;
         private readonly IRoleRepository roles;
         private readonly IUserRoleRepository userRoles;
 
@@ -45,7 +46,7 @@ namespace Oqtane.ChatHubs.Hubs
             this.chatHubRepository = chatHubRepository;
             this.chatHubService = chatHubService;
             this.userRepository = userRepository;
-            this.identityUserManager = identityUserManager;
+            this.userManager = identityUserManager;
             this.roles = roles;
             this.userRoles = userRoles;
         }
@@ -204,19 +205,30 @@ namespace Oqtane.ChatHubs.Hubs
             }
         }
 
+        private async Task<bool> ExecuteCommandManager(ChatHubUser chatHubUser, string message, int roomId)
+        {
+            var commandManager = new CommandManager(chatHubUser.UserId, Context.ConnectionId, roomId, this, chatHubService, chatHubRepository, userManager);
+            return await commandManager.TryHandleCommand(message);
+        }
+
         [AllowAnonymous]
-        public async Task SendMessage(string content, int roomId, int moduleId)
+        public async Task SendMessage(string message, int roomId, int moduleId)
         {
             ChatHubUser guest = await this.chatHubService.IdentifyGuest(Context.ConnectionId);
             if (guest != null)
             {
+
+                if (await ExecuteCommandManager(guest, message, roomId))
+                {
+                    return;
+                }
 
                 ChatHubMessage chatHubMessage = new ChatHubMessage()
                 {
                     ChatHubRoomId = roomId,
                     ChatHubUserId = guest.UserId,
                     User = guest,
-                    Content = content ?? string.Empty,
+                    Content = message ?? string.Empty,
                     Type = Enum.GetName(typeof(ChatHubMessageType), ChatHubMessageType.Guest)
                 };
                 this.chatHubRepository.AddChatHubMessage(chatHubMessage);

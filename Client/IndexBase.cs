@@ -80,13 +80,6 @@ namespace Oqtane.ChatHubs
                 await BrowserHasResized();
 
                 //await JsRuntime.InvokeAsync<object>("showChatPage");
-
-                /*
-                var browserDateTime = await browserDateTimeProvider.GetInstance();
-                currentTimeZone = browserDateTime.LocalTimeZoneInfo.DisplayName;
-                currentTimeZoneOffSet = browserDateTime.LocalTimeZoneInfo.GetUtcOffset(DateTime.Now);
-                currentLocalTime = browserDateTime.Now;
-                */
             }
 
             await base.OnAfterRenderAsync(firstRender);
@@ -238,7 +231,6 @@ namespace Oqtane.ChatHubs
                 {
                     chatUser.UserlistItemCollapsed = false;
                 }
-
                 user.UserlistItemCollapsed = true;
             }
 
@@ -247,7 +239,6 @@ namespace Oqtane.ChatHubs
 
         public async Task FixCorruptConnections_ClickedAsync()
         {
-
             try
             {
                 await this.ChatHubService.FixCorruptConnections(ModuleState.ModuleId);
@@ -256,7 +247,6 @@ namespace Oqtane.ChatHubs
             {
                 throw;
             }
-
         }
 
         public string ReplaceYoutubeLinksAsync(string message)

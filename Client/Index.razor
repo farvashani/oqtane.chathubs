@@ -30,9 +30,9 @@
     }
 
     .chat-hub-photo-mat-card {
-        color: #1a1a1a !important;
-        background-color: white !important;
+        color: #1a1a1a !important;        
         max-width: 400px;
+        background-color: white !important;
         border-radius: 0px !important;
         box-shadow: none !important;
     }
@@ -44,6 +44,7 @@
     .chat-hub-photo-mat-card-clean-margin {
         margin: 0px;
     }
+
 </style>
 
 <br />
@@ -59,16 +60,14 @@
 
     @if (ChatHubService.Connection == null || ChatHubService.Connection?.State == HubConnectionState.Disconnected)
     {
-
         <div class="form-group">
             <label for="guestUsernameInput-@ModuleState.ModuleId.ToString()">Choose your desired username:</label>
-            <input type="text" id="guestUsernameInput-@ModuleState.ModuleId.ToString()" class="form-control" @bind-value="@GuestUsername" placeholder="Gastname" />
+            <input type="text" id="guestUsernameInput-@ModuleState.ModuleId.ToString()" class="form-control" @bind-value="@GuestUsername" placeholder="Username" />
         </div>
 
         <div class="form-group">
             <button type="button" class="btn btn-sm btn-link bg-white border border-light" @onclick="@(async () => await ConnectAsGuest())">Connect to chat</button>
         </div>
-
     }
     else if (ChatHubService.Connection?.State == HubConnectionState.Connected)
     {
