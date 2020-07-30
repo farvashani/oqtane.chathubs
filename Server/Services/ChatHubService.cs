@@ -107,6 +107,30 @@ namespace Oqtane.ChatHubs.Services
             };
         }
 
+        public void IgnoreUser(ChatHubUser callerUser, ChatHubUser targetUser)
+        {
+            ChatHubIgnore chatHubIgnore = null;
+            var users = this.chatHubRepository.GetIgnoredUsers(targetUser);
+            chatHubIgnore = users.Where(u => u.ChatHubUserId == targetUser.UserId).FirstOrDefault();
+
+            if (chatHubIgnore != null)
+            {
+                chatHubIgnore.ModifiedOn = DateTime.Now;
+                this.chatHubRepository.UpdateChatHubIgnore(chatHubIgnore);
+            }
+            else
+            {
+                chatHubIgnore = new ChatHubIgnore()
+                {
+                    ChatHubUserId = callerUser.UserId,
+                    ChatHubIgnoredUserId = targetUser.UserId,
+                    User = callerUser
+                };
+
+                this.chatHubRepository.AddChatHubIgnore(chatHubIgnore);
+            }
+        }
+
         public async Task<ChatHubUser> IdentifyGuest(string connectionId)
         {
             ChatHubConnection connection = await Task.Run(() => chatHubRepository.GetConnectionByConnectionId(connectionId));

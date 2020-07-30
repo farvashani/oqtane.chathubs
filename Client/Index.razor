@@ -194,7 +194,15 @@
                                                 <Message Messages="@room.Messages" Context="item">
                                                     <SystemTemplate>
                                                         <div>
-                                                            @item.ChatHubMessageId
+                                                            <span class="text-muted">
+                                                                @string.Format("[{0}]", item.CreatedOn.ToLocalTime().ToString(ChatWindowDatePattern))
+                                                            </span>
+                                                            <span>
+                                                                <strong>@item.User.DisplayName:</strong>
+                                                            </span>
+                                                            <span>
+                                                                @(HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
+                                                            </span>
                                                         </div>
                                                     </SystemTemplate>
                                                     <AdminTemplate>

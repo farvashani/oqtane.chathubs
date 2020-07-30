@@ -147,17 +147,16 @@ namespace Oqtane.ChatHubs.Commands
 
                 if(candidates != null)
                 {
-                    switch (candidates.Count)
+                    if(candidates.Count == 1)
                     {
-                        case 1:
-                            command = commandCacheItem.Value.Command;
-                            commandName = candidates[0];
-                            break;
-                        case 0:
-                            throw new CommandNotFoundException();
-                        default:
-                            throw new CommandAmbiguityException(candidates);
+                        command = commandCacheItem.Value.Command;
+                        commandName = candidates[0];
+                        break;
                     }
+                    else if(candidates.Count == 0)
+                        throw new CommandNotFoundException();
+                    else
+                        throw new CommandAmbiguityException(candidates);
                 }
             }
 

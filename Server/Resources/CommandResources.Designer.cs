@@ -79,11 +79,20 @@ namespace Oqtane.ChatHubs.Server.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to whisper;.
+        ///   Looks up a localized string similar to ignore;block;.
         /// </summary>
-        public static string whisper {
+        public static string ignore {
             get {
-                return ResourceManager.GetString("whisper", resourceCulture);
+                return ResourceManager.GetString("ignore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to unignore;unblock;.
+        /// </summary>
+        public static string unignore {
+            get {
+                return ResourceManager.GetString("unignore", resourceCulture);
             }
         }
     }

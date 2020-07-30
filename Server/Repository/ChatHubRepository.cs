@@ -415,5 +415,15 @@ namespace Oqtane.ChatHubs.Repository
             return null;
         }
 
+        public IQueryable<ChatHubUser> GetUsersByDisplayName(string displayName)
+        {
+            IQueryable<ChatHubUser> users = db.ChatHubUser
+                .Select(u => u)
+                .Where(u => u.DisplayName == displayName)
+                .Include(u => u.Connections);
+
+            return users;
+        }
+
     }
 }

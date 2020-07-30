@@ -142,7 +142,7 @@ namespace Oqtane.ChatHubs.Hubs
                 }
                 
                 var rooms = chatHubRepository.GetChatHubRoomsByUser(guest).Active();
-                foreach (var room in rooms.Where(room => room.Type == Enum.GetName(typeof(ChatHubRoomType), ChatHubRoomType.Public)))
+                foreach (var room in rooms.Public())
                 {
                     await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.ChatHubRoomId.ToString());                    
                     if(guest.Connections.Active().Count() <= 1)
@@ -240,6 +240,24 @@ namespace Oqtane.ChatHubs.Hubs
             }
         }
 
+        public async Task SendNotification(string message, int roomId, string connectionId, ChatHubUser targetUser)
+        {
+
+            ChatHubMessage chatHubMessage = new ChatHubMessage()
+            {
+                ChatHubRoomId = roomId,
+                ChatHubUserId = targetUser.UserId,
+                User = targetUser,
+                Content = message ?? string.Empty,
+                Type = Enum.GetName(typeof(ChatHubMessageType), ChatHubMessageType.System)
+            };
+            this.chatHubRepository.AddChatHubMessage(chatHubMessage);
+
+            ChatHubMessage chatHubMessageClientModel = this.chatHubService.CreateChatHubMessageClientModel(chatHubMessage);
+            await Clients.Client(connectionId).SendAsync("AddMessage", chatHubMessageClientModel);
+
+        }
+
         [AllowAnonymous]
         public async Task<List<ChatHubUser>> GetIgnoredUsers()
         {
@@ -296,26 +314,7 @@ namespace Oqtane.ChatHubs.Hubs
                     throw new HubException("Calling user cannot be target user.");
                 }
 
-                ChatHubIgnore chatHubIgnore = null;
-                var users = this.chatHubRepository.GetIgnoredUsers(targetUser);
-                chatHubIgnore = users.Where(u => u.ChatHubUserId == targetUser.UserId).FirstOrDefault();
-
-                if (chatHubIgnore != null)
-                {
-                    chatHubIgnore.ModifiedOn = DateTime.Now;
-                    this.chatHubRepository.UpdateChatHubIgnore(chatHubIgnore);
-                }
-                else
-                {
-                    chatHubIgnore = new ChatHubIgnore()
-                    {
-                        ChatHubUserId = guest.UserId,
-                        ChatHubIgnoredUserId = targetUser.UserId,
-                        User = guest
-                    };
-
-                    this.chatHubRepository.AddChatHubIgnore(chatHubIgnore);
-                }
+                this.chatHubService.IgnoreUser(guest, targetUser);
 
                 var targetUserClientModel = this.chatHubService.CreateChatHubUserClientModel(targetUser);
                 foreach (var connection in guest.Connections.Active())
