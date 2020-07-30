@@ -95,5 +95,14 @@ namespace Oqtane.ChatHubs.Server.Resources {
                 return ResourceManager.GetString("unignore", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to whisper;asmr;.
+        /// </summary>
+        public static string whisper {
+            get {
+                return ResourceManager.GetString("whisper", resourceCulture);
+            }
+        }
     }
 }

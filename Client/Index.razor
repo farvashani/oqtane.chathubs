@@ -198,7 +198,7 @@
                                                                 @string.Format("[{0}]", item.CreatedOn.ToLocalTime().ToString(ChatWindowDatePattern))
                                                             </span>
                                                             <span>
-                                                                <strong>@item.User.DisplayName:</strong>
+                                                                <strong class="bg-danger text-white">System:</strong>
                                                             </span>
                                                             <span>
                                                                 @(HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
@@ -246,7 +246,15 @@
                                                     </GuestTemplate>
                                                     <WhisperTemplate>
                                                         <div>
-                                                            @item.ChatHubMessageId
+                                                            <span class="text-muted">
+                                                                @string.Format("[{0}]", item.CreatedOn.ToLocalTime().ToString(ChatWindowDatePattern))
+                                                            </span>
+                                                            <span>
+                                                                <strong class="bg-primary text-white">PM @item.User.DisplayName:</strong>
+                                                            </span>
+                                                            <span>
+                                                                @(HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
+                                                            </span>
                                                         </div>
                                                     </WhisperTemplate>
                                                     <MeTemplate>

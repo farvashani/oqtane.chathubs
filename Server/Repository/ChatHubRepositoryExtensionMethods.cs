@@ -27,16 +27,22 @@ namespace Oqtane.ChatHubs.Repository
             return connections.Where(c => c.Status == Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active));
         }
 
-        public static ChatHubUser Active(this IQueryable<ChatHubUser> users)
+        public static bool Online(this ChatHubUser user)
         {
-            foreach(var user in users)
+            return user.Connections.Where(c => c.Status == Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active)).Any();
+        }
+
+        public static IList<ChatHubUser> Online(this IQueryable<ChatHubUser> users)
+        {
+            List<ChatHubUser> list = new List<ChatHubUser>();
+            foreach (var user in users)
             {
-                if(user.Connections.Active().Any())
+                if (user.Connections.Active().Any())
                 {
-                    return user;
+                    list.Add(user);
                 }
             }
-            return null;
+            return list;
         }
 
         public static IQueryable<ChatHubRoom> Public(this IQueryable<ChatHubRoom> rooms)
