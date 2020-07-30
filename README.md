@@ -15,22 +15,22 @@ Edit startup.cs:
 services.AddFileReaderService();
 
 services.AddSignalR()
-                .AddHubOptions<ChatHub>(options =>
-                {
-                    options.EnableDetailedErrors = true;
-                    options.KeepAliveInterval = TimeSpan.FromSeconds(15);
-                    options.ClientTimeoutInterval = TimeSpan.FromMinutes(60);
-                })
-                .AddJsonProtocol(options =>
-                {
-                    options.PayloadSerializerOptions.PropertyNameCaseInsensitive = false;
-                    options.PayloadSerializerOptions.PropertyNamingPolicy = null;
-                });
+		.AddHubOptions<ChatHub>(options =>
+		{
+			options.EnableDetailedErrors = true;
+			options.KeepAliveInterval = TimeSpan.FromSeconds(15);
+			options.ClientTimeoutInterval = TimeSpan.FromMinutes(60);
+		})
+		.AddJsonProtocol(options =>
+		{
+			options.PayloadSerializerOptions.PropertyNameCaseInsensitive = false;
+			options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+		});
 				
-				endpoints.MapHub<ChatHub>("/chathub", options =>
-                {
-                    options.Transports = HttpTransportType.WebSockets | HttpTransportType.LongPolling;
-                });
+endpoints.MapHub<ChatHub>("/chathub", options =>
+{
+	options.Transports = HttpTransportType.WebSockets | HttpTransportType.LongPolling;
+});
 ```
 			
 Edit TenantResolver.cs (workarround for signalr hub http context multiple tenant resolving):
