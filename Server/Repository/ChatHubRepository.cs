@@ -34,7 +34,7 @@ namespace Oqtane.ChatHubs.Repository
         {
             return db.Entry(user)
                       .Collection(u => u.UserRooms)
-                      .Query().Select(u => u.Room);
+                      .Query().Select(u => u.Room);            
         }
         public ChatHubRoom AddChatHubRoom(ChatHubRoom ChatHubRoom)
         {
@@ -184,11 +184,8 @@ namespace Oqtane.ChatHubs.Repository
             return db.ChatHubUser.Include(u => u.Connections).Where(u => u.Connections.Any(c => c.Status == Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active)));
         }
         public IQueryable<ChatHubUser> GetOnlineUsers(ChatHubRoom room)
-        {
-            //IQueryable<ChatHubUser> users = db.ChatHubRoomChatHubUser.Where(x => x.Room_User_ChatHubRoomId == room.ChatHubRoomId).Include(x => x.User).ThenInclude(x => x.Connections).Select(x => x.User).Where(u => u.Connections.Any(c => c.ConnectionStatus == (int)ChatHubConnectionStatus.Active));
-            //IQueryable<ChatHubUser> users = db.ChatHubUser.Where(user => user.UserRooms.Any(user_room => user_room.Room_User_ChatHubRoomId == room.ChatHubRoomId)).Include(x => x.Connections).Where(u => u.Connections.Any(c => c.ConnectionStatus == (int)ChatHubConnectionStatus.Active));
+        {            
             IQueryable<ChatHubUser> users = db.Entry(room).Collection(r => r.RoomUsers).Query().Include(ru => ru.User).ThenInclude(u => u.Connections).Select(ru => ru.User).Where(u => u.Connections.Any(c => c.Status == Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active)));
-
             return users;
         }
 
@@ -218,6 +215,7 @@ namespace Oqtane.ChatHubs.Repository
         {
             return await db.ChatHubConnection
                 .Include(c => c.User)
+                .ThenInclude(u => u.UserRooms)
                 .FirstOrDefaultAsync(c => c.ConnectionId == connectionId);
         }
 
@@ -373,6 +371,7 @@ namespace Oqtane.ChatHubs.Repository
         {
             var item = await db.ChatHubUser
                             .Include(u => u.Connections)
+                            .Include(u => u.UserRooms)
                             .Where(u => u.UserId == id)
                             .Select(u => new
                             {
@@ -389,7 +388,7 @@ namespace Oqtane.ChatHubs.Repository
                 return user;
             }
 
-            return null;
+            return null;            
         }
 
         public async Task<ChatHubUser> GetUserByUserNameAsync(string username)
@@ -412,23 +411,15 @@ namespace Oqtane.ChatHubs.Repository
                 return user;
             }
 
-            return null;
+            return null;            
         }
 
-        public ChatHubUser GetUserByDisplayName(string displayName)
+        public async Task<ChatHubUser> GetUserByDisplayName(string displayName)
         {
-            var items = db.ChatHubUser
-                .Include(u => u.Connections)
-                .Where(u => u.DisplayName == displayName);
-
-            foreach(var item in items)
-            {
-                if (item.Connections.Active().Any())
-                    return item;
-            }
-
-            return null;
+            ChatHubUser user = await db.ChatHubUser.Include(u => u.Connections).Where(u => u.DisplayName == displayName).Where(u => u.Connections.Any(c => c.Status == Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active))).FirstOrDefaultAsync();
+            return user;
         }
 
     }
 }
+ 

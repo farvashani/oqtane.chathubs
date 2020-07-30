@@ -24,7 +24,7 @@ namespace Oqtane.ChatHubs.Commands
 
             string targetUserName = args[0];
 
-            ChatHubUser targetUser = context.ChatHubRepository.GetUserByDisplayName(targetUserName);
+            ChatHubUser targetUser = await context.ChatHubRepository.GetUserByDisplayName(targetUserName);
             targetUser = targetUser == null ? await context.ChatHubRepository.GetUserByUserNameAsync(targetUserName) : targetUser;
             if (targetUser == null)
             {
