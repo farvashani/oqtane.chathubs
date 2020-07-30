@@ -52,7 +52,7 @@ namespace Oqtane.ChatHubs.Repository
 
         Task<ChatHubUser> GetUserByIdAsync(int id);
         Task<ChatHubUser> GetUserByUserNameAsync(string username);
-        IQueryable<ChatHubUser> GetUsersByDisplayName(string displayName);
+        Task<ChatHubUser> GetUserByDisplayNameAsync(string displayName);
 
     }
 }

@@ -415,14 +415,26 @@ namespace Oqtane.ChatHubs.Repository
             return null;
         }
 
-        public IQueryable<ChatHubUser> GetUsersByDisplayName(string displayName)
+        public async Task<ChatHubUser> GetUserByDisplayNameAsync(string displayName)
         {
-            IQueryable<ChatHubUser> users = db.ChatHubUser
-                .Select(u => u)
-                .Where(u => u.DisplayName == displayName)
-                .Include(u => u.Connections);
+            var item = await db.ChatHubUser
+                .Include(u => u.Connections)
+                .Where(u => u.DisplayName == displayName)                
+                .Select(u => new
+                {
+                    User = u,
+                    Connections = u.Connections.OrderByDescending(c => c.Status == Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active)).Take(100),
+                }).FirstOrDefaultAsync();
 
-            return users;
+            if (item != null)
+            {
+                ChatHubUser user = item.User;
+                user.Connections = item.User.Connections;
+
+                return user;
+            }
+
+            return null;
         }
 
     }
