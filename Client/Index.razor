@@ -263,7 +263,15 @@
                                                     </WhisperTemplate>
                                                     <MeTemplate>
                                                         <div>
-                                                            @item.ChatHubMessageId
+                                                            <span class="text-muted">
+                                                                @string.Format("[{0}]", item.CreatedOn.ToLocalTime().ToString(ChatWindowDatePattern))
+                                                            </span>
+                                                            <span>
+                                                                <span class="text-muted">@item.User.DisplayName</span>
+                                                            </span>
+                                                            <span class="text-muted">
+                                                                @(HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
+                                                            </span>
                                                         </div>
                                                     </MeTemplate>
                                                     <EnterLeaveTemplate>
