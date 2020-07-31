@@ -86,6 +86,7 @@ namespace Oqtane.ChatHubs.Services
                 Content = message.Content,
                 Type = message.Type,
                 Photos = photos,
+                CommandMetaDatas = message.CommandMetaDatas,
                 CreatedOn = message.CreatedOn,
                 CreatedBy = message.CreatedBy
             };

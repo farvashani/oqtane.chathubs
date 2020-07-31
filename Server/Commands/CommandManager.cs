@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Localization;
 using System.Threading.Tasks;
 using System.Composition.Hosting;
 using Oqtane.ChatHubs.Hubs;
 using Oqtane.ChatHubs.Services;
 using Oqtane.ChatHubs.Repository;
-using Oqtane.Modules;
 using System.Dynamic;
+using System.Resources;
+using Oqtane.ChatHubs.Server.Resources;
+using System.Globalization;
+using Oqtane.Shared.Models;
 
 namespace Oqtane.ChatHubs.Commands
 {
@@ -163,17 +165,38 @@ namespace Oqtane.ChatHubs.Commands
             return command;
         }
 
-        private static IList<ICommand> GetCommands()
+        public static IList<ICommand> GetCommands()
         {
             var configuration = new ContainerConfiguration().WithAssembly(typeof(CommandManager).Assembly);
             var container = configuration.CreateContainer();
             IList<ICommand> iCommands = container.GetExports<ICommand>("ICommand").ToList();
             return iCommands;
-        }        
-        public static IEnumerable<CommandMetaData> GetCommandsMetaData()
+        }
+
+        public static IEnumerable<ChatHubCommandMetaData> GetCommandsMetaDataByUserRole(string role)
+        {
+            var resourceManager = new ResourceManager(typeof(CommandResources));
+            IEnumerable<ChatHubCommandMetaData> commands = from c in _commands.Value
+                                                     let commandAttribute = c.GetType()
+                                                                             .GetCustomAttributes(true)
+                                                                             .OfType<CommandAttribute>()
+                                                                             .FirstOrDefault()
+                                                     where commandAttribute != null && commandAttribute.Roles.Contains(role)
+                                                     select new ChatHubCommandMetaData
+                                                     {
+                                                         ResourceName = commandAttribute.ResourceName,
+                                                         Arguments = commandAttribute.Arguments,
+                                                         Usage = commandAttribute.Usage,
+                                                         Roles = commandAttribute.Roles,
+                                                         Commands = resourceManager.GetString(commandAttribute.ResourceName, CultureInfo.CurrentCulture).Split(';')
+                                                     };
+            return commands;
+        }
+
+        public static IEnumerable<ChatHubCommandMetaData> GetCommandsMetaData()
         {
             var commandsMetaData = _commands.Value.Where(x => x.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault() != null)
-                                        .Select(y => new CommandMetaData {
+                                        .Select(y => new ChatHubCommandMetaData {
                                             Commands = y.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault().Commands,
                                             Arguments = y.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault().Arguments,
                                             Roles = y.GetType().GetCustomAttributes(true).OfType<CommandAttribute>().FirstOrDefault().Roles,

@@ -10,7 +10,7 @@ using System;
 namespace Oqtane.ChatHubs.Commands
 {
     [Export("ICommand", typeof(ICommand))]
-    [Command("ignore", "[username]", Constants.AllUsersRole , "Usage: /ignore | /block")]
+    [Command("ignore", "[username]", new string[] { Constants.AllUsersRole, Constants.AdminRole }, "Usage: /ignore | /block")]
     public class IgnoreCommand : BaseCommand
     {
         public override async Task Execute(CommandServicesContext context, CommandCallerContext callerContext, string[] args, ChatHubUser caller)

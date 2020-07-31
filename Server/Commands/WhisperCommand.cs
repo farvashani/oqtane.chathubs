@@ -12,7 +12,7 @@ using System.Collections.Generic;
 namespace Oqtane.ChatHubs.Commands
 {
     [Export("ICommand", typeof(ICommand))]
-    [Command("whisper", "[username]", Constants.AllUsersRole , "Usage: /whisper | /asmr")]
+    [Command("whisper", "[username]", new string[] { Constants.AllUsersRole, Constants.AdminRole }, "Usage: /whisper | /asmr")]
     public class WhisperCommand : BaseCommand
     {
         public override async Task Execute(CommandServicesContext context, CommandCallerContext callerContext, string[] args, ChatHubUser caller)

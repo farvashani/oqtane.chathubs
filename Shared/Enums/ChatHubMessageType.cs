@@ -15,6 +15,7 @@ namespace Oqtane.Shared.Enums
         Connect_Disconnect,
         Whisper,
         Me,
-        Image
+        Image,
+        Commands
     }
 }

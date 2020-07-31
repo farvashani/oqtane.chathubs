@@ -3,18 +3,24 @@ using Oqtane.Shared.Models;
 using System.Composition;
 using System.Threading.Tasks;
 using Oqtane.Shared;
+using System.Collections.Generic;
+using System.Linq;
+using System;
+using Oqtane.Shared.Enums;
 
 namespace Oqtane.ChatHubs.Commands
 {
     [Export("ICommand", typeof(ICommand))]
-    [Command("clear", "[]", new string[] { Constants.AllUsersRole, Constants.AdminRole } , "Usage: /clear | /recycle")]
-    public class ClearCommand : BaseCommand
+    [Command("commands", "[]", new string[] { Constants.AllUsersRole, Constants.AdminRole }, "Usage: /commands | /list-commands")]
+    public class ListCommandsCommand : BaseCommand
     {
+
         public override async Task Execute(CommandServicesContext context, CommandCallerContext callerContext, string[] args, ChatHubUser caller)
         {
 
-            await context.ChatHub.Clients.Client(callerContext.ConnectionId).SendAsync("ClearHistory", callerContext.RoomId);
+            await context.ChatHub.SendCommandMetaDatas(callerContext.RoomId);            
 
         }
+
     }
 }

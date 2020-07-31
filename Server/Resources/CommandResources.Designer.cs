@@ -70,11 +70,11 @@ namespace Oqtane.ChatHubs.Server.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to help;info;.
+        ///   Looks up a localized string similar to commands;list-commands;.
         /// </summary>
-        public static string help {
+        public static string commands {
             get {
-                return ResourceManager.GetString("help", resourceCulture);
+                return ResourceManager.GetString("commands", resourceCulture);
             }
         }
         

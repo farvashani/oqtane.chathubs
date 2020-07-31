@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using Oqtane.Shared;
 using Microsoft.EntityFrameworkCore;
 using Oqtane.Shared.Models;
-using Oqtane.Modules;
 using Oqtane.ChatHubs.Services;
 using Oqtane.ChatHubs.Repository;
 using Microsoft.AspNetCore.Http;
@@ -135,7 +134,7 @@ namespace Oqtane.ChatHubs.Hubs
             ChatHubUser guest = await this.chatHubService.IdentifyGuest(Context.ConnectionId);
             if (guest != null)
             {
-                foreach(var connection in guest.Connections)
+                foreach(var connection in guest.Connections.Active())
                 {
                     connection.Status = Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Inactive);
                     chatHubRepository.UpdateChatHubConnection(connection);
@@ -162,7 +161,6 @@ namespace Oqtane.ChatHubs.Hubs
             ChatHubUser guest = await this.chatHubService.IdentifyGuest(Context.ConnectionId);
             if (guest != null)
             {
-
                 ChatHubRoom room = chatHubRepository.GetChatHubRoom(roomId);
                 ChatHubRoomChatHubUser room_user = new ChatHubRoomChatHubUser()
                 {
@@ -189,7 +187,6 @@ namespace Oqtane.ChatHubs.Hubs
             ChatHubUser guest = await this.chatHubService.IdentifyGuest(Context.ConnectionId);
             if (guest != null)
             {
-
                 this.chatHubRepository.DeleteChatHubRoomChatHubUser(roomId, guest.UserId);
                 ChatHubRoom room = chatHubRepository.GetChatHubRoom(roomId);
                 ChatHubRoom chatHubRoomClientModel = await this.chatHubService.CreateChatHubRoomClientModelAsync(room);
@@ -209,6 +206,31 @@ namespace Oqtane.ChatHubs.Hubs
         {
             var commandManager = new CommandManager(chatHubUser.UserId, Context.ConnectionId, roomId, this, chatHubService, chatHubRepository, userManager);
             return await commandManager.TryHandleCommand(message);
+        }
+
+        [AllowAnonymous]
+        public async Task SendCommandMetaDatas(int roomId)
+        {
+            ChatHubUser guest = await this.chatHubService.IdentifyGuest(Context.ConnectionId);
+            if (guest != null)
+            {
+                var callerUserRole = Constants.AllUsersRole;
+                List<ChatHubCommandMetaData> commandMetaDatas = CommandManager.GetCommandsMetaDataByUserRole(callerUserRole).ToList();
+
+                ChatHubMessage chatHubMessage = new ChatHubMessage()
+                {
+                    ChatHubRoomId = roomId,
+                    ChatHubUserId = guest.UserId,
+                    User = guest,
+                    Content = string.Empty,
+                    Type = Enum.GetName(typeof(ChatHubMessageType), ChatHubMessageType.Commands),
+                    CommandMetaDatas = commandMetaDatas
+                };
+                this.chatHubRepository.AddChatHubMessage(chatHubMessage);
+
+                ChatHubMessage chatHubMessageClientModel = this.chatHubService.CreateChatHubMessageClientModel(chatHubMessage);
+                await Clients.Clients(guest.Connections.Active().Select(c => c.ConnectionId).ToArray<string>()).SendAsync("AddMessage", chatHubMessageClientModel);
+            }
         }
 
         [AllowAnonymous]
@@ -242,7 +264,6 @@ namespace Oqtane.ChatHubs.Hubs
 
         public async Task SendNotification(string message, int roomId, string connectionId, ChatHubUser targetUser)
         {
-
             ChatHubMessage chatHubMessage = new ChatHubMessage()
             {
                 ChatHubRoomId = roomId,
@@ -255,7 +276,6 @@ namespace Oqtane.ChatHubs.Hubs
 
             ChatHubMessage chatHubMessageClientModel = this.chatHubService.CreateChatHubMessageClientModel(chatHubMessage);
             await Clients.Client(connectionId).SendAsync("AddMessage", chatHubMessageClientModel);
-
         }
 
         [AllowAnonymous]

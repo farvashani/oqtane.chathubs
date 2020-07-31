@@ -38,6 +38,9 @@
         case ChatHubMessageType.Image:
             @ImageTemplate(message)
             break;
+        case ChatHubMessageType.Commands:
+            @CommandsTemplate(message)
+            break;
         default:
             @GuestTemplate(message)
             break;
@@ -66,12 +69,15 @@
 
     [Parameter]
     public RenderFragment<ChatHubMessage> EnterLeaveTemplate { get; set; }
-    
+
     [Parameter]
     public RenderFragment<ChatHubMessage> ConnectDisconnectTemplate { get; set; }
 
     [Parameter]
     public RenderFragment<ChatHubMessage> ImageTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<ChatHubMessage> CommandsTemplate { get; set; }
 
     [Parameter]
     public ICollection<ChatHubMessage> Messages { get; set; }

@@ -26,6 +26,10 @@
         border: 1px solid #dddddd;
     }
 
+    .font-size-075rem {
+        font-size: 0.75rem;
+    }
+
     .visibility-collapse {
         visibility: collapse;
     }
@@ -198,7 +202,7 @@
                                                                 @string.Format("[{0}]", item.CreatedOn.ToLocalTime().ToString(ChatWindowDatePattern))
                                                             </span>
                                                             <span>
-                                                                <strong class="bg-danger text-white">System:</strong>
+                                                                <strong><span class="bg-danger text-white">System</span>:</strong>
                                                             </span>
                                                             <span>
                                                                 @(HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
@@ -250,7 +254,7 @@
                                                                 @string.Format("[{0}]", item.CreatedOn.ToLocalTime().ToString(ChatWindowDatePattern))
                                                             </span>
                                                             <span>
-                                                                <strong class="bg-primary text-white">PM @item.User.DisplayName:</strong>
+                                                                <strong><span class="bg-primary text-white">PM @item.User.DisplayName</span>:</strong>
                                                             </span>
                                                             <span>
                                                                 @(HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
@@ -298,6 +302,38 @@
 
                                                         }
                                                     </ImageTemplate>
+                                                    <CommandsTemplate>
+
+                                                        <div>
+                                                            @if (item.CommandMetaDatas != null && item.CommandMetaDatas.Any())
+                                                            {
+                                                            <div class="table-responsive-sm">
+                                                                <table class="table table-sm font-size-075rem">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col">Name</th>
+                                                                            <th scope="col">Roles</th>
+                                                                            <th scope="col">Usage</th>
+                                                                            <th scope="col">Arguments</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach (var command in item.CommandMetaDatas)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>/@command.ResourceName</td>
+                                                                                <td>@string.Join(" | ", command.Roles)</td>
+                                                                                <td>@command.Usage</td>
+                                                                                <td>@command.Arguments</td>
+                                                                            </tr>
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            }
+                                                        </div>
+
+                                                    </CommandsTemplate>
                                                 </Message>
 
                                             </div>

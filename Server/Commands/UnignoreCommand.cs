@@ -10,7 +10,7 @@ using System;
 namespace Oqtane.ChatHubs.Commands
 {
     [Export("ICommand", typeof(ICommand))]
-    [Command("unignore", "[]", Constants.AllUsersRole , "Usage: /unignore | /unblock")]
+    [Command("unignore", "[]", new string[] { Constants.AllUsersRole, Constants.AdminRole }, "Usage: /unignore | /unblock")]
     public class UnignoreCommand : BaseCommand
     {
         public override async Task Execute(CommandServicesContext context, CommandCallerContext callerContext, string[] args, ChatHubUser caller)

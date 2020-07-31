@@ -120,8 +120,8 @@
   <data name="clear" xml:space="preserve">
     <value>clear;recycle;free;</value>
   </data>
-  <data name="help" xml:space="preserve">
-    <value>help;info;</value>
+  <data name="commands" xml:space="preserve">
+    <value>commands;list-commands;</value>
   </data>
   <data name="ignore" xml:space="preserve">
     <value>ignore;block;</value>
