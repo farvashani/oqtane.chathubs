@@ -302,7 +302,7 @@ namespace Oqtane.ChatHubs
                 message = exception.Message;
             }
 
-            BlazorAlertsService.NewBlazorAlert(message, "[Javascript Application]");
+            BlazorAlertsService.NewBlazorAlert(message, "[Javascript Application]", PositionType.Absolute);
         }
 
         public void Dispose()

@@ -262,7 +262,6 @@ namespace Oqtane.ChatHubs.Hubs
                 ChatHubMessage chatHubMessageClientModel = this.chatHubService.CreateChatHubMessageClientModel(chatHubMessage);
                 var connectionsIds = this.chatHubService.GetAllExceptConnectionIds(guest);
                 await Clients.GroupExcept(roomId.ToString(), connectionsIds).SendAsync("AddMessage", chatHubMessageClientModel);
-
             }
         }
 

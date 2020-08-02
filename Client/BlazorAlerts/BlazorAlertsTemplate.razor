@@ -2,7 +2,7 @@
 
 @foreach(var item in Items)
 {
-    <div @key="item" class="blazoralerts-item">
+    <div @key="item" class="blazoralerts-item" style="position: @item.Position.ToString().ToLower();">
         <div class="blazoralerts-item-header">
             @RenderHeadline(item.Headline)
             @RenderCloseButton(item)

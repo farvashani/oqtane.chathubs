@@ -24,7 +24,7 @@ namespace Oqtane.ChatHubs.BlazorAlerts
             this.BlazorAlertsService.OnAlert += OnAlertExecute;
         }
 
-        public async void OnAlertExecute(string message, string heading)
+        public async void OnAlertExecute(string message, string heading, PositionType position)
         {
             await InvokeAsync(() =>
             {
@@ -33,6 +33,7 @@ namespace Oqtane.ChatHubs.BlazorAlerts
                     Guid = Guid.NewGuid(),
                     Message = message,
                     Headline = heading,
+                    Position = position,
                     CreatedOn = DateTime.Now
                 };
 

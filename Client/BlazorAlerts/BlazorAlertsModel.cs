@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace Oqtane.ChatHubs.BlazorAlerts
 {
@@ -13,6 +10,8 @@ namespace Oqtane.ChatHubs.BlazorAlerts
         public string Message { get; set; }
 
         public string Headline { get; set; }
+
+        public PositionType Position { get; set; }
 
         public DateTime CreatedOn { get; set; }
 

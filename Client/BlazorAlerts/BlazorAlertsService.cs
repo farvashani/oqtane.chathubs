@@ -12,7 +12,7 @@ namespace Oqtane.ChatHubs.BlazorAlerts
     {
 
         private readonly HttpClient _httpClient;
-        public event Action<string, string> OnAlert;
+        public event Action<string, string, PositionType> OnAlert;
 
         public List<BlazorAlertsModel> BlazorAlerts { get; set; } = new List<BlazorAlertsModel>();
 
@@ -21,9 +21,9 @@ namespace Oqtane.ChatHubs.BlazorAlerts
             this._httpClient = httpClient;
         }
 
-        public void NewBlazorAlert(string message, string heading)
+        public void NewBlazorAlert(string message, string heading, PositionType position = PositionType.Fixed)
         {
-            OnAlert?.Invoke(message, heading);
+            this.OnAlert?.Invoke(message, heading, position);
         }
 
         public void RemoveAlert(Guid guid)

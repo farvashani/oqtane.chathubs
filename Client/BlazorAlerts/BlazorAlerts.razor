@@ -8,13 +8,13 @@
 <style type="text/css">
 
     .blazoralerts-container {
-        position: relative;
-        z-index: 1000;
+        position: static;        
     }
 
     .blazoralerts-item {
         position: absolute; /* position relative to module container somehow feels wrong */
         position: fixed;
+        z-index: 1000;
         width: 400px;
         height: 240px;
         top: 0;
@@ -32,7 +32,7 @@
         height: 32px;
         padding: 3px 5px;
         color: #fff;
-        background-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(49,94,182,1));
+        background-image: linear-gradient(to bottom, rgba(255,255,255,1), rgba(49,94,182,1));
     }
 
     .blazoralerts-item-body {
@@ -42,6 +42,7 @@
         padding: 30px 45px;
         background-color: rgba(229,226,232,1);
     }
+
 </style>
 
 @if (BlazorAlertsService.BlazorAlerts.Any())
@@ -55,9 +56,9 @@
             </RenderHeadline>
             <RenderCloseButton Context="item">
                 <button type="button" @onclick="@(() => CloseAlert_OnClicked(item.Guid))" class="btn btn-sm btn-danger float-right" aria-label="Close" style="font-size: 2rem; line-height: 0.75; padding: 0;">
-                    <span aria-hidden="true" style="position: relative; top: -3px;">&times;</span>
+                    <span aria-hidden="true" style="position: relative; top: -4px;">&times;</span>
                 </button>
-            </RenderCloseButton>            
+            </RenderCloseButton>
             <RenderImage Context="item">
                 <img src="/modules/oqtane.chathubs/chathub/images/hub-exception.png" class="img-fluid" width="72" />
             </RenderImage>
@@ -65,7 +66,7 @@
                 <p>@item.Message</p>
             </RenderMessage>
             <RenderOkButton Context="item">
-                <button type="button" @onclick="@(() => CloseAlert_OnClicked(item.Guid))" class="btn btn-sm btn-link bg-light mt-5 w-100" aria-label="Close">
+                <button type="button" @onclick="@(() => CloseAlert_OnClicked(item.Guid))" class="btn btn-sm btn-link bg-light border-secondary mt-4 w-100" aria-label="Close">
                     Okay
                 </button>
             </RenderOkButton>
