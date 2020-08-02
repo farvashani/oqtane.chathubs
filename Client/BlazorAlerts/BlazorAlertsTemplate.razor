@@ -1,0 +1,47 @@
+﻿@namespace Oqtane.ChatHubs.BlazorAlerts
+
+@foreach(var item in Items)
+{
+    <div @key="item" class="blazoralerts-item">
+        <div class="blazoralerts-item-header">
+            @RenderHeadline(item.Headline)
+            @RenderCloseButton(item)
+        </div>
+        <div class="blazoralerts-item-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-3">@RenderImage(item)</div>
+                    <div class="col-sm-9">@RenderMessage(item)</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 offset-sm-3">
+                        @RenderOkButton(item)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public RenderFragment<string> RenderHeadline { get; set; }
+
+    [Parameter]
+    public RenderFragment<BlazorAlertsModel> RenderCloseButton { get; set; }
+
+    [Parameter]
+    public RenderFragment<BlazorAlertsModel> RenderImage { get; set; }
+
+    [Parameter]
+    public RenderFragment<BlazorAlertsModel> RenderMessage { get; set; }
+
+    [Parameter]
+    public RenderFragment<BlazorAlertsModel> RenderOkButton { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<BlazorAlertsModel> Items { get; set; }
+
+}

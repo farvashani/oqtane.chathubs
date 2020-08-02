@@ -11,6 +11,8 @@ using Oqtane.Services;
 using System.Linq;
 using System.Timers;
 using Oqtane.Shared.Models;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.JSInterop;
 
 namespace Oqtane.ChatHubs.Services
 {
@@ -19,7 +21,9 @@ namespace Oqtane.ChatHubs.Services
 
         private readonly HttpClient HttpClient;
         private readonly NavigationManager NavigationManager;
-        private SiteState SiteState;
+        private readonly SiteState SiteState;
+        private readonly IJSRuntime JSRuntime;
+
         private int ModuleId;
 
         public HubConnection Connection { get; set; }
@@ -44,14 +48,16 @@ namespace Oqtane.ChatHubs.Services
         public event EventHandler<ChatHubUser> OnAddIgnoredByUserEvent;
         public event EventHandler<ChatHubUser> OnRemoveIgnoredByUserEvent;
         public event EventHandler<int> OnClearHistoryEvent;
+        public event EventHandler<dynamic> OnExceptionEvent;
 
         private Timer GetLobbyRoomsTimer = new Timer();
 
-        public ChatHubService(HttpClient http, SiteState sitestate, NavigationManager NavigationManager, int ModuleId) : base(http)
+        public ChatHubService(HttpClient http, SiteState sitestate, NavigationManager NavigationManager, IJSRuntime JSRuntime, int ModuleId) : base(http)
         {
             this.HttpClient = http;
             this.SiteState = sitestate;
             this.NavigationManager = NavigationManager;
+            this.JSRuntime = JSRuntime;
             this.ModuleId = ModuleId;
 
             this.OnConnectedEvent += OnConnectedExecute;
@@ -101,9 +107,16 @@ namespace Oqtane.ChatHubs.Services
 
         public void RegisterHubConnectionHandlers()
         {
+
             Connection.Closed += (error) =>
             {
+                if (error != null && error.GetType() == typeof(HubException))
+                {
+                    this.HandleException(new Exception(error.Message, error));
+                }
+
                 this.Rooms.Clear();
+                this.UpdateUI();
                 return Task.CompletedTask;
             };
 
@@ -126,7 +139,7 @@ namespace Oqtane.ChatHubs.Services
             {
                 if (task.IsCompleted)
                 {
-
+                    this.HandleException(task);
                 }
             });
         }
@@ -137,7 +150,7 @@ namespace Oqtane.ChatHubs.Services
             {
                 if (task.IsCompleted)
                 {
-
+                    this.HandleException(task);
                 }
             });
         }
@@ -148,7 +161,7 @@ namespace Oqtane.ChatHubs.Services
             {
                 if (task.IsCompleted)
                 {
-
+                    this.HandleException(task);
                 }
             });
         }
@@ -428,6 +441,18 @@ namespace Oqtane.ChatHubs.Services
         {
             await HttpClient.DeleteAsync(apiurl + "/deleteroomimage/" + ChatHubRoomId + "?moduleid=" + ModuleId + "&entityid=" + ModuleId);
         }
+
+        private void HandleException(Task task)
+        {
+            if (task.Exception != null)
+            {
+                this.HandleException(task.Exception);
+            }
+        }
+        private void HandleException(Exception exception)
+        {
+            this.OnExceptionEvent.Invoke(this, new { Exception = exception, ConnectedUser = this.ConnectedUser });
+        }        
 
         public async Task FixCorruptConnections(int ModuleId)
         {

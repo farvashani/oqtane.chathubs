@@ -73,6 +73,20 @@ namespace Oqtane.ChatHubs.Repository
                 throw;
             }
         }
+        public ChatHubRoom GetChatHubRoomOneVsOne(int userId1, int userId2)
+        {
+            try
+            {
+                return db.ChatHubRoom.Include(item => item.Users)
+                    .Where(item => item.Type == Enum.GetName(typeof(ChatHubRoomType), ChatHubRoomType.OneVsOne))
+                    .Where(item => item.Users.Any(u => u.UserId == userId1) && item.Users.Any(u => u.UserId == userId2))
+                    .FirstOrDefault();
+            }
+            catch
+            {
+                throw;
+            }
+        }
         public void DeleteChatHubRoom(int ChatHubRoomId, int ModuleId)
         {
             try
@@ -227,7 +241,7 @@ namespace Oqtane.ChatHubs.Repository
                 db.SaveChanges();
                 return ChatHubUser;
             }
-            catch (Exception ex)
+            catch
             {
                 throw;
             }

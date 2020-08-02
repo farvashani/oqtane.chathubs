@@ -11,10 +11,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Oqtane.ChatHubs;
 using BlazorStrap;
 using System.Text.RegularExpressions;
 using Oqtane.Shared.Models;
+using Microsoft.AspNetCore.SignalR;
+using Oqtane.ChatHubs.BlazorAlerts;
 
 namespace Oqtane.ChatHubs
 {
@@ -22,24 +23,25 @@ namespace Oqtane.ChatHubs
     {
 
         [Inject]
-        public IJSRuntime JsRuntime { get; set; }
+        protected IJSRuntime JSRuntime { get; set; }
         [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        protected NavigationManager NavigationManager { get; set; }
         [Inject]
-        public HttpClient HttpClient { get; set; }
+        protected HttpClient HttpClient { get; set; }
         [Inject]
-        public SiteState SiteState { get; set; }
+        protected SiteState SiteState { get; set; }
         [Inject]
-        public ISettingService SettingService { get; set; }
-
-        public Dictionary<string, string> settings { get; set; }
+        protected ISettingService SettingService { get; set; }
 
         public ChatHubService ChatHubService { get; set; }
         public BrowserResizeService BrowserResizeService { get; set; }
         public ScrollService ScrollService { get; set; }
+        public BlazorAlertsService BlazorAlertsService { get; set; }
+
+        public string MessageWindowHeight { get; set; }
+        public string UserlistWindowHeight { get; set; }
 
         public string GuestUsername { get; set; } = string.Empty;
-
         public ChatHubRoom contextRoom { get; set; }
 
         public List<ChatHubRoom> rooms;
@@ -48,12 +50,9 @@ namespace Oqtane.ChatHubs
         public int InnerHeight = 0;
         public int InnerWidth = 0;
 
-        [Parameter]
-        public string MessageWindowHeight { get; set; }
-        [Parameter]
-        public string UserlistWindowHeight { get; set; }
-
         public static string ChatWindowDatePattern = @"HH:mm:ss";
+
+        public Dictionary<string, string> settings { get; set; }
 
         public IndexBase()
         {
@@ -62,12 +61,14 @@ namespace Oqtane.ChatHubs
 
         protected override void OnInitialized()
         {
-            this.ChatHubService = new ChatHubService(HttpClient, SiteState, NavigationManager, ModuleState.ModuleId);
-            this.BrowserResizeService = new BrowserResizeService(HttpClient, JsRuntime);
-            this.ScrollService = new ScrollService(HttpClient, JsRuntime);
+            this.ChatHubService = new ChatHubService(HttpClient, SiteState, NavigationManager, JSRuntime, ModuleState.ModuleId);
+            this.BrowserResizeService = new BrowserResizeService(HttpClient, JSRuntime);
+            this.ScrollService = new ScrollService(HttpClient, JSRuntime);
+            this.BlazorAlertsService = new BlazorAlertsService(HttpClient);
             
             this.ChatHubService.UpdateUI += UpdateUIStateHasChanged;
             this.ChatHubService.OnAddChatHubMessageEvent += OnAddChatHubMessageExecute;
+            this.ChatHubService.OnExceptionEvent += OnExceptionExecute;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -76,7 +77,7 @@ namespace Oqtane.ChatHubs
             if (firstRender)
             {
                 BrowserResizeService.OnResize += BrowserHasResized;
-                await JsRuntime.InvokeAsync<object>("browserResize.registerResizeCallback");
+                await JSRuntime.InvokeAsync<object>("browserResize.registerResizeCallback");
                 await BrowserHasResized();
 
                 //await JsRuntime.InvokeAsync<object>("showChatPage");
@@ -122,7 +123,6 @@ namespace Oqtane.ChatHubs
         {
             try
             {
-                ChatHubService BlogService = new ChatHubService(HttpClient, SiteState, NavigationManager, ModuleState.ModuleId);
                 await ChatHubService.DeleteChatHubRoomAsync(id, ModuleState.ModuleId);
                 await logger.LogInformation("Room Deleted {ChatHubRoomId}", id);
                 NavigationManager.NavigateTo(NavigateUrl());
@@ -285,6 +285,24 @@ namespace Oqtane.ChatHubs
             }
 
             return message;
+        }
+
+        public async void OnExceptionExecute(object sender, dynamic dynamicObject)
+        {
+            Exception exception = dynamicObject.Exception;
+            ChatHubUser contextUser = dynamicObject.ConnectedUser;
+
+            string message = string.Empty;
+            if (exception.InnerException != null && exception.InnerException is HubException)
+            {
+                message = exception.InnerException.Message.Substring(exception.InnerException.Message.IndexOf("HubException"));
+            }
+            else
+            {
+                message = exception.Message;
+            }
+
+            BlazorAlertsService.NewBlazorAlert(message, "[Javascript Application]");
         }
 
         public void Dispose()

@@ -54,7 +54,7 @@ namespace Oqtane.ChatHubs
         {
             try
             {
-                this.ChatHubService = new ChatHubService(HttpClient, SiteState, NavigationManager, ModuleState.ModuleId);
+                this.ChatHubService = new ChatHubService(HttpClient, SiteState, NavigationManager, JsRuntime, ModuleState.ModuleId);
                 this.ChatHubService.UpdateUI += UpdateUIStateHasChanged;
 
                 await this.InitContextRoomAsync();
@@ -70,7 +70,7 @@ namespace Oqtane.ChatHubs
         {
             try
             {
-                this.ChatHubService = new ChatHubService(HttpClient, SiteState, NavigationManager, ModuleState.ModuleId);
+                this.ChatHubService = new ChatHubService(HttpClient, SiteState, NavigationManager, JsRuntime, ModuleState.ModuleId);
                 this.ChatHubService.UpdateUI += UpdateUIStateHasChanged;
 
                 if (PageState.QueryString.ContainsKey("roomid"))

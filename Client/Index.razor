@@ -2,51 +2,44 @@
 
 @inherits IndexBase
 
-@inject NavigationManager NavigationManager
-@inject HttpClient http
-@inject SiteState sitestate
-@inject ISettingService SettingService
-
 @using Microsoft.AspNetCore.SignalR.Client
 @using System.Collections.Generic
 @using System.Linq
-@using Oqtane.ChatHubs
-@using Oqtane.Client
-@using Oqtane.Shared.Enums
-@using Oqtane.Modules
 @using Oqtane.Shared.Models
 @using BlazorStrap
 @using BlazorTable
 @using System.Globalization
+@using Oqtane.ChatHubs.BlazorAlerts
 
 <style type="text/css">
 
-    .light-yellow-container {
+    .chathub-light-yellow-module-container {
+        position: relative;
         background-color: #ffffdd;
         border: 1px solid #dddddd;
     }
 
-    .font-size-075rem {
+    .chathub-font-size-075rem {
         font-size: 0.75rem;
     }
 
-    .visibility-collapse {
+    .chathub-table-visibility-collapse {
         visibility: collapse;
     }
 
-    .chat-hub-photo-mat-card {
-        color: #1a1a1a !important;        
+    .chathub-photo-mat-card {
+        color: #1a1a1a !important;
         max-width: 400px;
         background-color: white !important;
         border-radius: 0px !important;
         box-shadow: none !important;
     }
 
-    .chat-hub-photo-mat-card-content {
+    .chathub-photo-mat-card-content {
         padding: 1rem;
     }
 
-    .chat-hub-photo-mat-card-clean-margin {
+    .chathub-photo-mat-card-clean-margin {
         margin: 0px;
     }
 
@@ -54,7 +47,11 @@
 
 <br />
 
-<div class="p-sm-3 light-yellow-container" style="height:900px; overflow: auto;">
+<div id="chathub-module-@ModuleState.ModuleId" class="p-sm-3 chathub-light-yellow-module-container" style="height:900px; overflow: auto;">
+
+
+    <BlazorAlerts BlazorAlertsService="@BlazorAlertsService"></BlazorAlerts>
+
 
     @if (UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions))
     {
@@ -115,18 +112,18 @@
 
                                     <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="Add Room" />
 
-                                    <Table TableItem="ChatHubRoom" Items="@ChatHubService.Lobbies" PageSize="4" TableClass="table table-sm table-light" TableHeadClass="visibility-collapse" ShowSearchBar="false">
+                                    <Table TableItem="ChatHubRoom" Items="@ChatHubService.Lobbies" PageSize="4" TableClass="table table-sm table-light" TableHeadClass="chathub-table-visibility-collapse" ShowSearchBar="false">
 
                                         <Column TableItem="ChatHubRoom" Title="Image" Field="@(x => x.ImageUrl)" Sortable="false" Filterable="false" Class="align-middle" Width="20%">
                                             <Template>
 
-                                                <MatCard class="chat-hub-photo-mat-card">
+                                                <MatCard class="chathub-photo-mat-card">
                                                     <MatCardContent>
                                                         <MatCardMedia Wide="true" ImageUrl="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/rooms/{1}", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "d-none" : "img-fuid bg-light")"></MatCardMedia>
                                                         <MatCardMedia Wide="true" ImageUrl="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/chat-room-image.png", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "img-fluid bg-light" : "d-none")"></MatCardMedia>
                                                     </MatCardContent>
                                                 </MatCard>
-                                                
+
                                             </Template>
                                         </Column>
 
@@ -315,29 +312,29 @@
                                                         <div>
                                                             @if (item.CommandMetaDatas != null && item.CommandMetaDatas.Any())
                                                             {
-                                                            <div class="table-responsive-sm">
-                                                                <table class="table table-sm font-size-075rem">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th scope="col">Name</th>
-                                                                            <th scope="col">Roles</th>
-                                                                            <th scope="col">Usage</th>
-                                                                            <th scope="col">Arguments</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        @foreach (var command in item.CommandMetaDatas)
-                                                                        {
+                                                                <div class="table-responsive-sm">
+                                                                    <table class="table table-sm chathub-font-size-075rem">
+                                                                        <thead>
                                                                             <tr>
-                                                                                <td>/@command.ResourceName</td>
-                                                                                <td>@string.Join(" | ", command.Roles)</td>
-                                                                                <td>@command.Usage</td>
-                                                                                <td>@command.Arguments</td>
+                                                                                <th scope="col">Name</th>
+                                                                                <th scope="col">Roles</th>
+                                                                                <th scope="col">Usage</th>
+                                                                                <th scope="col">Arguments</th>
                                                                             </tr>
-                                                                        }
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            @foreach (var command in item.CommandMetaDatas)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td>/@command.ResourceName</td>
+                                                                                    <td>@string.Join(" | ", command.Roles)</td>
+                                                                                    <td>@command.Usage</td>
+                                                                                    <td>@command.Arguments</td>
+                                                                                </tr>
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
                                                             }
                                                         </div>
 
@@ -475,7 +472,6 @@
 
 </div>
 
-
 <BSModal @ref="CenteredBSModal" IsCentered="true">
     <BSModalHeader OnClick="@BSModalOnToggle">Profil/Einstellungen</BSModalHeader>
     <BSModalBody>
@@ -579,18 +575,18 @@
 
                 @foreach (var photo in messageItem.Photos)
                 {
-                    <MatCard class="chat-hub-photo-mat-card">
+                    <MatCard class="chathub-photo-mat-card">
                         <MatCardContent>
                             <MatCardMedia Wide="true" ImageUrl="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/selfies/{1}", NavigationManager.BaseUri, photo.Source)" Style="@string.Format("height: {0}px", photo.Height.ToString())"></MatCardMedia>
-                            <div class="chat-hub-photo-mat-card-content">
-                                <MatHeadline6 class="chat-hub-photo-mat-card-clean-margin">
+                            <div class="chathub-photo-mat-card-content">
+                                <MatHeadline6 class="chathub-photo-mat-card-clean-margin">
                                     Posted by @photo.Caption
                                 </MatHeadline6>
-                                <MatSubtitle2 class="chat-hub-photo-mat-card-clean-margin">
+                                <MatSubtitle2 class="chathub-photo-mat-card-clean-margin">
                                     <button type="button" class="btn btn-sm btn-link">Click here to report no suitable content respectively inappropriate images..</button>
                                 </MatSubtitle2>
                             </div>
-                            <MatBody2 class="chat-hub-photo-mat-card-content chat-hub-photo-mat-card-clean-margin">
+                            <MatBody2 class="chathub-photo-mat-card-content chathub-photo-mat-card-clean-margin">
                             </MatBody2>
                         </MatCardContent>
                     </MatCard>

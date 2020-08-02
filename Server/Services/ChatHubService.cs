@@ -30,11 +30,6 @@ namespace Oqtane.ChatHubs.Services
         {
             IList<ChatHubUser> onlineUsers = await this.chatHubRepository.GetOnlineUsers(room).ToListAsync();
 
-            /*
-            IList<ChatHubMessage> recentMessages = chatRoom.ChatRoomType == (int)ChatRoomTypeEnum.Separee
-                                                ? await _repository.GetMessagesByRoom(chatRoom, 10).OrderBy(m => m.Created).ToListAsync()
-                                                : new List<ChatMessage>();
-                                                */
             return new ChatHubRoom()
             {
                 ChatHubRoomId = room.ChatHubRoomId,

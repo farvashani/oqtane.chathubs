@@ -72,6 +72,11 @@ namespace Oqtane.ChatHubs.Hubs
             string username = this.CreateUsername(guestname);
             string displayname = this.CreateDisplaynameFromUsername(username);
 
+            if(await this.chatHubRepository.GetUserByDisplayName(displayname) != null)
+            {
+                throw new HubException("Displayname already in use. Goodbye.");
+            }
+
             string email = "noreply@chathub.tv";
             string password = "§PasswordPolicy42";
 
@@ -100,7 +105,6 @@ namespace Oqtane.ChatHubs.Hubs
 
             if (chatHubUser != null && chatHubUser.Username != Constants.HostUser)
             {
-                // add auto assigned roles to user for site
                 List<Role> roles = this.roles.GetRoles(chatHubUser.SiteId).Where(item => item.IsAutoAssigned).ToList();
                 foreach (Role role in roles)
                 {

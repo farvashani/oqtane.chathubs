@@ -21,7 +21,6 @@ namespace Oqtane.Shared.Models
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
 
-        //[JsonProperty(ReferenceLoopHandling = ReferenceLoopHandling.Ignore)]
         [NotMapped]
         public virtual ChatHubUser User { get; set; }
 

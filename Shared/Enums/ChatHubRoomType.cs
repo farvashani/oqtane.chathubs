@@ -9,6 +9,6 @@ namespace Oqtane.Shared.Enums
         Public,
         Protected,
         Private,
-        Separee
+        OneVsOne
     }
 }

@@ -11,7 +11,6 @@
 
             if (Math.ceil($messageWindow.scrollTop() + $messageWindow.innerHeight()) + $lastChildHeight + tolerance >= $messageWindow.prop("scrollHeight")) {
 
-                //console.log($messageWindow);
                 //$messageWindow.stop(true, false);
                 $messageWindow.animate({ scrollTop: $messageWindow[0].scrollHeight }, { queue: false, duration: animationTime });
             }

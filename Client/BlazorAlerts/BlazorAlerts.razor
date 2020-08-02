@@ -1,0 +1,76 @@
+﻿@namespace Oqtane.ChatHubs.BlazorAlerts
+
+@inherits BlazorAlertsBase
+
+@using System.Collections.Generic
+@using System.Linq
+
+<style type="text/css">
+
+    .blazoralerts-container {
+        position: relative;
+        z-index: 1000;
+    }
+
+    .blazoralerts-item {
+        position: absolute; /* position relative to module container somehow feels wrong */
+        position: fixed;
+        width: 400px;
+        height: 240px;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        border: 1px solid rgba(49,94,182,1);
+        overflow: auto;
+    }
+
+    .blazoralerts-item-header {
+        position: relative;
+        width: 100%;
+        height: 32px;
+        padding: 3px 5px;
+        color: #fff;
+        background-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(49,94,182,1));
+    }
+
+    .blazoralerts-item-body {
+        position: relative;
+        width: 100%;
+        height: 206px;
+        padding: 30px 45px;
+        background-color: rgba(229,226,232,1);
+    }
+</style>
+
+@if (BlazorAlertsService.BlazorAlerts.Any())
+{
+    <div class="blazoralerts-container">
+
+        <BlazorAlertsTemplate Items="BlazorAlertsService.BlazorAlerts">
+
+            <RenderHeadline Context="headline">
+                <span>@headline</span>
+            </RenderHeadline>
+            <RenderCloseButton Context="item">
+                <button type="button" @onclick="@(() => CloseAlert_OnClicked(item.Guid))" class="btn btn-sm btn-danger float-right" aria-label="Close" style="font-size: 2rem; line-height: 0.75; padding: 0;">
+                    <span aria-hidden="true" style="position: relative; top: -3px;">&times;</span>
+                </button>
+            </RenderCloseButton>            
+            <RenderImage Context="item">
+                <img src="/modules/oqtane.chathubs/chathub/images/hub-exception.png" class="img-fluid" width="72" />
+            </RenderImage>
+            <RenderMessage Context="item">
+                <p>@item.Message</p>
+            </RenderMessage>
+            <RenderOkButton Context="item">
+                <button type="button" @onclick="@(() => CloseAlert_OnClicked(item.Guid))" class="btn btn-sm btn-link bg-light mt-5 w-100" aria-label="Close">
+                    Okay
+                </button>
+            </RenderOkButton>
+
+        </BlazorAlertsTemplate>
+
+    </div>
+}

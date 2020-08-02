@@ -14,13 +14,13 @@ namespace Oqtane.ChatHubs
     {
 
         [Inject]
-        public IFileReaderService fileReaderService { get; set; }
+        protected IFileReaderService FileReaderService { get; set; }
         [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        protected NavigationManager NavigationManager { get; set; }
         [Inject]
-        public HttpClient HttpClient { get; set; }
+        protected HttpClient HttpClient { get; set; }
         [Inject]
-        public SiteState SiteState { get; set; }
+        protected SiteState SiteState { get; set; }
 
         [Parameter]
         public ChatHubService ChatHubService { get; set; }
@@ -42,15 +42,11 @@ namespace Oqtane.ChatHubs
         public string Output { get; set; }
         public List<IFileInfo> FileList { get; } = new List<IFileInfo>();
 
-        protected override void OnInitialized()
-        {
-        }
-
         protected override async Task OnAfterRenderAsync(bool isFirstRender)
         {
             if (isFirstRender)
             {
-                dropReference = fileReaderService.CreateReference(dropTargetElement);
+                dropReference = FileReaderService.CreateReference(dropTargetElement);
                 await dropReference.RegisterDropEventsAsync();
             }
         }
