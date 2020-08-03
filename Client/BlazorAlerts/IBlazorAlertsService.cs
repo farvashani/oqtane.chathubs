@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Oqtane.ChatHubs.BlazorAlerts
+namespace Oqtane.ChatHubs
 {
     public interface IBlazorAlertsService
     {

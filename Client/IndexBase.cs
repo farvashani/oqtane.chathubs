@@ -15,7 +15,6 @@ using BlazorStrap;
 using System.Text.RegularExpressions;
 using Oqtane.Shared.Models;
 using Microsoft.AspNetCore.SignalR;
-using Oqtane.ChatHubs.BlazorAlerts;
 
 namespace Oqtane.ChatHubs
 {
@@ -38,8 +37,8 @@ namespace Oqtane.ChatHubs
         public ScrollService ScrollService { get; set; }
         public BlazorAlertsService BlazorAlertsService { get; set; }
 
-        public string MessageWindowHeight { get; set; }
-        public string UserlistWindowHeight { get; set; }
+        public int MessageWindowHeight { get; set; }
+        public int UserlistWindowHeight { get; set; }
 
         public string GuestUsername { get; set; } = string.Empty;
         public ChatHubRoom contextRoom { get; set; }
@@ -53,6 +52,8 @@ namespace Oqtane.ChatHubs
         public static string ChatWindowDatePattern = @"HH:mm:ss";
 
         public Dictionary<string, string> settings { get; set; }
+
+        protected ImageModal ImageModalRef;
 
         public IndexBase()
         {
@@ -202,8 +203,8 @@ namespace Oqtane.ChatHubs
 
         private void SetChatTabElementsHeight()
         {
-            MessageWindowHeight = 520 + "px";
-            UserlistWindowHeight = 570 + "px";
+            MessageWindowHeight = 520;
+            UserlistWindowHeight = 570;
         }
 
         private async void OnAddChatHubMessageExecute(object sender, ChatHubMessage message)
@@ -313,20 +314,6 @@ namespace Oqtane.ChatHubs
             }
 
             BrowserResizeService.OnResize -= BrowserHasResized;
-        }
-
-        public ChatHubMessage messageItem;
-        public bool dialogIsOpen = false;
-
-        public void OpenDialog(ChatHubMessage item)
-        {
-            this.messageItem = item;
-            dialogIsOpen = true;
-        }
-
-        public void CloseDialogClicked()
-        {
-            dialogIsOpen = false;
         }
 
         public BSModal CenteredBSModal;

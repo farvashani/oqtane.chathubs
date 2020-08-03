@@ -1,0 +1,31 @@
+﻿@namespace Oqtane.ChatHubs
+
+@inherits ImageModalBase
+
+<MatDialog @bind-IsOpen="@DialogIsOpen">
+
+    @if (Message != null && Message.Photos != null)
+    {
+        <MatDialogTitle>
+            <b>Posted by</b> @Message.User?.DisplayName <b>on</b> @Message.CreatedOn.ToShortTimeString()
+        </MatDialogTitle>
+        <MatDialogContent>
+
+            <div>
+                @foreach (var photo in Message.Photos)
+                {
+                    <img class="img-fluid" src="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/selfies/{1}", NavigationManager.BaseUri, photo.Source)" />
+                }
+            </div>
+
+            <div class="px-1 py-3">
+                <h6>Posted by @Message.User.Username</h6>
+            </div>
+
+        </MatDialogContent>
+    }
+
+    <MatDialogActions>
+        <button type="button" class="btn btn-link" @onclick="() => CloseDialogClicked()">Dialog schließen</button>
+    </MatDialogActions>
+</MatDialog>

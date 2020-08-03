@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 
-namespace Oqtane.ChatHubs.BlazorAlerts
+namespace Oqtane.ChatHubs
 {
     public class BlazorAlertsService : ServiceBase, IBlazorAlertsService
     {

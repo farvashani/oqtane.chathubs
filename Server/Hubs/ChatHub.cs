@@ -80,19 +80,6 @@ namespace Oqtane.ChatHubs.Hubs
             string email = "noreply@chathub.tv";
             string password = "§PasswordPolicy42";
 
-            /*
-            IdentityUser identityuser = await this.identityUserManager.FindByNameAsync(username);
-            if (identityuser == null)
-            {
-                identityuser = new IdentityUser();
-                identityuser.UserName = username;
-                identityuser.Email = email;
-                identityuser.EmailConfirmed = false;
-                var result = await this.identityUserManager.CreateAsync(identityuser, password);
-                if (result.Succeeded) { }
-            }
-            */
-
             ChatHubUser chatHubUser = new ChatHubUser()
             {
                 SiteId = 1,

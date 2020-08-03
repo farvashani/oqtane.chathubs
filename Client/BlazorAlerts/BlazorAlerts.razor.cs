@@ -3,7 +3,7 @@ using Oqtane.Modules;
 using System;
 using System.Net.Http;
 
-namespace Oqtane.ChatHubs.BlazorAlerts
+namespace Oqtane.ChatHubs
 {
     public class BlazorAlertsBase : ModuleBase
     {

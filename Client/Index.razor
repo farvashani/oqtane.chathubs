@@ -9,7 +9,6 @@
 @using BlazorStrap
 @using BlazorTable
 @using System.Globalization
-@using Oqtane.ChatHubs.BlazorAlerts
 
 <style type="text/css">
 
@@ -30,17 +29,9 @@
     .chathub-photo-mat-card {
         color: #1a1a1a !important;
         max-width: 400px;
-        background-color: white !important;
-        border-radius: 0px !important;
-        box-shadow: none !important;
-    }
-
-    .chathub-photo-mat-card-content {
-        padding: 1rem;
-    }
-
-    .chathub-photo-mat-card-clean-margin {
-        margin: 0px;
+        background-color: white;
+        border-radius: 0px;
+        box-shadow: none;
     }
 
 </style>
@@ -48,10 +39,6 @@
 <br />
 
 <div id="chathub-module-@ModuleState.ModuleId" class="p-sm-3 chathub-light-yellow-module-container" style="height:900px; overflow: auto;">
-
-
-    <BlazorAlerts BlazorAlertsService="@BlazorAlertsService"></BlazorAlerts>
-
 
     @if (UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions))
     {
@@ -108,7 +95,7 @@
                         <BSTabContent>
 
                             <section class="d-flex flex-wrap flex-lg-nowrap align-content-lg-start p-sm-3 bg-white">
-                                <div class="flex-fill" style="max-width: 1200px; height: @MessageWindowHeight; overflow: auto;">
+                                <div class="flex-fill" style="max-width: 1200px; height:@(string.Format("{0}px", UserlistWindowHeight)); overflow: auto;">
 
                                     <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="Add Room" />
 
@@ -186,13 +173,13 @@
                                     <div class="flex-fill flex-grow-1 @(room.ShowUserlist ? "d-none" : "d-flex")">
                                         <div class="w-100 bg-white p-sm-3">
 
-                                            <div id="message-window-@ModuleState.ModuleId-@room.ChatHubRoomId" style="height: @MessageWindowHeight; overflow: auto;">
+                                            <div id="message-window-@ModuleState.ModuleId-@room.ChatHubRoomId" style="height: @(string.Format("{0}px", MessageWindowHeight)); overflow: auto;">
 
                                                 <h3>@room.Content</h3>
 
                                                 <br />
 
-                                                <Message Messages="@room.Messages" Context="item">
+                                                <MessageTemplate Messages="@room.Messages" Context="item">
                                                     <SystemTemplate>
                                                         <div>
                                                             <span class="text-muted">
@@ -286,7 +273,7 @@
                                                         {
 
                                                             <div>
-                                                                <button type="button" class="btn btn-link" @onclick="() => OpenDialog(item)">
+                                                                <button type="button" class="btn btn-link" @onclick="() => ImageModalRef.OpenDialog(item)">
 
                                                                     Open Image(s)
 
@@ -339,7 +326,7 @@
                                                         </div>
 
                                                     </CommandsTemplate>
-                                                </Message>
+                                                </MessageTemplate>
 
                                             </div>
 
@@ -364,7 +351,7 @@
                                     </div>
 
                                     <div class="userlist bg-light p-0 pl-xl-3 w-100 d-none d-xl-flex @(room.ShowUserlist ? "flex-fill d-flex" : "")" style="max-width: 280px;">
-                                        <div class="w-100 my-3" style="height: @UserlistWindowHeight; overflow: auto;">
+                                        <div class="w-100 my-3" style="height: @(string.Format("{0}px", UserlistWindowHeight)); overflow: auto;">
 
                                             <button type="button" class="btn btn-light input-group-button @(room.ShowUserlist ? "d-block" : "d-none")" @onclick="() => ChatHubService.ToggleUserlist(room)" style="position: relative; float: right;"><span class="oi oi-x"></span></button>
 
@@ -407,11 +394,6 @@
                                                                                 </BSButton>
                                                                             </BSCard>
                                                                             <BSCollapse IsOpen="@user.UserlistItemCollapsed">
-                                                                                @*
-                                                                                    <BSCard CardType="CardType.Text">
-                                                                                        <button type="button" class="btn btn-sm btn-link" @onclick="() => OpenProfile_Clicked(user.UserId, room.ChatHubRoomId)">Profil öffnen</button>
-                                                                                    </BSCard>
-                                                                                *@
                                                                                 <BSCard CardType="CardType.Text">
                                                                                     <button type="button" class="btn btn-sm btn-link" @onclick="() => ChatHubService.IgnoreUser_Clicked(user.UserId, room.ChatHubRoomId, user.Username)">Benutzer Ignorieren</button>
                                                                                 </BSCard>
@@ -461,16 +443,19 @@
             </BSTabGroup>
 
         }
-        <br />
     }
 
-    <div class="w-100">
+    <div class="mt-2 w-100">
 
-        <p class="float-right"><small>Project Url: <a href="https://github.com/boredanyway/oqtane.chathubs" target="_blank" title="oqtane chathub module dev">https://github.com/boredanyway/oqtane.chathubs</a></small></p>
+        <p class="float-right bg-white"><small>Project Url: <a href="https://github.com/boredanyway/oqtane.chathubs" target="_blank" title="oqtane chathub module dev">https://github.com/boredanyway/oqtane.chathubs</a></small></p>
 
     </div>
 
+    <BlazorAlerts BlazorAlertsService="@BlazorAlertsService"></BlazorAlerts>
+
 </div>
+
+<ImageModal @ref="ImageModalRef"></ImageModal>
 
 <BSModal @ref="CenteredBSModal" IsCentered="true">
     <BSModalHeader OnClick="@BSModalOnToggle">Profil/Einstellungen</BSModalHeader>
@@ -562,47 +547,4 @@
     </BSModalFooter>
 </BSModal>
 
-<MatDialog @bind-IsOpen="@dialogIsOpen">
 
-    @if (messageItem != null && messageItem.Photos != null)
-    {
-        <MatDialogTitle>
-            <b>Posted by</b> @messageItem.User?.DisplayName <b>on</b> @messageItem.CreatedOn.ToShortTimeString()
-        </MatDialogTitle>
-        <MatDialogContent>
-
-            <div>
-
-                @foreach (var photo in messageItem.Photos)
-                {
-                    <MatCard class="chathub-photo-mat-card">
-                        <MatCardContent>
-                            <MatCardMedia Wide="true" ImageUrl="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/selfies/{1}", NavigationManager.BaseUri, photo.Source)" Style="@string.Format("height: {0}px", photo.Height.ToString())"></MatCardMedia>
-                            <div class="chathub-photo-mat-card-content">
-                                <MatHeadline6 class="chathub-photo-mat-card-clean-margin">
-                                    Posted by @photo.Caption
-                                </MatHeadline6>
-                                <MatSubtitle2 class="chathub-photo-mat-card-clean-margin">
-                                    <button type="button" class="btn btn-sm btn-link">Click here to report no suitable content respectively inappropriate images..</button>
-                                </MatSubtitle2>
-                            </div>
-                            <MatBody2 class="chathub-photo-mat-card-content chathub-photo-mat-card-clean-margin">
-                            </MatBody2>
-                        </MatCardContent>
-                    </MatCard>
-                }
-
-            </div>
-
-        </MatDialogContent>
-    }
-
-    <MatDialogActions>
-        <button type="button" class="btn btn-link" @onclick="() => CloseDialogClicked()">Dialog schließen</button>
-    </MatDialogActions>
-</MatDialog>
-
-
-@code {
-
-}
