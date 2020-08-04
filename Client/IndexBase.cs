@@ -54,6 +54,7 @@ namespace Oqtane.ChatHubs
         public Dictionary<string, string> settings { get; set; }
 
         protected ImageModal ImageModalRef;
+        protected SettingsModal SettingsModalRef;
 
         public IndexBase()
         {
@@ -315,19 +316,10 @@ namespace Oqtane.ChatHubs
 
             BrowserResizeService.OnResize -= BrowserHasResized;
         }
-
-        public BSModal CenteredBSModal;
-        public void BSModalOnToggle(MouseEventArgs e)
-        {
-            this.BSModalOnToggle();
-        }
-        private void BSModalOnToggle()
-        {
-            CenteredBSModal.Toggle();
-        }
+        
         public void OpenProfile_Clicked(int userId, int roomId)
         {
-            this.BSModalOnToggle();
+            this.SettingsModalRef.Toggle();
         }
 
         public void Show(BSTabEvent e)

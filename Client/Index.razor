@@ -9,6 +9,7 @@
 @using BlazorStrap
 @using BlazorTable
 @using System.Globalization
+@using System.Web
 
 <style type="text/css">
 
@@ -38,7 +39,7 @@
 
 <br />
 
-<div id="chathub-module-@ModuleState.ModuleId" class="p-sm-3 chathub-light-yellow-module-container" style="height:900px; overflow: auto;">
+<div id="chathub-module-@ModuleState.ModuleId" class="p-sm-3 chathub-light-yellow-module-container" style="height:920px; overflow: auto;">
 
     @if (UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions))
     {
@@ -189,7 +190,7 @@
                                                                 <strong><span class="bg-danger text-white">System</span>:</strong>
                                                             </span>
                                                             <span>
-                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(System.Web.HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
+                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
                                                             </span>
                                                         </div>
                                                     </SystemTemplate>
@@ -202,7 +203,7 @@
                                                                 <strong>@item.User.DisplayName:</strong>
                                                             </span>
                                                             <span>
-                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(System.Web.HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
+                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
                                                             </span>
                                                         </div>
                                                     </AdminTemplate>
@@ -215,7 +216,7 @@
                                                                 <strong>@item.User.DisplayName:</strong>
                                                             </span>
                                                             <span>
-                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(System.Web.HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
+                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
                                                             </span>
                                                         </div>
                                                     </UserTemplate>
@@ -228,7 +229,7 @@
                                                                 <strong>@item.User.DisplayName:</strong>
                                                             </span>
                                                             <span>
-                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(System.Web.HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
+                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
                                                             </span>
                                                         </div>
                                                     </GuestTemplate>
@@ -241,7 +242,7 @@
                                                                 <strong><span class="bg-primary text-white">PM @item.User.DisplayName</span>:</strong>
                                                             </span>
                                                             <span>
-                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(System.Web.HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
+                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
                                                             </span>
                                                         </div>
                                                     </WhisperTemplate>
@@ -254,7 +255,7 @@
                                                                 <span class="text-muted">@item.User.DisplayName</span>
                                                             </span>
                                                             <span class="text-muted">
-                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(System.Web.HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
+                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
                                                             </span>
                                                         </div>
                                                     </MeTemplate>
@@ -456,95 +457,4 @@
 </div>
 
 <ImageModal @ref="ImageModalRef"></ImageModal>
-
-<BSModal @ref="CenteredBSModal" IsCentered="true">
-    <BSModalHeader OnClick="@BSModalOnToggle">Profil/Einstellungen</BSModalHeader>
-    <BSModalBody>
-
-        <BSTabGroup>
-            <BSTabList>
-
-                <BSTab>
-                    <BSTabLabel>Profile Info</BSTabLabel>
-                    <BSTabContent>
-
-                        <div class="p-sm-3">
-                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                        </div>
-
-                    </BSTabContent>
-                </BSTab>
-
-                <BSTab>
-                    <BSTabLabel><div><span class="oi oi-shield"></span> (@ChatHubService.IgnoredUsers?.Count())</div></BSTabLabel>
-                    <BSTabContent>
-
-                        <div class="p-sm-3">
-
-                            <h5>Ignoliste</h5>
-
-                            @if (ChatHubService.IgnoredUsers == null || !ChatHubService.IgnoredUsers.Any())
-                            {
-                                <div class="alert alert-info"><small>Noch Niemanden gefunden bislang..</small></div>
-                            }
-                            else
-                            {
-                                <table class="table table-sm">
-                                    <tbody>
-                                        @foreach (var ignoredUser in ChatHubService.IgnoredUsers)
-                                        {
-
-                                            <tr>
-                                                <td>@ignoredUser.DisplayName</td>
-                                                <td>
-                                                    <button type="button" class="btn btn-sm btn-link" @onclick="() => ChatHubService.UnignoreUser_Clicked(ignoredUser.Username)">
-                                                        <span class="oi oi-x"></span>
-                                                    </button>
-                                                </td>
-                                            </tr>
-
-                                        }
-                                    </tbody>
-                                </table>
-                            }
-
-                        </div>
-
-                    </BSTabContent>
-                </BSTab>
-
-                <BSTab>
-                    <BSTabLabel><div><span class="oi oi-bug"></span> (@ChatHubService.IgnoredByUsers?.Count())</div></BSTabLabel>
-                    <BSTabContent>
-
-                        <div class="p-sm-3">
-
-                            <h5>Ignoriert von Liste</h5>
-
-                            @if (ChatHubService.IgnoredByUsers == null || !ChatHubService.IgnoredByUsers.Any())
-                            {
-                                <div class="alert alert-info"><small>Noch Niemanden gefunden bislang..</small></div>
-                            }
-                            else
-                            {
-                                @foreach (var ignoredByUser in ChatHubService.IgnoredByUsers)
-                                {
-                                    <div>@ignoredByUser.DisplayName</div>
-                                }
-                            }
-
-                        </div>
-
-                    </BSTabContent>
-                </BSTab>
-            </BSTabList>
-            <BSTabSelectedContent />
-
-        </BSTabGroup>
-    </BSModalBody>
-    <BSModalFooter>
-        <BSButton Color="Color.Link" @onclick="@BSModalOnToggle">Close</BSButton>
-    </BSModalFooter>
-</BSModal>
-
-
+<SettingsModal @ref="SettingsModalRef" ChatHubService="@ChatHubService"></SettingsModal>
