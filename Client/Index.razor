@@ -189,7 +189,7 @@
                                                                 <strong><span class="bg-danger text-white">System</span>:</strong>
                                                             </span>
                                                             <span>
-                                                                @(HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
+                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(System.Web.HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
                                                             </span>
                                                         </div>
                                                     </SystemTemplate>
@@ -202,7 +202,7 @@
                                                                 <strong>@item.User.DisplayName:</strong>
                                                             </span>
                                                             <span>
-                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
+                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(System.Web.HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
                                                             </span>
                                                         </div>
                                                     </AdminTemplate>
@@ -215,7 +215,7 @@
                                                                 <strong>@item.User.DisplayName:</strong>
                                                             </span>
                                                             <span>
-                                                                @(HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
+                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(System.Web.HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
                                                             </span>
                                                         </div>
                                                     </UserTemplate>
@@ -228,7 +228,7 @@
                                                                 <strong>@item.User.DisplayName:</strong>
                                                             </span>
                                                             <span>
-                                                                @(HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
+                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(System.Web.HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
                                                             </span>
                                                         </div>
                                                     </GuestTemplate>
@@ -241,7 +241,7 @@
                                                                 <strong><span class="bg-primary text-white">PM @item.User.DisplayName</span>:</strong>
                                                             </span>
                                                             <span>
-                                                                @(HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
+                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(System.Web.HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
                                                             </span>
                                                         </div>
                                                     </WhisperTemplate>
@@ -254,7 +254,7 @@
                                                                 <span class="text-muted">@item.User.DisplayName</span>
                                                             </span>
                                                             <span class="text-muted">
-                                                                @(HighlightOwnUsername(ReplaceYoutubeLinksAsync(item.Content), ChatHubService.ConnectedUser.DisplayName))
+                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(System.Web.HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
                                                             </span>
                                                         </div>
                                                     </MeTemplate>
