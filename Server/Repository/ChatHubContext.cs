@@ -68,14 +68,6 @@ namespace Oqtane.ChatHubs.Repository
 
             // Relation
             // One-to-one
-            // ChatHubUser / ChatHubSetting
-            modelBuilder.Entity<ChatHubUser>()
-                .HasOne(u => u.Settings)
-                .WithOne(s => s.User)
-                .HasForeignKey<ChatHubUser>(u => u.UserId);
-
-            // Relation
-            // One-to-one
             // ChatHubSetting / ChatHubUser
             modelBuilder.Entity<ChatHubSetting>()
                 .HasOne(s => s.User)
