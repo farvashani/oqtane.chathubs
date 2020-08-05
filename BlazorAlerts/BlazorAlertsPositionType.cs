@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Oqtane.ChatHubs
+namespace BlazorAlerts
 {
-    public interface IBlazorAlertsService
+    public enum PositionType
     {
-
+        Fixed,
+        Absolute
     }
 }

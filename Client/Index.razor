@@ -10,8 +10,13 @@
 @using BlazorTable
 @using System.Globalization
 @using System.Web
+@using BlazorAlerts
 
 <style type="text/css">
+
+    /*
+    .chathub-light-yellow-module-container * { border-radius: 0px !important; -webkit-border-radius: 0px !important; -moz-border-radius: 0px !important; }
+    */
 
     .chathub-light-yellow-module-container {
         position: relative;
@@ -123,7 +128,8 @@
                                                     </a>
                                                     <p class="text-muted">
                                                         <span>@context.Content</span>
-                                                        &nbsp;(<b>Posted by</b> @context.CreatedBy <b>on</b> @context.CreatedOn.ToShortDateString())
+                                                        &nbsp;
+                                                        <span class="text-muted">(Posted by @context.CreatedBy on @context.CreatedOn.ToShortDateString())</span>
                                                         <br />
                                                         Online Users: @context.Users.Count()
                                                     </p>
@@ -452,7 +458,7 @@
 
     </div>
 
-    <BlazorAlerts BlazorAlertsService="@BlazorAlertsService"></BlazorAlerts>
+    <BlazorAlertsComponent></BlazorAlertsComponent>
 
 </div>
 

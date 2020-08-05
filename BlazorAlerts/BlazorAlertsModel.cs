@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Oqtane.ChatHubs
+namespace BlazorAlerts
 {
     public class BlazorAlertsModel
     {

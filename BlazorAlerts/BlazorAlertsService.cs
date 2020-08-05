@@ -1,24 +1,22 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Oqtane.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 
-namespace Oqtane.ChatHubs
+namespace BlazorAlerts
 {
-    public class BlazorAlertsService : ServiceBase, IBlazorAlertsService
+    public class BlazorAlertsService : IBlazorAlertsService
     {
 
-        private readonly HttpClient _httpClient;
         public event Action<string, string, PositionType> OnAlert;
 
         public List<BlazorAlertsModel> BlazorAlerts { get; set; } = new List<BlazorAlertsModel>();
 
-        public BlazorAlertsService(HttpClient httpClient) : base(httpClient)
+        public BlazorAlertsService()
         {
-            this._httpClient = httpClient;
+
         }
 
         public void NewBlazorAlert(string message, string heading, PositionType position = PositionType.Fixed)

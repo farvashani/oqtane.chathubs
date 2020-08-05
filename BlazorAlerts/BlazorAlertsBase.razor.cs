@@ -1,17 +1,13 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Oqtane.Modules;
 using System;
 using System.Net.Http;
 
-namespace Oqtane.ChatHubs
+namespace BlazorAlerts
 {
-    public class BlazorAlertsBase : ModuleBase
+    public class BlazorAlertsBase : ComponentBase
     {
 
         [Inject]
-        protected HttpClient HttpClient { get; set; }
-
-        [Parameter]
         public BlazorAlertsService BlazorAlertsService { get; set; }
 
         public BlazorAlertsBase() 

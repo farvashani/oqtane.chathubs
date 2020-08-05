@@ -36,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BlazorAlerts\BlazorAlerts.csproj" />
     <ProjectReference Include="..\Shared\Oqtane.ChatHubs.Shared.csproj" />
   </ItemGroup>
 

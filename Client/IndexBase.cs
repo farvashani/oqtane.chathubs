@@ -15,6 +15,7 @@ using BlazorStrap;
 using System.Text.RegularExpressions;
 using Oqtane.Shared.Models;
 using Microsoft.AspNetCore.SignalR;
+using BlazorAlerts;
 
 namespace Oqtane.ChatHubs
 {
@@ -31,11 +32,12 @@ namespace Oqtane.ChatHubs
         protected SiteState SiteState { get; set; }
         [Inject]
         protected ISettingService SettingService { get; set; }
+        [Inject]
+        protected BlazorAlertsService BlazorAlertsService { get; set; }
 
         public ChatHubService ChatHubService { get; set; }
         public BrowserResizeService BrowserResizeService { get; set; }
-        public ScrollService ScrollService { get; set; }
-        public BlazorAlertsService BlazorAlertsService { get; set; }
+        public ScrollService ScrollService { get; set; }        
 
         public int MessageWindowHeight { get; set; }
         public int UserlistWindowHeight { get; set; }
@@ -66,7 +68,6 @@ namespace Oqtane.ChatHubs
             this.ChatHubService = new ChatHubService(HttpClient, SiteState, NavigationManager, JSRuntime, ModuleState.ModuleId);
             this.BrowserResizeService = new BrowserResizeService(HttpClient, JSRuntime);
             this.ScrollService = new ScrollService(HttpClient, JSRuntime);
-            this.BlazorAlertsService = new BlazorAlertsService(HttpClient);
             
             this.ChatHubService.UpdateUI += UpdateUIStateHasChanged;
             this.ChatHubService.OnAddChatHubMessageEvent += OnAddChatHubMessageExecute;

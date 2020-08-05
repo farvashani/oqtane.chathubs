@@ -12,6 +12,8 @@ The Oqtane Framework allows developers to create external modules.
 
 Edit startup.cs:
 ```C#
+services.AddScoped<BlazorAlertsService, BlazorAlertsService>();
+
 services.AddFileReaderService();
 
 services.AddSignalR()

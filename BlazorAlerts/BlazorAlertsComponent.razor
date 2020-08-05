@@ -1,14 +1,15 @@
-﻿@namespace Oqtane.ChatHubs
+﻿@namespace BlazorAlerts
 
 @inherits BlazorAlertsBase
 
 @using System.Collections.Generic
 @using System.Linq
+@using Microsoft.AspNetCore.Components.Web
 
 <style type="text/css">
 
     .blazoralerts-container {
-        position: static;        
+        position: static;
     }
 
     .blazoralerts-item {
@@ -42,7 +43,6 @@
         padding: 30px 45px;
         background-color: rgba(229,226,232,1);
     }
-
 </style>
 
 @if (BlazorAlertsService.BlazorAlerts.Any())
