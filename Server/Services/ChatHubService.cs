@@ -52,6 +52,9 @@ namespace Oqtane.ChatHubs.Services
         {
             IEnumerable<ChatHubConnection> activeConnections = user.Connections.Active();
 
+            ChatHubSetting chatHubSettings = this.chatHubRepository.GetChatHubSetting(user.UserId);
+            ChatHubSetting chatHubSettingClientModel = this.CreateChatHubSettingClientModel(chatHubSettings);
+
             return new ChatHubUser()
             {
                 UserId = user.UserId,
@@ -62,9 +65,11 @@ namespace Oqtane.ChatHubs.Services
                     ChatHubConnectionId = x.ChatHubConnectionId,
                     CreatedOn = x.CreatedOn
                 }).ToList(),
+                Settings = chatHubSettingClientModel ?? null,
                 CreatedOn = user.CreatedOn,
                 CreatedBy = user.CreatedBy,
-                ModifiedOn = user.ModifiedOn
+                ModifiedOn = user.ModifiedOn,
+                ModifiedBy = user.ModifiedBy
             };
         }
 
@@ -103,6 +108,19 @@ namespace Oqtane.ChatHubs.Services
             };
         }
 
+        public ChatHubSetting CreateChatHubSettingClientModel(ChatHubSetting settings)
+        {
+            return new ChatHubSetting()
+            {
+                UsernameColor = settings.UsernameColor,
+                MessageColor = settings.MessageColor,
+                CreatedOn = settings.CreatedOn,
+                CreatedBy = settings.CreatedBy,
+                ModifiedOn = settings.ModifiedOn,
+                ModifiedBy = settings.ModifiedBy
+            };
+        }
+
         public void IgnoreUser(ChatHubUser callerUser, ChatHubUser targetUser)
         {
             ChatHubIgnore chatHubIgnore = null;
@@ -132,7 +150,7 @@ namespace Oqtane.ChatHubs.Services
             ChatHubConnection connection = await Task.Run(() => chatHubRepository.GetConnectionByConnectionId(connectionId));
             if (connection != null)
             {
-                return connection.User;
+                return await this.chatHubRepository.GetUserByIdAsync(connection.User.UserId);
             }
 
             return null;

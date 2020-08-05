@@ -16,6 +16,7 @@ namespace Oqtane.ChatHubs.Repository
         public virtual DbSet<ChatHubMessage> ChatHubMessage { get; set; }
         public virtual DbSet<ChatHubConnection> ChatHubConnection { get; set; }
         public virtual DbSet<ChatHubPhoto> ChatHubPhoto { get; set; }
+        public virtual DbSet<ChatHubSetting> ChatHubSetting { get; set; }
         public virtual DbSet<ChatHubIgnore> ChatHubIgnore { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -64,6 +65,22 @@ namespace Oqtane.ChatHubs.Repository
                 .HasOne(i => i.User)
                 .WithMany(u => u.Ignores)
                 .HasForeignKey(i => i.ChatHubUserId);
+
+            // Relation
+            // One-to-one
+            // ChatHubUser / ChatHubSetting
+            modelBuilder.Entity<ChatHubUser>()
+                .HasOne(u => u.Settings)
+                .WithOne(s => s.User)
+                .HasForeignKey<ChatHubUser>(u => u.UserId);
+
+            // Relation
+            // One-to-one
+            // ChatHubSetting / ChatHubUser
+            modelBuilder.Entity<ChatHubSetting>()
+                .HasOne(s => s.User)
+                .WithOne(u => u.Settings)
+                .HasForeignKey<ChatHubSetting>(s => s.ChatHubUserId);
 
         }
 

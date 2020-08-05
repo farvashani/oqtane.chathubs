@@ -229,7 +229,6 @@ namespace Oqtane.ChatHubs.Repository
         {
             return await db.ChatHubConnection
                 .Include(c => c.User)
-                .ThenInclude(u => u.UserRooms)
                 .FirstOrDefaultAsync(c => c.ConnectionId == connectionId);
         }
 
@@ -381,10 +380,49 @@ namespace Oqtane.ChatHubs.Repository
             }
         }
 
+        public ChatHubSetting AddChatHubSetting(ChatHubSetting ChatHubSetting)
+        {
+            try
+            {
+                db.ChatHubSetting.Add(ChatHubSetting);
+                db.SaveChanges();
+                return ChatHubSetting;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public ChatHubSetting GetChatHubSetting(int ChatHubUserId)
+        {
+            try
+            {
+                return db.ChatHubSetting.Include(item => item.User).Where(item => item.ChatHubUserId == ChatHubUserId).FirstOrDefault();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public ChatHubSetting UpdateChatHubSetting(ChatHubSetting ChatHubSetting)
+        {
+            try
+            {
+                db.Entry(ChatHubSetting).State = EntityState.Modified;
+                db.SaveChanges();
+                return ChatHubSetting;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
         public async Task<ChatHubUser> GetUserByIdAsync(int id)
         {
             var item = await db.ChatHubUser
                             .Include(u => u.Connections)
+                            .Include(u => u.Settings)
                             .Include(u => u.UserRooms)
                             .Where(u => u.UserId == id)
                             .Select(u => new

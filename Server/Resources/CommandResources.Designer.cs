@@ -97,11 +97,29 @@ namespace Oqtane.ChatHubs.Server.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to message-color;msg-color;.
+        /// </summary>
+        public static string message_color {
+            get {
+                return ResourceManager.GetString("message-color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to unignore;unblock;.
         /// </summary>
         public static string unignore {
             get {
                 return ResourceManager.GetString("unignore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to username-color;.
+        /// </summary>
+        public static string username_color {
+            get {
+                return ResourceManager.GetString("username-color", resourceCulture);
             }
         }
         

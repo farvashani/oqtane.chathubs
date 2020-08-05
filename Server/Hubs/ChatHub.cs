@@ -114,6 +114,14 @@ namespace Oqtane.ChatHubs.Hubs
             };
             ChatHubConnection = this.chatHubRepository.AddChatHubConnection(ChatHubConnection);
 
+            ChatHubSetting ChatHubSetting = new ChatHubSetting()
+            {
+                UsernameColor = "#7744aa",
+                MessageColor = "#44aa77",
+                ChatHubUserId = chatHubUser.UserId
+            };
+            ChatHubSetting = this.chatHubRepository.AddChatHubSetting(ChatHubSetting);
+
             ChatHubUser chatHubUserClientModel = this.chatHubService.CreateChatHubUserClientModel(chatHubUser);
 
             await Clients.Client(Context.ConnectionId).SendAsync("OnConnected", chatHubUserClientModel);

@@ -18,6 +18,9 @@ namespace Oqtane.Shared.Models
         public virtual ICollection<ChatHubConnection> Connections { get; set; }
 
         [NotMapped]
+        public ChatHubSetting Settings { get; set; }
+
+        [NotMapped]
         public virtual ICollection<ChatHubIgnore> Ignores { get; set; }
 
     }

@@ -91,6 +91,22 @@ CREATE TABLE [dbo].[ChatHubPhoto](
 )
 GO
 
+CREATE TABLE [dbo].[ChatHubSetting](
+	[ChatHubSettingId] [int] IDENTITY(1,1) NOT NULL,
+	[ChatHubUserId] [int] NOT NULL,
+	[UsernameColor] [nvarchar](256) NOT NULL,
+	[MessageColor] [nvarchar](256) NOT NULL,
+	[CreatedBy] [nvarchar](256) NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+	[ModifiedBy] [nvarchar](256) NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+  CONSTRAINT [PK_ChatHubSetting] PRIMARY KEY CLUSTERED 
+  (
+	[ChatHubSettingId] ASC
+  )
+)
+GO
+
 CREATE TABLE [dbo].[ChatHubIgnore](
 	[ChatHubIgnoreId] [int] IDENTITY(1,1) NOT NULL,
 	[ChatHubUserId] [int] NOT NULL,
@@ -154,6 +170,11 @@ GO
 
 ALTER TABLE [dbo].[ChatHubPhoto]  WITH CHECK ADD  CONSTRAINT [FK_ChatHubPhoto_ChatHubMessage] FOREIGN KEY([ChatHubMessageId])
 REFERENCES [dbo].[ChatHubMessage] ([ChatHubMessageId])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[ChatHubSetting]  WITH CHECK ADD  CONSTRAINT [FK_ChatHubSetting_ChatHubUser] FOREIGN KEY([ChatHubUserId])
+REFERENCES [dbo].[User] ([UserId])
 ON DELETE CASCADE
 GO
 

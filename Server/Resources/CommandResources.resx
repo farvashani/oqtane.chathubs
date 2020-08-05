@@ -129,8 +129,14 @@
   <data name="me" xml:space="preserve">
     <value>me;myself;i;</value>
   </data>
+  <data name="message-color" xml:space="preserve">
+    <value>message-color;msg-color;</value>
+  </data>
   <data name="unignore" xml:space="preserve">
     <value>unignore;unblock;</value>
+  </data>
+  <data name="username-color" xml:space="preserve">
+    <value>username-color;</value>
   </data>
   <data name="whisper" xml:space="preserve">
     <value>whisper;asmr;</value>
