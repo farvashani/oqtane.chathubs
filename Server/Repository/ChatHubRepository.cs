@@ -301,7 +301,7 @@ namespace Oqtane.ChatHubs.Repository
                 db.SaveChanges();
                 return ChatHubPhoto;
             }
-            catch(Exception ex)
+            catch
             {
                 throw;
             }

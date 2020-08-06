@@ -112,8 +112,8 @@
 
                                                 <MatCard class="chathub-photo-mat-card">
                                                     <MatCardContent>
-                                                        <MatCardMedia Wide="true" ImageUrl="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/rooms/{1}", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "d-none" : "img-fuid bg-light")"></MatCardMedia>
-                                                        <MatCardMedia Wide="true" ImageUrl="@string.Format("{0}/modules/oqtane.chathubs/chathub/images/chat-room-image.png", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "img-fluid bg-light" : "d-none")"></MatCardMedia>
+                                                        <MatCardMedia Wide="true" ImageUrl="@string.Format("{0}/modules/oqtane.chathubs/images/rooms/{1}", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "d-none" : "img-fuid bg-light")"></MatCardMedia>
+                                                        <MatCardMedia Wide="true" ImageUrl="@string.Format("{0}/modules/oqtane.chathubs/images/chat-room-image.png", NavigationManager.BaseUri, context.ImageUrl)" class="@(string.IsNullOrEmpty(context.ImageUrl) ? "img-fluid bg-light" : "d-none")"></MatCardMedia>
                                                     </MatCardContent>
                                                 </MatCard>
 
@@ -267,12 +267,28 @@
                                                     </MeTemplate>
                                                     <EnterLeaveTemplate>
                                                         <div>
-                                                            @item.ChatHubMessageId
+                                                            <span class="text-muted">
+                                                                @string.Format("[{0}]", item.CreatedOn.ToLocalTime().ToString(ChatWindowDatePattern))
+                                                            </span>
+                                                            <span>
+                                                                <strong><span class="bg-primary text-white">Enter/Leave</span>:</strong>
+                                                            </span>
+                                                            <span>
+                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
+                                                            </span>
                                                         </div>
                                                     </EnterLeaveTemplate>
                                                     <ConnectDisconnectTemplate>
                                                         <div>
-                                                            @item.ChatHubMessageId
+                                                            <span class="text-muted">
+                                                                @string.Format("[{0}]", item.CreatedOn.ToLocalTime().ToString(ChatWindowDatePattern))
+                                                            </span>
+                                                            <span>
+                                                                <strong><span class="bg-warning text-white">Connect/Disconnect</span>:</strong>
+                                                            </span>
+                                                            <span>
+                                                                @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
+                                                            </span>
                                                         </div>
                                                     </ConnectDisconnectTemplate>
                                                     <ImageTemplate>

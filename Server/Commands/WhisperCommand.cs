@@ -20,7 +20,7 @@ namespace Oqtane.ChatHubs.Commands
 
             if (args.Length == 0)
             {
-                await context.ChatHub.SendNotification("No arguments found.", callerContext.RoomId, callerContext.ConnectionId, caller);
+                await context.ChatHub.SendClientNotification("No arguments found.", callerContext.RoomId, callerContext.ConnectionId, caller, ChatHubMessageType.System);
                 return;
             }
 
@@ -30,19 +30,19 @@ namespace Oqtane.ChatHubs.Commands
             targetUser = targetUser == null ? await context.ChatHubRepository.GetUserByUserNameAsync(targetUserName) : targetUser;
             if (targetUser == null)
             {
-                await context.ChatHub.SendNotification("No user found.", callerContext.RoomId, callerContext.ConnectionId, caller);
+                await context.ChatHub.SendClientNotification("No user found.", callerContext.RoomId, callerContext.ConnectionId, caller, ChatHubMessageType.System);
                 return;
             }
 
             if (!targetUser.Online())
             {
-                await context.ChatHub.SendNotification("User not online.", callerContext.RoomId, callerContext.ConnectionId, caller);
+                await context.ChatHub.SendClientNotification("User not online.", callerContext.RoomId, callerContext.ConnectionId, caller, ChatHubMessageType.System);
                 return;
             }
 
             if (caller.UserId == targetUser.UserId)
             {
-                await context.ChatHub.SendNotification("Calling user can not be target user.", callerContext.RoomId, callerContext.ConnectionId, caller);
+                await context.ChatHub.SendClientNotification("Calling user can not be target user.", callerContext.RoomId, callerContext.ConnectionId, caller, ChatHubMessageType.System);
                 return;
             }
 

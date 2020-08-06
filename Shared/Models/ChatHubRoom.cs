@@ -34,7 +34,7 @@ namespace Oqtane.Shared.Models
         [NotMapped]
         public bool ShowUserlist { get; set; }
         [NotMapped]
-        public IList<ChatHubUser> Users { get; set; }
+        public virtual IList<ChatHubUser> Users { get; set; }
 
     }
 }

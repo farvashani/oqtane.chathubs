@@ -123,8 +123,8 @@ namespace Oqtane.ChatHubs.Hubs
             ChatHubSetting = this.chatHubRepository.AddChatHubSetting(ChatHubSetting);
 
             ChatHubUser chatHubUserClientModel = this.chatHubService.CreateChatHubUserClientModel(chatHubUser);
-
             await Clients.Client(Context.ConnectionId).SendAsync("OnConnected", chatHubUserClientModel);
+
             await base.OnConnectedAsync();
         }
         [AllowAnonymous]
@@ -133,22 +133,23 @@ namespace Oqtane.ChatHubs.Hubs
             ChatHubUser guest = await this.chatHubService.IdentifyGuest(Context.ConnectionId);
             if (guest != null)
             {
-                foreach(var connection in guest.Connections.Active())
-                {
-                    connection.Status = Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Inactive);
-                    chatHubRepository.UpdateChatHubConnection(connection);
-                }
-                
+
                 var rooms = chatHubRepository.GetChatHubRoomsByUser(guest).Active();
-                foreach (var room in rooms.Public())
+                foreach (var room in await rooms.Public().ToListAsync())
                 {
                     await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.ChatHubRoomId.ToString());                    
-                    if(guest.Connections.Active().Count() <= 1)
+                    await this.SendGroupNotification(string.Format("{0} disconnected from chat with client device {1}.", guest.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.ChatHubRoomId, Context.ConnectionId, guest, ChatHubMessageType.Connect_Disconnect);
+
+                    if (guest.Connections.Active().Count() == 1)
                     {
                         var chatHubUserClientModel = this.chatHubService.CreateChatHubUserClientModel(guest);
                         await Clients.Group(room.ChatHubRoomId.ToString()).SendAsync("RemoveUser", chatHubUserClientModel, room.ChatHubRoomId.ToString());
                     }
                 }
+
+                var connection = await this.chatHubRepository.GetConnectionByConnectionId(Context.ConnectionId);
+                connection.Status = Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Inactive);
+                chatHubRepository.UpdateChatHubConnection(connection);
             }
 
             await base.OnDisconnectedAsync(exception);
@@ -178,6 +179,8 @@ namespace Oqtane.ChatHubs.Hubs
 
                 ChatHubUser chatHubUserClientModel = this.chatHubService.CreateChatHubUserClientModel(guest);
                 await Clients.Group(room.ChatHubRoomId.ToString()).SendAsync("AddUser", chatHubUserClientModel, room.ChatHubRoomId.ToString());
+
+                await this.SendGroupNotification(string.Format("{0} entered chat room with client device {1}.", guest.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.ChatHubRoomId, Context.ConnectionId, guest, ChatHubMessageType.Enter_Leave);
             }
         }
         [AllowAnonymous]
@@ -198,6 +201,7 @@ namespace Oqtane.ChatHubs.Hubs
 
                 ChatHubUser chatHubUserClientModel = this.chatHubService.CreateChatHubUserClientModel(guest);
                 await Clients.Group(room.ChatHubRoomId.ToString()).SendAsync("RemoveUser", chatHubUserClientModel, room.ChatHubRoomId.ToString());
+                await this.SendGroupNotification(string.Format("{0} left chat room with client device {1}.", guest.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.ChatHubRoomId, Context.ConnectionId, guest, ChatHubMessageType.Enter_Leave);
             }
         }
 
@@ -260,7 +264,7 @@ namespace Oqtane.ChatHubs.Hubs
             }
         }
 
-        public async Task SendNotification(string message, int roomId, string connectionId, ChatHubUser targetUser)
+        public async Task SendClientNotification(string message, int roomId, string connectionId, ChatHubUser targetUser, ChatHubMessageType chatHubMessageType)
         {
             ChatHubMessage chatHubMessage = new ChatHubMessage()
             {
@@ -268,12 +272,28 @@ namespace Oqtane.ChatHubs.Hubs
                 ChatHubUserId = targetUser.UserId,
                 User = targetUser,
                 Content = message ?? string.Empty,
-                Type = Enum.GetName(typeof(ChatHubMessageType), ChatHubMessageType.System)
+                Type = Enum.GetName(typeof(ChatHubMessageType), chatHubMessageType)
             };
             this.chatHubRepository.AddChatHubMessage(chatHubMessage);
 
             ChatHubMessage chatHubMessageClientModel = this.chatHubService.CreateChatHubMessageClientModel(chatHubMessage);
             await Clients.Client(connectionId).SendAsync("AddMessage", chatHubMessageClientModel);
+        }
+        public async Task SendGroupNotification(string message, int roomId, string connectionId, ChatHubUser contextUser, ChatHubMessageType chatHubMessageType)
+        {
+            ChatHubMessage chatHubMessage = new ChatHubMessage()
+            {
+                ChatHubRoomId = roomId,
+                ChatHubUserId = contextUser.UserId,
+                User = contextUser,
+                Content = message ?? string.Empty,
+                Type = Enum.GetName(typeof(ChatHubMessageType), chatHubMessageType)
+            };
+            this.chatHubRepository.AddChatHubMessage(chatHubMessage);
+
+            ChatHubMessage chatHubMessageClientModel = this.chatHubService.CreateChatHubMessageClientModel(chatHubMessage);
+            var connectionsIds = this.chatHubService.GetAllExceptConnectionIds(contextUser);
+            await Clients.GroupExcept(roomId.ToString(), connectionsIds).SendAsync("AddMessage", chatHubMessageClientModel);
         }
 
         [AllowAnonymous]
@@ -391,6 +411,22 @@ namespace Oqtane.ChatHubs.Hubs
             var numbers = username.Substring(username.IndexOf('-') + 1, 4);
             var displayname = string.Concat(name, "-", numbers);
             return displayname;
+        }
+
+        private string MakeStringAnonymous(string value, int tolerance, char symbol = '*')
+        {
+            if(tolerance >= value.Length)
+            {
+                return value;
+            }
+
+            var newValue = value.Substring(0, value.Length - tolerance);
+            for (var i = 0; i <= tolerance; i++)
+            {
+                newValue += symbol;
+            }
+
+            return newValue;
         }
 
         private bool IsValidGuestUsername(string guestName)

@@ -1,6 +1,7 @@
 ﻿using Oqtane.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Oqtane.Shared.Models
@@ -18,7 +19,8 @@ namespace Oqtane.Shared.Models
         public DateTime ModifiedOn { get; set; }
 
         public int ChatHubUserId { get; set; }
-        public ChatHubUser User { get; set; }
+        [NotMapped]
+        public virtual ChatHubUser User { get; set; }
 
     }
 }

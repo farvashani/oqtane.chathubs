@@ -33,7 +33,7 @@ namespace BlazorAlerts
                     CreatedOn = DateTime.Now
                 };
 
-                this.BlazorAlertsService.BlazorAlerts.Add(alert);
+                this.BlazorAlertsService.AddAlert(alert);
                 StateHasChanged();
             });
         }

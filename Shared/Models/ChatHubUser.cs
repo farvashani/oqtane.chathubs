@@ -9,7 +9,7 @@ namespace Oqtane.Shared.Models
     {
 
         [NotMapped]
-        public bool UserlistItemCollapsed { get; set; } = false;
+        public bool UserlistItemCollapsed { get; set; }
 
         [NotMapped]
         public virtual ICollection<ChatHubRoomChatHubUser> UserRooms { get; set; }
@@ -18,7 +18,7 @@ namespace Oqtane.Shared.Models
         public virtual ICollection<ChatHubConnection> Connections { get; set; }
 
         [NotMapped]
-        public ChatHubSetting Settings { get; set; }
+        public virtual ChatHubSetting Settings { get; set; }
 
         [NotMapped]
         public virtual ICollection<ChatHubIgnore> Ignores { get; set; }

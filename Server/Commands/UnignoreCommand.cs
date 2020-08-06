@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using Oqtane.Shared.Models;
+﻿using Oqtane.Shared.Models;
 using System.Composition;
 using System.Threading.Tasks;
 using Oqtane.Shared;
-using System.Linq;
-using Oqtane.ChatHubs.Repository;
-using System;
+using Oqtane.Shared.Enums;
 
 namespace Oqtane.ChatHubs.Commands
 {
@@ -18,7 +15,7 @@ namespace Oqtane.ChatHubs.Commands
 
             if (args.Length == 0)
             {
-                await context.ChatHub.SendNotification("No arguments found.", callerContext.RoomId, callerContext.ConnectionId, caller);
+                await context.ChatHub.SendClientNotification("No arguments found.", callerContext.RoomId, callerContext.ConnectionId, caller, ChatHubMessageType.System);
                 return;
             }
 
@@ -28,7 +25,7 @@ namespace Oqtane.ChatHubs.Commands
             targetUser = targetUser == null ? await context.ChatHubRepository.GetUserByUserNameAsync(targetUserName) : targetUser;
             if (targetUser == null)
             {
-                await context.ChatHub.SendNotification("No user found.", callerContext.RoomId, callerContext.ConnectionId, caller);
+                await context.ChatHub.SendClientNotification("No user found.", callerContext.RoomId, callerContext.ConnectionId, caller, ChatHubMessageType.System);
                 return;
             }
 

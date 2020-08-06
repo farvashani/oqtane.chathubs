@@ -17,7 +17,7 @@ namespace Oqtane.ChatHubs.Commands
 
             if (args.Length == 0)
             {
-                await context.ChatHub.SendNotification("No arguments found.", callerContext.RoomId, callerContext.ConnectionId, caller);
+                await context.ChatHub.SendClientNotification("No arguments found.", callerContext.RoomId, callerContext.ConnectionId, caller, ChatHubMessageType.System);
                 return;
             }
 

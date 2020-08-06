@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 
 namespace BlazorAlerts
 {
@@ -22,6 +19,14 @@ namespace BlazorAlerts
         public void NewBlazorAlert(string message, string heading, PositionType position = PositionType.Fixed)
         {
             this.OnAlert?.Invoke(message, heading, position);
+        }
+
+        public void AddAlert(BlazorAlertsModel model)
+        {
+            if(!this.BlazorAlerts.Any(item => item.Guid == model.Guid))
+            {
+                this.BlazorAlerts.Add(model);
+            }
         }
 
         public void RemoveAlert(Guid guid)

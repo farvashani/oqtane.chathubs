@@ -24,9 +24,9 @@ namespace Oqtane.Shared.Models
         [NotMapped]
         public virtual ChatHubUser User { get; set; }
         [NotMapped]
-        public IList<ChatHubPhoto> Photos { get; set; }
+        public virtual IList<ChatHubPhoto> Photos { get; set; }
         [NotMapped]
-        public IList<ChatHubCommandMetaData> CommandMetaDatas { get; set; }
+        public virtual IList<ChatHubCommandMetaData> CommandMetaDatas { get; set; }
 
     }
 }

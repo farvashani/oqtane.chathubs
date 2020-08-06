@@ -13,7 +13,7 @@
     }
 
     .blazoralerts-item {
-        position: absolute; /* position relative to module container somehow feels wrong */
+        position: absolute;
         position: fixed;
         z-index: 1000;
         width: 400px;
@@ -43,6 +43,7 @@
         padding: 30px 45px;
         background-color: rgba(229,226,232,1);
     }
+
 </style>
 
 @if (BlazorAlertsService.BlazorAlerts.Any())
@@ -60,7 +61,7 @@
                 </button>
             </RenderCloseButton>
             <RenderImage Context="item">
-                <img src="/modules/oqtane.chathubs/chathub/images/hub-exception.png" class="img-fluid" width="72" />
+                <img src="/modules/oqtane.chathubs/images/hub-exception.png" class="img-fluid" width="72" />
             </RenderImage>
             <RenderMessage Context="item">
                 <p>@item.Message</p>

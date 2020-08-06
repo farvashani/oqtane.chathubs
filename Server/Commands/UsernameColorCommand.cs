@@ -3,19 +3,20 @@ using Oqtane.Shared.Models;
 using System.Composition;
 using System.Threading.Tasks;
 using Oqtane.Shared;
+using Oqtane.Shared.Enums;
 
 namespace Oqtane.ChatHubs.Commands
 {
     [Export("ICommand", typeof(ICommand))]
     [Command("username-color", "[]", new string[] { Constants.AllUsersRole, Constants.AdminRole } , "Usage: /username-color")]
-    public class UsernameColor : BaseCommand
+    public class UsernameColorCommand : BaseCommand
     {
         public override async Task Execute(CommandServicesContext context, CommandCallerContext callerContext, string[] args, ChatHubUser caller)
         {
 
             if (args.Length == 0)
             {
-                await context.ChatHub.SendNotification("No arguments found.", callerContext.RoomId, callerContext.ConnectionId, caller);
+                await context.ChatHub.SendClientNotification("No arguments found.", callerContext.RoomId, callerContext.ConnectionId, caller, ChatHubMessageType.System);
                 return;
             }
 
@@ -27,7 +28,7 @@ namespace Oqtane.ChatHubs.Commands
                 settings.UsernameColor = usernameColor;
                 context.ChatHubRepository.UpdateChatHubSetting(settings);
 
-                await context.ChatHub.SendNotification("Username Color Updated.", callerContext.RoomId, callerContext.ConnectionId, caller);
+                await context.ChatHub.SendClientNotification("Username Color Updated.", callerContext.RoomId, callerContext.ConnectionId, caller, ChatHubMessageType.System);
             }
 
         }
