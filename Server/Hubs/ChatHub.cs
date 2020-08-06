@@ -417,7 +417,7 @@ namespace Oqtane.ChatHubs.Hubs
         {
             if(tolerance >= value.Length)
             {
-                return value;
+                return string.Empty;
             }
 
             var newValue = value.Substring(0, value.Length - tolerance);

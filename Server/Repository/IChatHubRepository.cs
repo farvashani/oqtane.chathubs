@@ -10,53 +10,61 @@ namespace Oqtane.ChatHubs.Repository
     public interface IChatHubRepository
     {
 
+        #region GET
+
         IEnumerable<ChatHubRoom> GetChatHubRooms(int ModuleId);
         IQueryable<ChatHubRoom> GetChatHubRoomsByUser(ChatHubUser user);
-        ChatHubRoom AddChatHubRoom(ChatHubRoom ChatHubRoom);
-        ChatHubRoom UpdateChatHubRoom(ChatHubRoom ChatHubRoom);
         ChatHubRoom GetChatHubRoom(int ChatHubRoomId);
-        void DeleteChatHubRoom(int ChatHubRoomId, int ModuleId);
-
         IEnumerable<ChatHubMessage> GetChatHubMessages(int ChatHubRoomId);
-        ChatHubMessage AddChatHubMessage(ChatHubMessage ChatHubMessage);
-        ChatHubMessage UpdateChatHubMessage(ChatHubMessage ChatHubMessage);
         ChatHubMessage GetChatHubMessage(int ChatHubMessageId);
-        void DeleteChatHubMessage(int ChatHubMessageId, int ChatHubRoomId);
-
-        ChatHubConnection AddChatHubConnection(ChatHubConnection ChatHubConnection);
-        void DeleteChatHubConnection(int ChatHubConnectionId, int ChatHubUserId);
-
         IQueryable<ChatHubUser> GetOnlineUsers();
         IQueryable<ChatHubUser> GetOnlineUsers(ChatHubRoom room);
-
-        ChatHubConnection UpdateChatHubConnection(ChatHubConnection ChatHubConnection);
-
         IQueryable<ChatHubConnection> GetConnectionsByUserId(int userId);
         Task<ChatHubConnection> GetConnectionByConnectionId(string connectionId);
-
-        ChatHubUser AddChatHubUser(ChatHubUser ChatHubUser);
-
         ChatHubRoomChatHubUser GetChatHubRoomChatHubUser(int chatHubRoomId, int chatHubUserId);
-        ChatHubRoomChatHubUser AddChatHubRoomChatHubUser(ChatHubRoomChatHubUser ChatHubRoomChatHubUser);
-        void DeleteChatHubRoomChatHubUser(int ChatHubRoomId, int ChatHubUserId);
-
-        ChatHubPhoto AddChatHubPhoto(ChatHubPhoto ChatHubPhoto);
-
         IQueryable<ChatHubIgnore> GetIgnoredUsers(ChatHubUser user);
         IQueryable<ChatHubUser> GetIgnoredApplicationUsers(ChatHubUser user);
         IQueryable<ChatHubUser> GetIgnoredByApplicationUsers(ChatHubUser user);
         IQueryable<ChatHubIgnore> GetIgnoredByUsers(ChatHubUser user);
-        ChatHubIgnore AddChatHubIgnore(ChatHubIgnore chatHubIgnore);
-        ChatHubIgnore UpdateChatHubIgnore(ChatHubIgnore chatHubIgnore);
-        void DeleteChatHubIgnore(ChatHubIgnore chatHubIgnore);
-
-        ChatHubSetting AddChatHubSetting(ChatHubSetting ChatHubSetting);
         ChatHubSetting GetChatHubSetting(int ChatHubSettingId);
-        ChatHubSetting UpdateChatHubSetting(ChatHubSetting ChatHubSetting);
-
         Task<ChatHubUser> GetUserByIdAsync(int id);
         Task<ChatHubUser> GetUserByUserNameAsync(string username);
         Task<ChatHubUser> GetUserByDisplayName(string displayName);
+
+        #endregion
+
+        #region ADD
+
+        ChatHubRoom AddChatHubRoom(ChatHubRoom ChatHubRoom);
+        ChatHubMessage AddChatHubMessage(ChatHubMessage ChatHubMessage);
+        ChatHubConnection AddChatHubConnection(ChatHubConnection ChatHubConnection);
+        ChatHubUser AddChatHubUser(ChatHubUser ChatHubUser);
+        ChatHubRoomChatHubUser AddChatHubRoomChatHubUser(ChatHubRoomChatHubUser ChatHubRoomChatHubUser);
+        ChatHubPhoto AddChatHubPhoto(ChatHubPhoto ChatHubPhoto);
+        ChatHubIgnore AddChatHubIgnore(ChatHubIgnore chatHubIgnore);
+        ChatHubSetting AddChatHubSetting(ChatHubSetting ChatHubSetting);
+
+        #endregion
+
+        #region DELETE
+
+        void DeleteChatHubRoom(int ChatHubRoomId, int ModuleId);
+        void DeleteChatHubMessage(int ChatHubMessageId, int ChatHubRoomId);
+        void DeleteChatHubConnection(int ChatHubConnectionId, int ChatHubUserId);
+        void DeleteChatHubRoomChatHubUser(int ChatHubRoomId, int ChatHubUserId);
+        void DeleteChatHubIgnore(ChatHubIgnore chatHubIgnore);
+
+        #endregion
+
+        #region UPDATE
+
+        ChatHubRoom UpdateChatHubRoom(ChatHubRoom ChatHubRoom);
+        ChatHubMessage UpdateChatHubMessage(ChatHubMessage ChatHubMessage);
+        ChatHubConnection UpdateChatHubConnection(ChatHubConnection ChatHubConnection);
+        ChatHubIgnore UpdateChatHubIgnore(ChatHubIgnore chatHubIgnore);
+        ChatHubSetting UpdateChatHubSetting(ChatHubSetting ChatHubSetting);
+
+        #endregion
 
     }
 }
