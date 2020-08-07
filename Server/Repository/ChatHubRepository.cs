@@ -20,7 +20,8 @@ namespace Oqtane.ChatHubs.Repository
         }
 
         #region GET
-        public IEnumerable<ChatHubRoom> GetChatHubRooms(int ModuleId)
+
+        public IQueryable<ChatHubRoom> GetChatHubRooms(int ModuleId)
         {
             try
             {
@@ -37,6 +38,12 @@ namespace Oqtane.ChatHubs.Repository
                       .Collection(u => u.UserRooms)
                       .Query().Select(u => u.Room);            
         }
+        public IQueryable<ChatHubUser> GetChatHubUsersByRoom(ChatHubRoom room)
+        {
+            return db.Entry(room)
+                      .Collection(r => r.RoomUsers)
+                      .Query().Select(r => r.User);
+        }
         public ChatHubRoom GetChatHubRoom(int ChatHubRoomId)
         {
             try
@@ -48,14 +55,11 @@ namespace Oqtane.ChatHubs.Repository
                 throw;
             }
         }
-        public ChatHubRoom GetChatHubRoomOneVsOne(int userId1, int userId2)
+        public ChatHubRoom GetChatHubRoomOneVsOne(string OneVsOneId)
         {
             try
             {
-                return db.ChatHubRoom.Include(item => item.Users)
-                    .Where(item => item.Type == Enum.GetName(typeof(ChatHubRoomType), ChatHubRoomType.OneVsOne))
-                    .Where(item => item.Users.Any(u => u.UserId == userId1) && item.Users.Any(u => u.UserId == userId2))
-                    .FirstOrDefault();
+                return db.ChatHubRoom.FirstOrDefault(item => item.OneVsOneId == OneVsOneId);
             }
             catch
             {

@@ -135,9 +135,9 @@ namespace Oqtane.ChatHubs.Hubs
             {
 
                 var rooms = chatHubRepository.GetChatHubRoomsByUser(guest).Active();
-                foreach (var room in await rooms.Public().ToListAsync())
+                foreach (var room in await rooms.ToListAsync())
                 {
-                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.ChatHubRoomId.ToString());                    
+                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.ChatHubRoomId.ToString());
                     await this.SendGroupNotification(string.Format("{0} disconnected from chat with client device {1}.", guest.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.ChatHubRoomId, Context.ConnectionId, guest, ChatHubMessageType.Connect_Disconnect);
 
                     if (guest.Connections.Active().Count() == 1)
@@ -156,52 +156,84 @@ namespace Oqtane.ChatHubs.Hubs
         }
 
         [AllowAnonymous]
-        public async Task EnterChatRoom(int roomId, int moduleId)
+        public async Task EnterChatRoom(int roomId)
         {
             ChatHubUser guest = await this.chatHubService.IdentifyGuest(Context.ConnectionId);
             if (guest != null)
             {
                 ChatHubRoom room = chatHubRepository.GetChatHubRoom(roomId);
-                ChatHubRoomChatHubUser room_user = new ChatHubRoomChatHubUser()
+                if(this.chatHubRepository.GetChatHubUsersByRoom(room).Any(item => item.UserId == guest.UserId))
                 {
-                    ChatHubRoomId = room.ChatHubRoomId,
-                    ChatHubUserId = guest.UserId
-                };
-                chatHubRepository.AddChatHubRoomChatHubUser(room_user);
-
-                ChatHubRoom chatHubRoomClientModel = await this.chatHubService.CreateChatHubRoomClientModelAsync(room);
-
-                foreach (var connection in guest.Connections.Active())
-                {
-                    await Groups.AddToGroupAsync(connection.ConnectionId, room.ChatHubRoomId.ToString());
-                    await Clients.Client(connection.ConnectionId).SendAsync("AddRoom", chatHubRoomClientModel);
+                    throw new HubException("User already entered room.");
                 }
 
-                ChatHubUser chatHubUserClientModel = this.chatHubService.CreateChatHubUserClientModel(guest);
-                await Clients.Group(room.ChatHubRoomId.ToString()).SendAsync("AddUser", chatHubUserClientModel, room.ChatHubRoomId.ToString());
+                if (room.OneVsOne())
+                {
+                    if(!this.chatHubService.IsValidOneVsOneConnection(room, guest))
+                    {
+                        throw new HubException("No valid one vs one room id.");
+                    }
+                }
 
-                await this.SendGroupNotification(string.Format("{0} entered chat room with client device {1}.", guest.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.ChatHubRoomId, Context.ConnectionId, guest, ChatHubMessageType.Enter_Leave);
+                if (room.Public() || room.OneVsOne())
+                {
+                    ChatHubRoomChatHubUser room_user = new ChatHubRoomChatHubUser()
+                    {
+                        ChatHubRoomId = room.ChatHubRoomId,
+                        ChatHubUserId = guest.UserId
+                    };
+                    chatHubRepository.AddChatHubRoomChatHubUser(room_user);
+
+                    ChatHubRoom chatHubRoomClientModel = await this.chatHubService.CreateChatHubRoomClientModelAsync(room);
+
+                    foreach (var connection in guest.Connections.Active())
+                    {
+                        await Groups.AddToGroupAsync(connection.ConnectionId, room.ChatHubRoomId.ToString());
+                        await Clients.Client(connection.ConnectionId).SendAsync("AddRoom", chatHubRoomClientModel);
+                    }
+
+                    ChatHubUser chatHubUserClientModel = this.chatHubService.CreateChatHubUserClientModel(guest);
+                    await Clients.Group(room.ChatHubRoomId.ToString()).SendAsync("AddUser", chatHubUserClientModel, room.ChatHubRoomId.ToString());
+
+                    await this.SendGroupNotification(string.Format("{0} entered chat room with client device {1}.", guest.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.ChatHubRoomId, Context.ConnectionId, guest, ChatHubMessageType.Enter_Leave);
+                }
             }
         }
         [AllowAnonymous]
-        public async Task LeaveChatRoom(int roomId, int moduleId)
+        public async Task LeaveChatRoom(int roomId)
         {
             ChatHubUser guest = await this.chatHubService.IdentifyGuest(Context.ConnectionId);
             if (guest != null)
             {
-                this.chatHubRepository.DeleteChatHubRoomChatHubUser(roomId, guest.UserId);
                 ChatHubRoom room = chatHubRepository.GetChatHubRoom(roomId);
-                ChatHubRoom chatHubRoomClientModel = await this.chatHubService.CreateChatHubRoomClientModelAsync(room);
-
-                foreach (var connection in guest.Connections.Active())
+                if (!this.chatHubRepository.GetChatHubUsersByRoom(room).Any(item => item.UserId == guest.UserId))
                 {
-                    await Groups.RemoveFromGroupAsync(connection.ConnectionId, room.ChatHubRoomId.ToString());
-                    await Clients.Client(connection.ConnectionId).SendAsync("RemoveRoom", chatHubRoomClientModel);
+                    throw new HubException("User already left room.");
                 }
 
-                ChatHubUser chatHubUserClientModel = this.chatHubService.CreateChatHubUserClientModel(guest);
-                await Clients.Group(room.ChatHubRoomId.ToString()).SendAsync("RemoveUser", chatHubUserClientModel, room.ChatHubRoomId.ToString());
-                await this.SendGroupNotification(string.Format("{0} left chat room with client device {1}.", guest.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.ChatHubRoomId, Context.ConnectionId, guest, ChatHubMessageType.Enter_Leave);
+                if (room.OneVsOne())
+                {
+                    if (!this.chatHubService.IsValidOneVsOneConnection(room, guest))
+                    {
+                        throw new HubException("No valid one vs one room id.");
+                    }
+                }
+
+                if (room.Public() || room.OneVsOne())
+                {
+                    this.chatHubRepository.DeleteChatHubRoomChatHubUser(roomId, guest.UserId);
+                    ChatHubRoom chatHubRoomClientModel = await this.chatHubService.CreateChatHubRoomClientModelAsync(room);
+
+                    foreach (var connection in guest.Connections.Active())
+                    {
+                        await Groups.RemoveFromGroupAsync(connection.ConnectionId, room.ChatHubRoomId.ToString());
+                        await Clients.Client(connection.ConnectionId).SendAsync("RemoveRoom", chatHubRoomClientModel);
+                    }
+
+                    ChatHubUser chatHubUserClientModel = this.chatHubService.CreateChatHubUserClientModel(guest);
+                    await Clients.Group(room.ChatHubRoomId.ToString()).SendAsync("RemoveUser", chatHubUserClientModel, room.ChatHubRoomId.ToString());
+                    await this.SendGroupNotification(string.Format("{0} left chat room with client device {1}.", guest.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.ChatHubRoomId, Context.ConnectionId, guest, ChatHubMessageType.Enter_Leave);
+                }
             }
         }
 
@@ -261,6 +293,7 @@ namespace Oqtane.ChatHubs.Hubs
                 ChatHubMessage chatHubMessageClientModel = this.chatHubService.CreateChatHubMessageClientModel(chatHubMessage);
                 var connectionsIds = this.chatHubService.GetAllExceptConnectionIds(guest);
                 await Clients.GroupExcept(roomId.ToString(), connectionsIds).SendAsync("AddMessage", chatHubMessageClientModel);
+                
             }
         }
 

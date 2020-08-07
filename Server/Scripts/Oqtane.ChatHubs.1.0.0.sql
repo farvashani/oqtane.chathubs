@@ -10,6 +10,7 @@ CREATE TABLE [dbo].[ChatHubRoom](
 	[ImageUrl] [nvarchar](256) NOT NULL,
 	[Type] [nvarchar](256) NOT NULL,
 	[Status] [nvarchar](256) NOT NULL,
+	[OneVsOneId] [nvarchar](256) NOT NULL,
 	[CreatedBy] [nvarchar](256) NOT NULL,
 	[CreatedOn] [datetime] NOT NULL,
 	[ModifiedBy] [nvarchar](256) NOT NULL,

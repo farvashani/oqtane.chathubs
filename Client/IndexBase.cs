@@ -142,10 +142,12 @@ namespace Oqtane.ChatHubs
 
             try
             {
-                if (this.ChatHubService.Connection?.State == HubConnectionState.Connected)
+                if (this.ChatHubService.Connection?.State == HubConnectionState.Connected
+                 || this.ChatHubService.Connection?.State == HubConnectionState.Connecting
+                 || this.ChatHubService.Connection?.State == HubConnectionState.Reconnecting)
                 {
-                    return;
-                }                
+                    this.BlazorAlertsService.NewBlazorAlert("The client is already connected.");
+                }
 
                 this.ChatHubService.BuildGuestConnection(GuestUsername);
                 this.ChatHubService.RegisterHubConnectionHandlers();
@@ -153,7 +155,7 @@ namespace Oqtane.ChatHubs
             }
             catch (Exception ex)
             {
-                await logger.LogError(ex, "Error Connecting To ChatHub {Error}", ex.Message);
+                await logger.LogError(ex, "Error Connecting To ChatHub: {Error}", ex.Message);
                 ModuleInstance.AddModuleMessage("Error Connecting To ChatHub", MessageType.Error);
             }
 
@@ -163,13 +165,27 @@ namespace Oqtane.ChatHubs
         {
             if(ChatHubService.Connection?.State == HubConnectionState.Connected)
             {
-                await this.ChatHubService.EnterChatRoom(roomId, moduleid);
+                await this.ChatHubService.EnterChatRoom(roomId);
             }
         }
 
         public async Task LeaveRoom_Clicked(int roomId, int moduleId)
         {
-            await this.ChatHubService.LeaveChatRoom(roomId, moduleId);
+            await this.ChatHubService.LeaveChatRoom(roomId);
+        }
+
+        public async Task FollowInvitation_Clicked(Guid invitationGuid, int roomId)
+        {
+            if (ChatHubService.Connection?.State == HubConnectionState.Connected)
+            {
+                await this.ChatHubService.EnterChatRoom(roomId);
+                this.ChatHubService.RemoveInvitation(invitationGuid);
+            }
+        }
+
+        public void RemoveInvitation_Clicked(Guid guid)
+        {
+            this.ChatHubService.RemoveInvitation(guid);
         }
 
         public async void KeyDown(KeyboardEventArgs e, ChatHubRoom room)
@@ -305,12 +321,14 @@ namespace Oqtane.ChatHubs
                 message = exception.Message;
             }
 
-            BlazorAlertsService.NewBlazorAlert(message, "[Javascript Application]", PositionType.Absolute);
+            BlazorAlertsService.NewBlazorAlert(message);
         }
 
         public void Dispose()
         {
-            if (this.ChatHubService.Connection?.State != HubConnectionState.Disconnected)
+            if (this.ChatHubService.Connection?.State == HubConnectionState.Connected
+             || this.ChatHubService.Connection?.State == HubConnectionState.Connecting
+             || this.ChatHubService.Connection?.State == HubConnectionState.Reconnecting)
             {
                 this.ChatHubService.Connection?.StopAsync();
             }
@@ -325,26 +343,21 @@ namespace Oqtane.ChatHubs
 
         public void Show(BSTabEvent e)
         {
-            Console.WriteLine($"Show   -> Activated: {e.Activated?.Id.ToString()} , Deactivated: {e.Deactivated?.Id.ToString()}");
         }
         public void Shown(BSTabEvent e)
         {
-            var shownRoomId = e.Activated.Id;
-            this.ChatHubService.ContextRoomId = shownRoomId;
+            this.ChatHubService.ContextRoomId = e.Activated.Id;
             var room = this.ChatHubService.Rooms.FirstOrDefault(item => item.ChatHubRoomId.ToString() == this.ChatHubService.ContextRoomId);
             if(room != null)
             {
                 room.UnreadMessages = 0;
             }
-            Console.WriteLine($"Shown  -> Activated: {e.Activated?.Id.ToString()} , Deactivated: {e.Deactivated?.Id.ToString()}");
         }
         public void Hide(BSTabEvent e)
         {
-            Console.WriteLine($"Hide   ->  Activated: {e.Activated?.Id.ToString()} , Deactivated: {e.Deactivated?.Id.ToString()}");
         }
         public void Hidden(BSTabEvent e)
         {
-            Console.WriteLine($"Hidden -> Activated: {e.Activated?.Id.ToString()} , Deactivated: {e.Deactivated?.Id.ToString()}");
         }
 
     }

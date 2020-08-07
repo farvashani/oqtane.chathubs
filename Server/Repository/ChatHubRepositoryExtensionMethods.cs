@@ -34,7 +34,22 @@ namespace Oqtane.ChatHubs.Repository
 
         public static IQueryable<ChatHubRoom> Public(this IQueryable<ChatHubRoom> rooms)
         {
-            return rooms.Where(room => room.Type == Enum.GetName(typeof(ChatHubRoomType), ChatHubRoomType.Public));
+            return rooms.Where(room => room.Type == ChatHubRoomType.Public.ToString());
+        }
+
+        public static IQueryable<ChatHubRoom> OneVsOne(this IQueryable<ChatHubRoom> rooms)
+        {
+            return rooms.Where(room => room.Type == ChatHubRoomType.OneVsOne.ToString());
+        }
+
+        public static bool Public(this ChatHubRoom room)
+        {
+            return room.Type == ChatHubRoomType.Public.ToString();
+        }
+
+        public static bool OneVsOne(this ChatHubRoom room)
+        {
+            return room.Type == ChatHubRoomType.OneVsOne.ToString();
         }
 
     }

@@ -7,6 +7,8 @@ namespace BlazorAlerts
 
         void NewBlazorAlert(string message, string heading, PositionType position = PositionType.Fixed);
 
+        void AddAlert(BlazorAlertsModel model);
+
         void RemoveAlert(Guid guid);
 
     }

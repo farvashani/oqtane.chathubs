@@ -60,6 +60,7 @@ namespace Oqtane.ChatHubs.Manager
                     room.ImageUrl = chatHubRoom.ImageUrl;
                     room.Type = chatHubRoom.Type;
                     room.Status = chatHubRoom.Status;
+                    room.OneVsOneId = chatHubRoom.OneVsOneId;
                     _chatHubRepository.AddChatHubRoom(room);
                 }
             }

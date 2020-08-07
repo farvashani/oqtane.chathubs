@@ -15,7 +15,7 @@
 <style type="text/css">
 
     /*
-    .chathub-light-yellow-module-container * { border-radius: 0px !important; -webkit-border-radius: 0px !important; -moz-border-radius: 0px !important; }
+    .chathub-light-yellow-module-container * { border-radius: 0px; -webkit-border-radius: 0px; -moz-border-radius: 0px; }
     */
 
     .chathub-light-yellow-module-container {
@@ -434,7 +434,7 @@
 
                                                 <MatTab>
 
-                                                    <LabelContent><span class="oi oi-image"></span></LabelContent>
+                                                    <LabelContent><div><span class="oi oi-image"></span></div></LabelContent>
 
                                                     <ChildContent>
 
@@ -442,6 +442,39 @@
 
                                                             <h5>Teile deine Bilder <span class="badge badge-success">NEW</span></h5>
                                                             <FileReader ModuleId="@ModuleState.ModuleId.ToString()" ChatHubRoomId="@room.ChatHubRoomId.ToString()" ChatHubService="ChatHubService"></FileReader>
+
+                                                        </div>
+
+                                                    </ChildContent>
+
+                                                </MatTab>
+
+                                                <MatTab>
+
+                                                    <LabelContent><div><span class="oi oi-list"></span> (@ChatHubService.Invitations.Count())</div></LabelContent>
+
+                                                    <ChildContent>
+
+                                                        <div class="px-sm-1 py-3">
+
+                                                            <h5>Invitations <span class="badge badge-warning">NEW</span></h5>
+                                                            @foreach (var item in ChatHubService.Invitations)
+                                                            {
+
+                                                                <div class="py-1">
+                                                                    <button type="button" @onclick="@(async () => await FollowInvitation_Clicked(item.Guid, item.RoomId))" class="btn btn-sm btn-link">@item.Hostname</button>
+
+                                                                    <button type="button" @onclick="@(() => RemoveInvitation_Clicked(item.Guid))" class="btn btn-sm btn-danger">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                            }
+                                                            @if (!ChatHubService.Invitations.Any())
+                                                            {
+                                                                <div class="alert alert-warning" role="alert">
+                                                                    No invitations found yet.
+                                                                </div>
+                                                            }
 
                                                         </div>
 

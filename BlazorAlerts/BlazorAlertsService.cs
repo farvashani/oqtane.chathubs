@@ -16,7 +16,7 @@ namespace BlazorAlerts
 
         }
 
-        public void NewBlazorAlert(string message, string heading, PositionType position = PositionType.Fixed)
+        public void NewBlazorAlert(string message, string heading = "[Javascript Application]", PositionType position = PositionType.Absolute)
         {
             this.OnAlert?.Invoke(message, heading, position);
         }

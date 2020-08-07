@@ -88,6 +88,15 @@ namespace Oqtane.ChatHubs.Server.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to invite;.
+        /// </summary>
+        public static string invite {
+            get {
+                return ResourceManager.GetString("invite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to me;myself;i;.
         /// </summary>
         public static string me {

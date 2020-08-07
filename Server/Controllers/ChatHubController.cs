@@ -47,7 +47,6 @@ namespace Oqtane.ChatHubs.Controllers
             }
         }
 
-        // GET: api/<controller>?moduleid=x
         [HttpGet]
         [ActionName("GetChatHubRooms")]
         [Authorize(Policy = "ViewModule")]
@@ -58,7 +57,7 @@ namespace Oqtane.ChatHubs.Controllers
                 IList<ChatHubRoom> chatHubRooms = new List<ChatHubRoom>();
                 if (moduleid == EntityId)
                 {
-                    var rooms = chatHubRepository.GetChatHubRooms(moduleid).ToList();
+                    var rooms = chatHubRepository.GetChatHubRooms(moduleid).Public().ToList();
                     if (rooms != null && rooms.Any())
                     {                        
                         foreach(var room in rooms)
@@ -78,7 +77,6 @@ namespace Oqtane.ChatHubs.Controllers
             }
         }
 
-        // GET api/<controller>/5
         [HttpGet("{id}")]
         [ActionName("GetChatHubRoom")]
         [Authorize(Policy = "ViewModule")]
@@ -101,7 +99,6 @@ namespace Oqtane.ChatHubs.Controllers
             }
         }
 
-        // POST api/<controller>
         [HttpPost]
         [ActionName("AddChatHubRoom")]
         [Authorize(Policy = "EditModule")]
@@ -123,7 +120,6 @@ namespace Oqtane.ChatHubs.Controllers
             }
         }
 
-        // PUT api/<controller>/5
         [HttpPut("{id}")]
         [ActionName("UpdateChatHubRoom")]
         [Authorize(Policy = "EditModule")]
@@ -145,7 +141,6 @@ namespace Oqtane.ChatHubs.Controllers
             }
         }
 
-        // DELETE api/<controller>/5
         [HttpDelete("{id}")]
         [ActionName("DeleteChatHubRoom")]
         [Authorize(Policy = "EditModule")]
@@ -166,7 +161,6 @@ namespace Oqtane.ChatHubs.Controllers
             }
         }
 
-        // DELETE api/<controller>/5
         [HttpDelete]
         [ActionName("FixCorruptConnections")]
         [Authorize(Policy = "EditModule")]
@@ -196,7 +190,6 @@ namespace Oqtane.ChatHubs.Controllers
             }
         }
 
-        // POST api/<controller>/
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> PostImageUpload()

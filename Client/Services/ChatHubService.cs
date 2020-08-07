@@ -33,6 +33,8 @@ namespace Oqtane.ChatHubs.Services
         public List<ChatHubRoom> Lobbies { get; set; } = new List<ChatHubRoom>();
         public List<ChatHubRoom> Rooms { get; set; } = new List<ChatHubRoom>();
 
+        public List<ChatHubInvitation> Invitations { get; set; } = new List<ChatHubInvitation>();
+
         public List<ChatHubUser> IgnoredUsers { get; set; } = new List<ChatHubUser>();
         public List<ChatHubUser> IgnoredByUsers { get; set; } = new List<ChatHubUser>();
 
@@ -43,6 +45,8 @@ namespace Oqtane.ChatHubs.Services
         public event EventHandler<dynamic> OnAddChatHubUserEvent;
         public event EventHandler<dynamic> OnRemoveChatHubUserEvent;
         public event EventHandler<ChatHubMessage> OnAddChatHubMessageEvent;
+        public event EventHandler<ChatHubInvitation> OnAddChatHubInvitationEvent;
+        public event EventHandler<ChatHubInvitation> OnRemoveChatHubInvitationEvent;
         public event EventHandler<ChatHubUser> OnAddIgnoredUserEvent;
         public event EventHandler<ChatHubUser> OnRemoveIgnoredUserEvent;
         public event EventHandler<ChatHubUser> OnAddIgnoredByUserEvent;
@@ -66,6 +70,8 @@ namespace Oqtane.ChatHubs.Services
             this.OnAddChatHubUserEvent += OnAddChatHubUserExecute;
             this.OnRemoveChatHubUserEvent += OnRemoveChatHubUserExecute;
             this.OnAddChatHubMessageEvent += OnAddChatHubMessageExecute;
+            this.OnAddChatHubInvitationEvent += OnAddChatHubInvitationExecute;
+            this.OnRemoveChatHubInvitationEvent += OnRemoveChatHubInvitationExecute;
             this.OnAddIgnoredUserEvent += OnAddIngoredUserExexute;
             this.OnRemoveIgnoredUserEvent += OnRemoveIgnoredUserExecute;
             this.OnAddIgnoredByUserEvent += OnAddIgnoredByUserExecute;
@@ -126,6 +132,8 @@ namespace Oqtane.ChatHubs.Services
             Connection.On("AddUser", (ChatHubUser user, string roomId) => OnAddChatHubUserEvent(this, new { userModel = user, roomId = roomId }));
             Connection.On("RemoveUser", (ChatHubUser user, string roomId) => OnRemoveChatHubUserEvent(this, new { userModel = user, roomId = roomId }));
             Connection.On("AddMessage", (ChatHubMessage message) => OnAddChatHubMessageEvent(this, message));
+            Connection.On("AddInvitation", (ChatHubInvitation invitation) => OnAddChatHubInvitationEvent(this, invitation));
+            Connection.On("RemoveInvitation", (ChatHubInvitation invitation) => OnRemoveChatHubInvitationEvent(this, invitation));
             Connection.On("AddIgnoredUser", (ChatHubUser ignoredUser) => OnAddIgnoredUserEvent(this, ignoredUser));
             Connection.On("RemoveIgnoredUser", (ChatHubUser ignoredUser) => OnRemoveIgnoredUserEvent(this, ignoredUser));
             Connection.On("AddIgnoredByUser", (ChatHubUser ignoredUser) => OnAddIgnoredByUserExecute(this, ignoredUser));
@@ -144,9 +152,9 @@ namespace Oqtane.ChatHubs.Services
             });
         }
 
-        public async Task EnterChatRoom(int roomId, int moduleid)
+        public async Task EnterChatRoom(int roomId)
         {
-            await this.Connection.InvokeAsync("EnterChatRoom", roomId, moduleid).ContinueWith((task) =>
+            await this.Connection.InvokeAsync("EnterChatRoom", roomId).ContinueWith((task) =>
             {
                 if (task.IsCompleted)
                 {
@@ -155,9 +163,9 @@ namespace Oqtane.ChatHubs.Services
             });
         }
 
-        public async Task LeaveChatRoom(int roomId, int moduleId)
+        public async Task LeaveChatRoom(int roomId)
         {
-            await this.Connection.InvokeAsync("LeaveChatRoom", roomId, moduleId).ContinueWith((task) =>
+            await this.Connection.InvokeAsync("LeaveChatRoom", roomId).ContinueWith((task) =>
             {
                 if (task.IsCompleted)
                 {
@@ -186,6 +194,8 @@ namespace Oqtane.ChatHubs.Services
             {
                 if (task.IsCompleted)
                 {
+                    this.HandleException(task);
+
                     var ignoredUsers = task.Result;
                     if (ignoredUsers != null)
                     {
@@ -204,6 +214,8 @@ namespace Oqtane.ChatHubs.Services
             {
                 if (task.IsCompleted)
                 {
+                    this.HandleException(task);
+
                     var ignoredByUsers = task.Result;
                     if (ignoredByUsers != null)
                     {
@@ -230,7 +242,7 @@ namespace Oqtane.ChatHubs.Services
             {
                 if (task.IsCompleted)
                 {
-
+                    this.HandleException(task);
                 }
             });
         }
@@ -296,13 +308,23 @@ namespace Oqtane.ChatHubs.Services
             this.RemoveUser(obj.userModel, obj.roomId);
             this.UpdateUI();
         }
-        public void OnAddChatHubMessageExecute(object sender, ChatHubMessage message)
+        public async void OnAddChatHubMessageExecute(object sender, ChatHubMessage message)
         {
             ChatHubRoom room = this.Rooms.FirstOrDefault(item => item.ChatHubRoomId == message.ChatHubRoomId);
 
             this.AddMessage(message, room);
-            this.UpdateUI();
+            this.UpdateUI();            
         }
+
+        private void OnAddChatHubInvitationExecute(object sender, ChatHubInvitation item)
+        {
+            this.AddInvitation(item);
+        }
+        private void OnRemoveChatHubInvitationExecute(object sender, ChatHubInvitation item)
+        {
+            this.RemoveInvitation(item.Guid);
+        }
+
         public void OnGetLobbyRooms(object sender, List<ChatHubRoom> e)
         {
             this.Lobbies = e;
@@ -373,6 +395,21 @@ namespace Oqtane.ChatHubs.Services
             if (!room.Messages.Any(x => x.ChatHubMessageId == message.ChatHubMessageId))
             {
                 room.Messages.Add(message);
+            }
+        }
+        public void AddInvitation(ChatHubInvitation invitation)
+        {
+            if (!this.Invitations.Any(x => x.Guid == invitation.Guid))
+            {
+                this.Invitations.Add(invitation);
+            }
+        }
+        public void RemoveInvitation(Guid guid)
+        {
+            var item = this.Invitations.First(x => x.Guid == guid);
+            if (item != null)
+            {
+                this.Invitations.Remove(item);
             }
         }
         public void AddIgnoredUser(ChatHubUser user)

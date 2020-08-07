@@ -114,7 +114,8 @@ namespace Oqtane.ChatHubs
                         Content = content,
                         Type = Enum.GetName(typeof(ChatHubRoomType), ChatHubRoomType.Public),
                         Status = Enum.GetName(typeof(ChatHubRoomStatus), ChatHubRoomStatus.Active),
-                        ImageUrl = string.Empty
+                        ImageUrl = string.Empty,
+                        OneVsOneId = string.Empty,
                     };
 
                     room = await this.ChatHubService.AddChatHubRoomAsync(room);

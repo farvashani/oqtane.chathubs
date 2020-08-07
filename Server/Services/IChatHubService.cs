@@ -22,5 +22,11 @@ namespace Oqtane.ChatHubs.Services
 
         List<string> GetAllExceptConnectionIds(ChatHubUser user);
 
+        Task<ChatHubRoom> GetOneVsOneRoom(int callerUserId, int targetUserId, int moduleId);
+
+        string CreateOneVsOneId(ChatHubUser user1, ChatHubUser user2);
+
+        bool IsValidOneVsOneConnection(ChatHubRoom room, ChatHubUser caller);
+
     }
 }

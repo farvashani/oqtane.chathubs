@@ -179,5 +179,48 @@ namespace Oqtane.ChatHubs.Services
             return connectionsIds;
         }
 
+        public async Task<ChatHubRoom> GetOneVsOneRoom(int callerUserId, int targetUserId, int moduleId)
+        {
+            var callerUser = await this.chatHubRepository.GetUserByIdAsync(callerUserId);
+            var targetUser = await this.chatHubRepository.GetUserByIdAsync(targetUserId);
+
+            if (callerUser != null && targetUser != null)
+            {
+                var oneVsOneRoom = this.chatHubRepository.GetChatHubRoomOneVsOne(this.CreateOneVsOneId(callerUser, targetUser));
+                if(oneVsOneRoom != null)
+                {
+                    return oneVsOneRoom;
+                }
+
+                ChatHubRoom chatHubRoom = new ChatHubRoom()
+                {
+                    ModuleId = moduleId,
+                    Title = string.Format("{0} vs {1}", callerUser.DisplayName, targetUser.DisplayName),
+                    Content = "One Vs One",
+                    Type = ChatHubRoomType.OneVsOne.ToString(),
+                    Status = ChatHubRoomStatus.Active.ToString(),
+                    ImageUrl = string.Empty,
+                    OneVsOneId = this.CreateOneVsOneId(callerUser, targetUser)
+                };
+                return this.chatHubRepository.AddChatHubRoom(chatHubRoom);
+            }
+
+            return null;
+        }
+        public string CreateOneVsOneId(ChatHubUser user1, ChatHubUser user2)
+        {
+            var list = new List<string>();
+            list.Add(user1.UserId.ToString());
+            list.Add(user2.UserId.ToString());
+            list = list.OrderBy(item => item).ToList();
+            string roomId = string.Concat(list.First(), "|", list.Last());
+
+            return roomId;
+        }
+        public bool IsValidOneVsOneConnection(ChatHubRoom room, ChatHubUser caller)
+        {
+            return room.OneVsOneId.Split('|').OrderBy(item => item).Any(item => item == caller.UserId.ToString());
+        }
+
     }
 }

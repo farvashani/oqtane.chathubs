@@ -126,6 +126,9 @@
   <data name="ignore" xml:space="preserve">
     <value>ignore;block;</value>
   </data>
+  <data name="invite" xml:space="preserve">
+    <value>invite;</value>
+  </data>
   <data name="me" xml:space="preserve">
     <value>me;myself;i;</value>
   </data>
