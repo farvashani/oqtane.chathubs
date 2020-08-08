@@ -32,7 +32,7 @@ namespace Oqtane.ChatHubs.Services
 
             return new ChatHubRoom()
             {
-                ChatHubRoomId = room.ChatHubRoomId,
+                Id = room.Id,
                 ModuleId = room.ModuleId,
                 Title = room.Title,
                 Content = room.Content,
@@ -62,7 +62,7 @@ namespace Oqtane.ChatHubs.Services
                 DisplayName = user.DisplayName,
                 Connections = activeConnections.Any() ? new List<ChatHubConnection>() : activeConnections.Select(x => new ChatHubConnection()
                 {
-                    ChatHubConnectionId = x.ChatHubConnectionId,
+                    Id = x.Id,
                     CreatedOn = x.CreatedOn
                 }).ToList(),
                 Settings = chatHubSettingClientModel ?? null,
@@ -79,7 +79,7 @@ namespace Oqtane.ChatHubs.Services
 
             return new ChatHubMessage()
             {
-                ChatHubMessageId = message.ChatHubMessageId,
+                Id = message.Id,
                 ChatHubRoomId = message.ChatHubRoomId,
                 ChatHubUserId = message.ChatHubUserId,
                 User = this.CreateChatHubUserClientModel(message.User),

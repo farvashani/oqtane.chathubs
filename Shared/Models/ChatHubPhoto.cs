@@ -1,15 +1,10 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using Oqtane.Models;
-using Oqtane.Modules;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Oqtane.Shared.Models
 {
-    public class ChatHubPhoto : IAuditable
+    public class ChatHubPhoto : ChatHubBaseModel
     {
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ChatHubPhotoId { get; set; }
         public int ChatHubMessageId { get; set; }
         public string Source { get; set; }
         public string Thumb { get; set; }
@@ -18,10 +13,6 @@ namespace Oqtane.Shared.Models
         public int Width { get; set; }
         public int Height { get; set; }
 
-        public string CreatedBy { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public string ModifiedBy { get; set; }
-        public DateTime ModifiedOn { get; set; }
         
         [NotMapped]
         public virtual ChatHubMessage Message { get; set; }

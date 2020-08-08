@@ -56,12 +56,12 @@ namespace Oqtane.ChatHubs.Commands
 
             if(oneVsOneRoom != null)
             {
-                await context.ChatHub.EnterChatRoom(oneVsOneRoom.ChatHubRoomId);
+                await context.ChatHub.EnterChatRoom(oneVsOneRoom.Id);
 
                 ChatHubInvitation chatHubInvitation = new ChatHubInvitation()
                 {
                     Guid = Guid.NewGuid(),
-                    RoomId = oneVsOneRoom.ChatHubRoomId,
+                    RoomId = oneVsOneRoom.Id,
                     Hostname = caller.DisplayName
                 };
                 foreach(var connection in targetUser.Connections.Active())

@@ -198,7 +198,7 @@ namespace Oqtane.ChatHubs
 
         public void SendMessage_Clicked(string messageInput, ChatHubRoom room)
         {
-            this.ChatHubService.SendMessage(messageInput, room.ChatHubRoomId, ModuleState.ModuleId);
+            this.ChatHubService.SendMessage(messageInput, room.Id, ModuleState.ModuleId);
             room.MessageInput = string.Empty;
         }
         
@@ -229,7 +229,7 @@ namespace Oqtane.ChatHubs
         {
             if(message.ChatHubRoomId.ToString() != ChatHubService.ContextRoomId)
             {
-                ChatHubService.Rooms.FirstOrDefault(room => room.ChatHubRoomId == message.ChatHubRoomId).UnreadMessages++;
+                ChatHubService.Rooms.FirstOrDefault(room => room.Id == message.ChatHubRoomId).UnreadMessages++;
                 this.UpdateUIStateHasChanged();
             }
 
@@ -347,7 +347,7 @@ namespace Oqtane.ChatHubs
         public void Shown(BSTabEvent e)
         {
             this.ChatHubService.ContextRoomId = e.Activated.Id;
-            var room = this.ChatHubService.Rooms.FirstOrDefault(item => item.ChatHubRoomId.ToString() == this.ChatHubService.ContextRoomId);
+            var room = this.ChatHubService.Rooms.FirstOrDefault(item => item.Id.ToString() == this.ChatHubService.ContextRoomId);
             if(room != null)
             {
                 room.UnreadMessages = 0;

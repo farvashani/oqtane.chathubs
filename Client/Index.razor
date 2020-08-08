@@ -123,7 +123,7 @@
                                         <Column TableItem="ChatHubRoom" Title="Content" Field="@(x => x.Content)" Sortable="false" Filterable="false">
                                             <Template>
                                                 <div class="px-1 py-2">
-                                                    <a href="@NavigateUrl(PageState.Page.Path, "moduleid=" + context.ModuleId.ToString() + "&" + "roomid=" + context.ChatHubRoomId.ToString())">
+                                                    <a href="@NavigateUrl(PageState.Page.Path, "moduleid=" + context.ModuleId.ToString() + "&" + "roomid=" + context.Id.ToString())">
                                                         <h6>@context.Title</h6>
                                                     </a>
                                                     <p class="text-muted">
@@ -134,7 +134,7 @@
                                                         Online Users: @context.Users.Count()
                                                     </p>
                                                     <div class="form-group">
-                                                        <button type="button" class="btn btn-sm btn-link bg-light border-0" @onclick="@(async () => await EnterRoom_Clicked(context.ChatHubRoomId, context.ModuleId))">Enter Room</button>
+                                                        <button type="button" class="btn btn-sm btn-link bg-light border-0" @onclick="@(async () => await EnterRoom_Clicked(context.Id, context.ModuleId))">Enter Room</button>
                                                     </div>
                                                 </div>
                                             </Template>
@@ -142,13 +142,13 @@
 
                                         <Column TableItem="ChatHubRoom" Title="Edit" Sortable="false" Filterable="false" Class="@(UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions) && PageState.EditMode ? "d-table-cell" : "d-none")">
                                             <Template>
-                                                <ActionLink Action="Edit" Security="SecurityAccessLevel.Edit" Parameters="@($"moduleid=" + context.ModuleId.ToString() + "&" + "roomid=" + context.ChatHubRoomId.ToString())" />
+                                                <ActionLink Action="Edit" Security="SecurityAccessLevel.Edit" Parameters="@($"moduleid=" + context.ModuleId.ToString() + "&" + "roomid=" + context.Id.ToString())" />
                                             </Template>
                                         </Column>
 
                                         <Column TableItem="ChatHubRoom" Title="Delete" Sortable="false" Filterable="false" Class="@(UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions) && PageState.EditMode ? "d-table-cell" : "d-none")">
                                             <Template>
-                                                <ActionDialog Header="Delete Room" Message="@("Are You Sure You Wish To Delete This Room?")" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await DeleteRoom(context.ChatHubRoomId))" />
+                                                <ActionDialog Header="Delete Room" Message="@("Are You Sure You Wish To Delete This Room?")" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await DeleteRoom(context.Id))" />
                                             </Template>
                                         </Column>
 
@@ -163,15 +163,15 @@
                     </BSTab>
 
 
-                    @foreach (var room in ChatHubService.Rooms)
+                    @foreach (ChatHubRoom room in ChatHubService.Rooms)
                     {
 
-                        <BSTab @key="room" Id="@room.ChatHubRoomId.ToString()">
+                        <BSTab @key="room" Id="@room.Id.ToString()">
                             <BSTabLabel>
 
                                 @room.Title&nbsp;
                                 <BSBadge Color="Color.Warning" Class="@(room.UnreadMessages != 0 ? "" : "d-none")">@room.UnreadMessages</BSBadge>
-                                <MatIcon Icon="@MatIconNames.Close" @onclick="async () => await LeaveRoom_Clicked(room.ChatHubRoomId, ModuleState.ModuleId)"></MatIcon>
+                                <MatIcon Icon="@MatIconNames.Close" @onclick="async () => await LeaveRoom_Clicked(room.Id, ModuleState.ModuleId)"></MatIcon>
 
                             </BSTabLabel>
                             <BSTabContent>
@@ -180,7 +180,7 @@
                                     <div class="flex-fill flex-grow-1 @(room.ShowUserlist ? "d-none" : "d-flex")">
                                         <div class="w-100 bg-white p-sm-3">
 
-                                            <div id="message-window-@ModuleState.ModuleId-@room.ChatHubRoomId" style="height: @(string.Format("{0}px", MessageWindowHeight)); overflow: auto;">
+                                            <div id="message-window-@ModuleState.ModuleId-@room.Id" style="height: @(string.Format("{0}px", MessageWindowHeight)); overflow: auto;">
 
                                                 <h3>@room.Content</h3>
 
@@ -361,7 +361,7 @@
 
                                                     <div class="input-group-append">
                                                         <button type="button" class="btn btn-primary input-group-button mr-0 mr-sm-4" @onclick="() => SendMessage_Clicked(room.MessageInput, room)"><span class="oi oi-envelope-open"></span></button>
-                                                        <button type="button" class="btn btn-info input-group-button d-none d-sm-inline-block" @onclick="() => ChatHubService.ClearHistory(room.ChatHubRoomId)"><span class="oi oi-trash"></span></button>
+                                                        <button type="button" class="btn btn-info input-group-button d-none d-sm-inline-block" @onclick="() => ChatHubService.ClearHistory(room.Id)"><span class="oi oi-trash"></span></button>
                                                         <button type="button" class="btn btn-dark input-group-button d-inline-block d-xl-none" @onclick="() => ChatHubService.ToggleUserlist(room)"><span class="oi oi-list"></span></button>
                                                         <button type="button" class="btn btn-danger input-group-button d-none d-sm-inline-block" @onclick="async () => await ChatHubService.DisconnectAsync()"><span class="oi oi-power-standby"></span></button>
                                                     </div>
@@ -403,7 +403,7 @@
                                                                             </BSCard>
                                                                             <BSCollapse IsOpen="@user.UserlistItemCollapsed">
                                                                                 <BSCard CardType="CardType.Text">
-                                                                                    <button type="button" class="btn btn-sm btn-link" @onclick="() => OpenProfile_Clicked(user.UserId, room.ChatHubRoomId)">Profil/Einstellungen</button>
+                                                                                    <button type="button" class="btn btn-sm btn-link" @onclick="() => OpenProfile_Clicked(user.UserId, room.Id)">Profil/Einstellungen</button>
                                                                                 </BSCard>
                                                                             </BSCollapse>
                                                                         </BSCard>
@@ -418,7 +418,7 @@
                                                                             </BSCard>
                                                                             <BSCollapse IsOpen="@user.UserlistItemCollapsed">
                                                                                 <BSCard CardType="CardType.Text">
-                                                                                    <button type="button" class="btn btn-sm btn-link" @onclick="() => ChatHubService.IgnoreUser_Clicked(user.UserId, room.ChatHubRoomId, user.Username)">Benutzer Ignorieren</button>
+                                                                                    <button type="button" class="btn btn-sm btn-link" @onclick="() => ChatHubService.IgnoreUser_Clicked(user.UserId, room.Id, user.Username)">Benutzer Ignorieren</button>
                                                                                 </BSCard>
                                                                             </BSCollapse>
                                                                         </BSCard>
@@ -441,7 +441,7 @@
                                                         <div class="px-sm-1 py-3">
 
                                                             <h5>Teile deine Bilder <span class="badge badge-success">NEW</span></h5>
-                                                            <FileReader ModuleId="@ModuleState.ModuleId.ToString()" ChatHubRoomId="@room.ChatHubRoomId.ToString()" ChatHubService="ChatHubService"></FileReader>
+                                                            <FileReader ModuleId="@ModuleState.ModuleId.ToString()" ChatHubRoomId="@room.Id.ToString()" ChatHubService="ChatHubService"></FileReader>
 
                                                         </div>
 

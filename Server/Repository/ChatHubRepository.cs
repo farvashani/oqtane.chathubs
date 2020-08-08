@@ -48,7 +48,7 @@ namespace Oqtane.ChatHubs.Repository
         {
             try
             {
-                return db.ChatHubRoom.Where(item => item.ChatHubRoomId == ChatHubRoomId).FirstOrDefault();
+                return db.ChatHubRoom.Where(item => item.Id == ChatHubRoomId).FirstOrDefault();
             }
             catch
             {
@@ -81,7 +81,7 @@ namespace Oqtane.ChatHubs.Repository
         {
             try
             {
-                return db.ChatHubMessage.Where(item => item.ChatHubMessageId == ChatHubMessageId).Include(item => item.Photos).FirstOrDefault();
+                return db.ChatHubMessage.Where(item => item.Id == ChatHubMessageId).Include(item => item.Photos).FirstOrDefault();
             }
             catch
             {
@@ -145,7 +145,7 @@ namespace Oqtane.ChatHubs.Repository
         }
         public IQueryable<ChatHubIgnore> GetIgnoredByUsers(ChatHubUser user)
         {
-            return db.ChatHubIgnore.Include(i => i.User).Select(i => i).Where(i => i.ChatHubIgnoreId == user.UserId && (i.ModifiedOn.AddDays(7)) >= DateTime.Now);
+            return db.ChatHubIgnore.Include(i => i.User).Select(i => i).Where(i => i.Id == user.UserId && (i.ModifiedOn.AddDays(7)) >= DateTime.Now);
         }
         public ChatHubSetting GetChatHubSetting(int ChatHubUserId)
         {
@@ -339,7 +339,7 @@ namespace Oqtane.ChatHubs.Repository
         {
             try
             {
-                ChatHubRoom ChatHubRoom = db.ChatHubRoom.Where(item => item.ChatHubRoomId == ChatHubRoomId)
+                ChatHubRoom ChatHubRoom = db.ChatHubRoom.Where(item => item.Id == ChatHubRoomId)
                     .Where(item => item.ModuleId == ModuleId).FirstOrDefault();
                 db.ChatHubRoom.Remove(ChatHubRoom);
                 db.SaveChanges();
@@ -353,7 +353,7 @@ namespace Oqtane.ChatHubs.Repository
         {
             try
             {
-                ChatHubMessage ChatHubMessage = db.ChatHubMessage.Where(item => item.ChatHubMessageId == ChatHubMessageId)
+                ChatHubMessage ChatHubMessage = db.ChatHubMessage.Where(item => item.Id == ChatHubMessageId)
                     .Where(item => item.ChatHubRoomId == ChatHubRoomId).FirstOrDefault();
                 db.ChatHubMessage.Remove(ChatHubMessage);
                 db.SaveChanges();
@@ -367,7 +367,7 @@ namespace Oqtane.ChatHubs.Repository
         {
             try
             {
-                ChatHubConnection ChatHubConnection = db.ChatHubConnection.Where(item => item.ChatHubConnectionId == ChatHubConnectionId)
+                ChatHubConnection ChatHubConnection = db.ChatHubConnection.Where(item => item.Id == ChatHubConnectionId)
                     .Where(item => item.ChatHubUserId == ChatHubUserId).FirstOrDefault();
                 db.ChatHubConnection.Remove(ChatHubConnection);
                 db.SaveChanges();

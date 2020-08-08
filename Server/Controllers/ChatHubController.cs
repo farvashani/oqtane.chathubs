@@ -256,7 +256,7 @@ namespace Oqtane.ChatHubs.Controllers
 
             ChatHubMessage chatHubMessage = new ChatHubMessage()
             {
-                ChatHubRoomId = chatHubRoom.ChatHubRoomId,
+                ChatHubRoomId = chatHubRoom.Id,
                 ChatHubUserId = user.UserId,
                 Type = Enum.GetName(typeof(ChatHubMessageType), ChatHubMessageType.Image),
                 Content = content,
@@ -331,7 +331,7 @@ namespace Oqtane.ChatHubs.Controllers
 
                     ChatHubPhoto chatHubPhoto = new ChatHubPhoto()
                     {
-                        ChatHubMessageId = chatHubMessage.ChatHubMessageId,
+                        ChatHubMessageId = chatHubMessage.Id,
                         Source = fileName,
                         Size = file.Length,
                         Thumb = fileName,

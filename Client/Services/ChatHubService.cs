@@ -16,6 +16,7 @@ using Microsoft.JSInterop;
 
 namespace Oqtane.ChatHubs.Services
 {
+
     public class ChatHubService : ServiceBase, IChatHubService
     {
 
@@ -66,7 +67,7 @@ namespace Oqtane.ChatHubs.Services
 
             this.OnConnectedEvent += OnConnectedExecute;
             this.OnAddChatHubRoomEvent += OnAddChatHubRoomExecute;
-            this.OnRemoveChatHubRoomEvent += OnRemoveChatHubExecute;
+            this.OnRemoveChatHubRoomEvent += OnRemoveChatHubRoomExecute;
             this.OnAddChatHubUserEvent += OnAddChatHubUserExecute;
             this.OnRemoveChatHubUserEvent += OnRemoveChatHubUserExecute;
             this.OnAddChatHubMessageEvent += OnAddChatHubMessageExecute;
@@ -271,7 +272,8 @@ namespace Oqtane.ChatHubs.Services
 
         public void ClearHistory(int roomId)
         {
-            this.Rooms.FirstOrDefault(x => x.ChatHubRoomId == roomId).Messages.Clear();
+            var room = this.Rooms.FirstOrDefault(x => x.Id == roomId);
+            room.Messages.Clear();
             this.UpdateUI();
         }
 
@@ -288,12 +290,12 @@ namespace Oqtane.ChatHubs.Services
             }
         }
 
-        public void OnAddChatHubRoomExecute(object sender, ChatHubRoom room)
+        private void OnAddChatHubRoomExecute(object sender, ChatHubRoom room)
         {
             this.AddRoom(room);
             this.UpdateUI();
         }
-        private void OnRemoveChatHubExecute(object sender, ChatHubRoom room)
+        private void OnRemoveChatHubRoomExecute(object sender, ChatHubRoom room)
         {
             this.RemoveRoom(room);
             this.UpdateUI();
@@ -310,7 +312,7 @@ namespace Oqtane.ChatHubs.Services
         }
         public async void OnAddChatHubMessageExecute(object sender, ChatHubMessage message)
         {
-            ChatHubRoom room = this.Rooms.FirstOrDefault(item => item.ChatHubRoomId == message.ChatHubRoomId);
+            ChatHubRoom room = this.Rooms.FirstOrDefault(item => item.Id == message.ChatHubRoomId);
 
             this.AddMessage(message, room);
             this.UpdateUI();            
@@ -354,17 +356,17 @@ namespace Oqtane.ChatHubs.Services
         {
             this.ClearHistory(roomId);
         }
-
+        
         public void AddRoom(ChatHubRoom room)
         {
-            if (!this.Rooms.Any(x => x.ChatHubRoomId == room.ChatHubRoomId))
+            if (!this.Rooms.Any(x => x.Id == room.Id))
             {
                 this.Rooms.Add(room);
             }
         }
         public void RemoveRoom(ChatHubRoom room)
         {
-            var chatRoom = this.Rooms.First(x => x.ChatHubRoomId == room.ChatHubRoomId);
+            var chatRoom = this.Rooms.First(x => x.Id == room.Id);
             if (chatRoom != null)
             {
                 this.Rooms.Remove(chatRoom);
@@ -372,7 +374,7 @@ namespace Oqtane.ChatHubs.Services
         }
         public void AddUser(ChatHubUser user, string roomId)
         {
-            var room = this.Rooms.FirstOrDefault(x => x.ChatHubRoomId.ToString() == roomId);
+            var room = this.Rooms.FirstOrDefault(x => x.Id.ToString() == roomId);
             if (room != null && !room.Users.Any(x => x.UserId == user.UserId))
             {
                 room.Users.Add(user);
@@ -380,7 +382,7 @@ namespace Oqtane.ChatHubs.Services
         }
         public void RemoveUser(ChatHubUser user, string roomId)
         {
-            var room = this.Rooms.FirstOrDefault(x => x.ChatHubRoomId.ToString() == roomId);
+            var room = this.Rooms.FirstOrDefault(x => x.Id.ToString() == roomId);
             if (room != null)
             {
                 var userItem = room.Users.FirstOrDefault(x => x.UserId == user.UserId);
@@ -392,7 +394,7 @@ namespace Oqtane.ChatHubs.Services
         }
         public void AddMessage(ChatHubMessage message, ChatHubRoom room)
         {
-            if (!room.Messages.Any(x => x.ChatHubMessageId == message.ChatHubMessageId))
+            if (!room.Messages.Any(x => x.Id == message.Id))
             {
                 room.Messages.Add(message);
             }
@@ -467,7 +469,7 @@ namespace Oqtane.ChatHubs.Services
         }
         public async Task UpdateChatHubRoomAsync(ChatHubRoom ChatHubRoom)
         {
-            await HttpClient.PutJsonAsync(apiurl + "/updatechathubroom/" + ChatHubRoom.ChatHubRoomId + "?entityid=" + ChatHubRoom.ModuleId, ChatHubRoom);
+            await HttpClient.PutJsonAsync(apiurl + "/updatechathubroom/" + ChatHubRoom.Id + "?entityid=" + ChatHubRoom.ModuleId, ChatHubRoom);
         }
         public async Task DeleteChatHubRoomAsync(int ChatHubRoomId, int ModuleId)
         {

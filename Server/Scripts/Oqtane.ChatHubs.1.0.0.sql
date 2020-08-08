@@ -3,7 +3,7 @@ Create ChatHub Tables
 */
 
 CREATE TABLE [dbo].[ChatHubRoom](
-	[ChatHubRoomId] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[ModuleId] [int] NOT NULL,
 	[Title] [nvarchar](256) NOT NULL,
 	[Content] [nvarchar](max) NOT NULL,
@@ -17,13 +17,13 @@ CREATE TABLE [dbo].[ChatHubRoom](
 	[ModifiedOn] [datetime] NOT NULL,
   CONSTRAINT [PK_ChatHubRoom] PRIMARY KEY CLUSTERED 
   (
-	[ChatHubRoomId] ASC
+	[Id] ASC
   )
 )
 GO
 
 CREATE TABLE [dbo].[ChatHubRoomChatHubUser](
-	[ChatHubRoomChatHubUserId] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[ChatHubRoomId] [int] NOT NULL,
 	[ChatHubUserId] [int] NOT NULL,
 	[CreatedBy] [nvarchar](256) NOT NULL,
@@ -32,13 +32,13 @@ CREATE TABLE [dbo].[ChatHubRoomChatHubUser](
 	[ModifiedOn] [datetime] NOT NULL,
   CONSTRAINT [PK_ChatHubRoomChatHubUser] PRIMARY KEY CLUSTERED 
   (
-	[ChatHubRoomChatHubUserId] ASC
+	[Id] ASC
   )
 )
 GO
 
 CREATE TABLE [dbo].[ChatHubMessage](
-	[ChatHubMessageId] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[ChatHubRoomId] [int] NOT NULL,
 	[ChatHubUserId] [int] NOT NULL,
 	[Content] [nvarchar](max) NOT NULL,
@@ -49,13 +49,13 @@ CREATE TABLE [dbo].[ChatHubMessage](
 	[ModifiedOn] [datetime] NOT NULL,
   CONSTRAINT [PK_ChatHubMessage] PRIMARY KEY CLUSTERED 
   (
-	[ChatHubMessageId] ASC
+	[Id] ASC
   )
 )
 GO
 
 CREATE TABLE [dbo].[ChatHubConnection](
-	[ChatHubConnectionId] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[ChatHubUserId] [int] NOT NULL,
 	[ConnectionId] [nvarchar](256) NOT NULL,
 	[IpAddress] [nvarchar](256) NOT NULL,
@@ -67,13 +67,13 @@ CREATE TABLE [dbo].[ChatHubConnection](
 	[ModifiedOn] [datetime] NOT NULL,
   CONSTRAINT [PK_ChatHubConnection] PRIMARY KEY CLUSTERED 
   (
-	[ChatHubConnectionId] ASC
+	[Id] ASC
   )
 )
 GO
 
 CREATE TABLE [dbo].[ChatHubPhoto](
-	[ChatHubPhotoId] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[ChatHubMessageId] [int] NOT NULL,
 	[Source] [nvarchar](256) NOT NULL,
 	[Thumb] [nvarchar](256) NOT NULL,
@@ -87,13 +87,13 @@ CREATE TABLE [dbo].[ChatHubPhoto](
 	[ModifiedOn] [datetime] NOT NULL,
   CONSTRAINT [PK_ChatHubPhoto] PRIMARY KEY CLUSTERED 
   (
-	[ChatHubPhotoId] ASC
+	[Id] ASC
   )
 )
 GO
 
 CREATE TABLE [dbo].[ChatHubSetting](
-	[ChatHubSettingId] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[ChatHubUserId] [int] NOT NULL,
 	[UsernameColor] [nvarchar](256) NOT NULL,
 	[MessageColor] [nvarchar](256) NOT NULL,
@@ -103,13 +103,13 @@ CREATE TABLE [dbo].[ChatHubSetting](
 	[ModifiedOn] [datetime] NOT NULL,
   CONSTRAINT [PK_ChatHubSetting] PRIMARY KEY CLUSTERED 
   (
-	[ChatHubSettingId] ASC
+	[Id] ASC
   )
 )
 GO
 
 CREATE TABLE [dbo].[ChatHubIgnore](
-	[ChatHubIgnoreId] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[ChatHubUserId] [int] NOT NULL,
 	[ChatHubIgnoredUserId] [int] NOT NULL,
 	[CreatedBy] [nvarchar](256) NOT NULL,
@@ -118,7 +118,7 @@ CREATE TABLE [dbo].[ChatHubIgnore](
 	[ModifiedOn] [datetime] NOT NULL,
   CONSTRAINT [PK_ChatHubIgnore] PRIMARY KEY CLUSTERED 
   (
-	[ChatHubIgnoreId] ASC
+	[Id] ASC
   )
 )
 GO
@@ -145,7 +145,7 @@ ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[ChatHubRoomChatHubUser]  WITH CHECK ADD  CONSTRAINT [FK_ChatHubRoomChatHubUser_ChatHubRoom] FOREIGN KEY([ChatHubRoomId])
-REFERENCES [dbo].[ChatHubRoom] ([ChatHubRoomId])
+REFERENCES [dbo].[ChatHubRoom] ([Id])
 ON DELETE CASCADE
 GO
 
@@ -155,7 +155,7 @@ ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[ChatHubMessage]  WITH CHECK ADD  CONSTRAINT [FK_ChatHubMessage_ChatHubRoom] FOREIGN KEY([ChatHubRoomId])
-REFERENCES [dbo].[ChatHubRoom] ([ChatHubRoomId])
+REFERENCES [dbo].[ChatHubRoom] ([Id])
 ON DELETE CASCADE
 GO
 
@@ -170,7 +170,7 @@ ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[ChatHubPhoto]  WITH CHECK ADD  CONSTRAINT [FK_ChatHubPhoto_ChatHubMessage] FOREIGN KEY([ChatHubMessageId])
-REFERENCES [dbo].[ChatHubMessage] ([ChatHubMessageId])
+REFERENCES [dbo].[ChatHubMessage] ([Id])
 ON DELETE CASCADE
 GO
 

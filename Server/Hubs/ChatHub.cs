@@ -26,7 +26,6 @@ namespace Oqtane.ChatHubs.Hubs
         private IHttpContextAccessor httpContextAccessor;
         private readonly IChatHubRepository chatHubRepository;
         private readonly IChatHubService chatHubService;
-        private readonly IUserRepository userRepository;
         private readonly UserManager<IdentityUser> userManager;
         private readonly IRoleRepository roles;
         private readonly IUserRoleRepository userRoles;
@@ -35,7 +34,6 @@ namespace Oqtane.ChatHubs.Hubs
             IHttpContextAccessor httpContextAccessor,
             IChatHubRepository chatHubRepository,
             IChatHubService chatHubService,
-            IUserRepository userRepository,
             UserManager<IdentityUser> identityUserManager,
             IRoleRepository roles,
             IUserRoleRepository userRoles
@@ -44,7 +42,6 @@ namespace Oqtane.ChatHubs.Hubs
             this.httpContextAccessor = httpContextAccessor;
             this.chatHubRepository = chatHubRepository;
             this.chatHubService = chatHubService;
-            this.userRepository = userRepository;
             this.userManager = identityUserManager;
             this.roles = roles;
             this.userRoles = userRoles;
@@ -137,13 +134,13 @@ namespace Oqtane.ChatHubs.Hubs
                 var rooms = chatHubRepository.GetChatHubRoomsByUser(guest).Active();
                 foreach (var room in await rooms.ToListAsync())
                 {
-                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.ChatHubRoomId.ToString());
-                    await this.SendGroupNotification(string.Format("{0} disconnected from chat with client device {1}.", guest.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.ChatHubRoomId, Context.ConnectionId, guest, ChatHubMessageType.Connect_Disconnect);
+                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.Id.ToString());
+                    await this.SendGroupNotification(string.Format("{0} disconnected from chat with client device {1}.", guest.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.Id, Context.ConnectionId, guest, ChatHubMessageType.Connect_Disconnect);
 
                     if (guest.Connections.Active().Count() == 1)
                     {
                         var chatHubUserClientModel = this.chatHubService.CreateChatHubUserClientModel(guest);
-                        await Clients.Group(room.ChatHubRoomId.ToString()).SendAsync("RemoveUser", chatHubUserClientModel, room.ChatHubRoomId.ToString());
+                        await Clients.Group(room.Id.ToString()).SendAsync("RemoveUser", chatHubUserClientModel, room.Id.ToString());
                     }
                 }
 
@@ -179,7 +176,7 @@ namespace Oqtane.ChatHubs.Hubs
                 {
                     ChatHubRoomChatHubUser room_user = new ChatHubRoomChatHubUser()
                     {
-                        ChatHubRoomId = room.ChatHubRoomId,
+                        ChatHubRoomId = room.Id,
                         ChatHubUserId = guest.UserId
                     };
                     chatHubRepository.AddChatHubRoomChatHubUser(room_user);
@@ -188,14 +185,14 @@ namespace Oqtane.ChatHubs.Hubs
 
                     foreach (var connection in guest.Connections.Active())
                     {
-                        await Groups.AddToGroupAsync(connection.ConnectionId, room.ChatHubRoomId.ToString());
+                        await Groups.AddToGroupAsync(connection.ConnectionId, room.Id.ToString());
                         await Clients.Client(connection.ConnectionId).SendAsync("AddRoom", chatHubRoomClientModel);
                     }
 
                     ChatHubUser chatHubUserClientModel = this.chatHubService.CreateChatHubUserClientModel(guest);
-                    await Clients.Group(room.ChatHubRoomId.ToString()).SendAsync("AddUser", chatHubUserClientModel, room.ChatHubRoomId.ToString());
+                    await Clients.Group(room.Id.ToString()).SendAsync("AddUser", chatHubUserClientModel, room.Id.ToString());
 
-                    await this.SendGroupNotification(string.Format("{0} entered chat room with client device {1}.", guest.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.ChatHubRoomId, Context.ConnectionId, guest, ChatHubMessageType.Enter_Leave);
+                    await this.SendGroupNotification(string.Format("{0} entered chat room with client device {1}.", guest.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.Id, Context.ConnectionId, guest, ChatHubMessageType.Enter_Leave);
                 }
             }
         }
@@ -226,13 +223,13 @@ namespace Oqtane.ChatHubs.Hubs
 
                     foreach (var connection in guest.Connections.Active())
                     {
-                        await Groups.RemoveFromGroupAsync(connection.ConnectionId, room.ChatHubRoomId.ToString());
+                        await Groups.RemoveFromGroupAsync(connection.ConnectionId, room.Id.ToString());
                         await Clients.Client(connection.ConnectionId).SendAsync("RemoveRoom", chatHubRoomClientModel);
                     }
 
                     ChatHubUser chatHubUserClientModel = this.chatHubService.CreateChatHubUserClientModel(guest);
-                    await Clients.Group(room.ChatHubRoomId.ToString()).SendAsync("RemoveUser", chatHubUserClientModel, room.ChatHubRoomId.ToString());
-                    await this.SendGroupNotification(string.Format("{0} left chat room with client device {1}.", guest.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.ChatHubRoomId, Context.ConnectionId, guest, ChatHubMessageType.Enter_Leave);
+                    await Clients.Group(room.Id.ToString()).SendAsync("RemoveUser", chatHubUserClientModel, room.Id.ToString());
+                    await this.SendGroupNotification(string.Format("{0} left chat room with client device {1}.", guest.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.Id, Context.ConnectionId, guest, ChatHubMessageType.Enter_Leave);
                 }
             }
         }
