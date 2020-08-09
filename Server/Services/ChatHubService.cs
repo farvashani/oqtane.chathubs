@@ -1,12 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Oqtane.ChatHubs.Repository;
 using Oqtane.Modules;
-using Oqtane.Repository;
 using Oqtane.Shared.Enums;
 using Oqtane.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Oqtane.ChatHubs.Services
@@ -15,20 +17,19 @@ namespace Oqtane.ChatHubs.Services
     {
 
         private readonly IChatHubRepository chatHubRepository;
-        private readonly IUserRepository userRepository;
 
         public ChatHubService(
-            IChatHubRepository chatHubRepository,
-            IUserRepository userRepository
+            IChatHubRepository chatHubRepository
             )
         {
             this.chatHubRepository = chatHubRepository;
-            this.userRepository = userRepository;
         }
 
         public async Task<ChatHubRoom> CreateChatHubRoomClientModelAsync(ChatHubRoom room)
         {
+            var messages = !room.OneVsOne() ? new List<ChatHubMessage>() : this.chatHubRepository.GetChatHubMessages(room.Id).OrderByDescending(item => item.Id).Take(10).Select(item => this.CreateChatHubMessageClientModel(item)).ToList();
             IList<ChatHubUser> onlineUsers = await this.chatHubRepository.GetOnlineUsers(room).ToListAsync();
+            onlineUsers = !onlineUsers.Any() ? new List<ChatHubUser>() : onlineUsers.Select(x => this.CreateChatHubUserClientModel(x)).ToList();
 
             return new ChatHubRoom()
             {
@@ -39,8 +40,8 @@ namespace Oqtane.ChatHubs.Services
                 ImageUrl = room.ImageUrl,
                 Type = room.Type,
                 Status = room.Status,
-                Messages = new List<ChatHubMessage>(),
-                Users = !onlineUsers.Any() ? new List<ChatHubUser>() : onlineUsers.Select(x => this.CreateChatHubUserClientModel(x)).ToList(),
+                Messages = messages,
+                Users = onlineUsers,
                 CreatedOn = room.CreatedOn,
                 CreatedBy = room.CreatedBy,
                 ModifiedBy = room.ModifiedBy,
@@ -155,6 +156,16 @@ namespace Oqtane.ChatHubs.Services
 
             return null;
         }
+        public async Task<ChatHubUser> IdentifyUser(HubCallerContext Context)
+        {
+            if (Context.User.Identity.IsAuthenticated)
+            {
+                ChatHubUser user = await this.chatHubRepository.GetUserByUserNameAsync(Context.User.Identity.Name);
+                return user;
+            }
+
+            return null;
+        }
 
         public List<string> GetAllExceptConnectionIds(ChatHubUser user)
         {
@@ -179,11 +190,8 @@ namespace Oqtane.ChatHubs.Services
             return connectionsIds;
         }
 
-        public async Task<ChatHubRoom> GetOneVsOneRoom(int callerUserId, int targetUserId, int moduleId)
+        public ChatHubRoom GetOneVsOneRoom(ChatHubUser callerUser, ChatHubUser targetUser, int moduleId)
         {
-            var callerUser = await this.chatHubRepository.GetUserByIdAsync(callerUserId);
-            var targetUser = await this.chatHubRepository.GetUserByIdAsync(targetUserId);
-
             if (callerUser != null && targetUser != null)
             {
                 var oneVsOneRoom = this.chatHubRepository.GetChatHubRoomOneVsOne(this.CreateOneVsOneId(callerUser, targetUser));

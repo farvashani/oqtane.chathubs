@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Oqtane.Modules;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Oqtane.Models;
 using Oqtane.Shared.Models;
 
 namespace Oqtane.ChatHubs.Repository
@@ -17,7 +14,7 @@ namespace Oqtane.ChatHubs.Repository
         IQueryable<ChatHubUser> GetChatHubUsersByRoom(ChatHubRoom room);
         ChatHubRoom GetChatHubRoom(int ChatHubRoomId);
         ChatHubRoom GetChatHubRoomOneVsOne(string OneVsOneId);
-        IEnumerable<ChatHubMessage> GetChatHubMessages(int ChatHubRoomId);
+        IQueryable<ChatHubMessage> GetChatHubMessages(int ChatHubRoomId);
         ChatHubMessage GetChatHubMessage(int ChatHubMessageId);
         IQueryable<ChatHubUser> GetOnlineUsers();
         IQueryable<ChatHubUser> GetOnlineUsers(ChatHubRoom room);
@@ -29,6 +26,7 @@ namespace Oqtane.ChatHubs.Repository
         IQueryable<ChatHubUser> GetIgnoredByApplicationUsers(ChatHubUser user);
         IQueryable<ChatHubIgnore> GetIgnoredByUsers(ChatHubUser user);
         ChatHubSetting GetChatHubSetting(int ChatHubSettingId);
+        ChatHubSetting GetChatHubSettingByUser(ChatHubUser user);
         Task<ChatHubUser> GetUserByIdAsync(int id);
         Task<ChatHubUser> GetUserByUserNameAsync(string username);
         Task<ChatHubUser> GetUserByDisplayName(string displayName);

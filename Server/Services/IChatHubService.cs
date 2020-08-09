@@ -1,4 +1,6 @@
-﻿using Oqtane.Modules;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
+using Oqtane.Modules;
 using Oqtane.Shared.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,9 +22,11 @@ namespace Oqtane.ChatHubs.Services
 
         Task<ChatHubUser> IdentifyGuest(string connectionId);
 
+        Task<ChatHubUser> IdentifyUser(HubCallerContext Context);
+
         List<string> GetAllExceptConnectionIds(ChatHubUser user);
 
-        Task<ChatHubRoom> GetOneVsOneRoom(int callerUserId, int targetUserId, int moduleId);
+        ChatHubRoom GetOneVsOneRoom(ChatHubUser caller, ChatHubUser targetUser, int moduleId);
 
         string CreateOneVsOneId(ChatHubUser user1, ChatHubUser user2);
 

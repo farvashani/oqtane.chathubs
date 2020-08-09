@@ -66,7 +66,7 @@ namespace Oqtane.ChatHubs.Repository
                 throw;
             }
         }
-        public IEnumerable<ChatHubMessage> GetChatHubMessages(int ChatHubRoomId)
+        public IQueryable<ChatHubMessage> GetChatHubMessages(int ChatHubRoomId)
         {
             try
             {
@@ -152,6 +152,17 @@ namespace Oqtane.ChatHubs.Repository
             try
             {
                 return db.ChatHubSetting.Include(item => item.User).Where(item => item.ChatHubUserId == ChatHubUserId).FirstOrDefault();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public ChatHubSetting GetChatHubSettingByUser(ChatHubUser user)
+        {
+            try
+            {
+                return db.ChatHubSetting.Where(item => item.ChatHubUserId == user.UserId).FirstOrDefault();
             }
             catch
             {
