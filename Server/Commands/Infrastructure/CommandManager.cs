@@ -8,7 +8,6 @@ using System.Composition.Hosting;
 using Oqtane.ChatHubs.Hubs;
 using Oqtane.ChatHubs.Services;
 using Oqtane.ChatHubs.Repository;
-using System.Dynamic;
 using System.Resources;
 using Oqtane.ChatHubs.Server.Resources;
 using System.Globalization;
@@ -18,9 +17,9 @@ namespace Oqtane.ChatHubs.Commands
 {
     public class CommandManager
     {
-        private readonly int _userId;
         private readonly string _connectionId;
         private readonly int _roomId;
+        private readonly ChatHubUser _caller;
         private readonly ChatHub _chatHub;
         private readonly IChatHubService _chatService;
         private readonly IChatHubRepository _repository;
@@ -29,17 +28,18 @@ namespace Oqtane.ChatHubs.Commands
         private static Dictionary<string, dynamic> _commandCache = new Dictionary<string, dynamic>();
         private static readonly Lazy<IList<ICommand>> _commands = new Lazy<IList<ICommand>>(GetCommands);
 
-        public CommandManager(int userId, 
-                              string connectionId,
-                              int roomId,
-                              ChatHub chatHub,
-                              IChatHubService service,
-                              IChatHubRepository repository,
-                              UserManager<IdentityUser> userManager)
+        public CommandManager(
+                            string connectionId,
+                            int roomId,
+                            ChatHubUser user,
+                            ChatHub chatHub,
+                            IChatHubService service,
+                            IChatHubRepository repository,
+                            UserManager<IdentityUser> userManager)
         {
-            _userId = userId;
             _connectionId = connectionId;
             _roomId = roomId;
+            _caller = user;
             _chatHub = chatHub;
             _chatService = service;
             _repository = repository;
@@ -96,7 +96,7 @@ namespace Oqtane.ChatHubs.Commands
             var callerContext = new CommandCallerContext
             {
                 ConnectionId = _connectionId,
-                UserId = _userId,
+                UserId = _caller.UserId,
                 RoomId = _roomId
             };
 
@@ -104,7 +104,7 @@ namespace Oqtane.ChatHubs.Commands
             try
             {
                 command = MatchCommand(commandName);
-                await command.Execute(context, callerContext, args);
+                await command.Execute(context, callerContext, args, _caller);
             }
             catch (CommandNotFoundException e)
             {
@@ -128,11 +128,7 @@ namespace Oqtane.ChatHubs.Commands
 
                 foreach(var c in commands)
                 {
-                    dynamic dictionnaryValue = new ExpandoObject();
-                    dictionnaryValue.Commands = c.Commands;
-                    dictionnaryValue.Command = c.Command;
-
-                    _commandCache.Add(c.ResourceName, dictionnaryValue);
+                    _commandCache.Add(c.ResourceName, new { Commands = c.Commands, Command = c.Command });
                 }
             }
 

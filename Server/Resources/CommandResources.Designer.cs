@@ -79,6 +79,15 @@ namespace Oqtane.ChatHubs.Server.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to disconnect;exit;shutdown;.
+        /// </summary>
+        public static string disconnect {
+            get {
+                return ResourceManager.GetString("disconnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ignore;block;.
         /// </summary>
         public static string ignore {

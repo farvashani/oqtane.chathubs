@@ -61,11 +61,7 @@ namespace Oqtane.ChatHubs.Services
                 UserId = user.UserId,
                 Username = user.Username,
                 DisplayName = user.DisplayName,
-                Connections = activeConnections.Any() ? new List<ChatHubConnection>() : activeConnections.Select(x => new ChatHubConnection()
-                {
-                    Id = x.Id,
-                    CreatedOn = x.CreatedOn
-                }).ToList(),
+                Connections = activeConnections.Any() ? new List<ChatHubConnection>() : activeConnections.Select(item => CreateChatHubConnectionClientModel(item)).ToList(),
                 Settings = chatHubSettingClientModel ?? null,
                 CreatedOn = user.CreatedOn,
                 CreatedBy = user.CreatedBy,
@@ -76,7 +72,7 @@ namespace Oqtane.ChatHubs.Services
 
         public ChatHubMessage CreateChatHubMessageClientModel(ChatHubMessage message)
         {
-            List<ChatHubPhoto> photos = message.Photos != null && message.Photos.Any() ? message.Photos.Select(x => CreateChatHubPhotoClientModel(x)).ToList() : null;
+            List<ChatHubPhoto> photos = message.Photos != null && message.Photos.Any() ? message.Photos.Select(item => CreateChatHubPhotoClientModel(item)).ToList() : null;
 
             return new ChatHubMessage()
             {
@@ -89,7 +85,23 @@ namespace Oqtane.ChatHubs.Services
                 Photos = photos,
                 CommandMetaDatas = message.CommandMetaDatas,
                 CreatedOn = message.CreatedOn,
-                CreatedBy = message.CreatedBy
+                CreatedBy = message.CreatedBy,
+                ModifiedOn = message.ModifiedOn,
+                ModifiedBy = message.ModifiedBy
+            };
+        }
+
+        public ChatHubConnection CreateChatHubConnectionClientModel(ChatHubConnection connection)
+        {
+            return new ChatHubConnection()
+            {
+                ChatHubUserId = connection.ChatHubUserId,
+                Status = connection.Status,
+                User = connection.User,
+                CreatedOn = connection.CreatedOn,
+                CreatedBy = connection.CreatedBy,
+                ModifiedOn = connection.ModifiedOn,
+                ModifiedBy = connection.ModifiedBy
             };
         }
 
@@ -105,7 +117,9 @@ namespace Oqtane.ChatHubs.Services
                 Width = photo.Width,
                 Height = photo.Height,
                 CreatedOn = photo.CreatedOn,
-                CreatedBy = photo.CreatedBy
+                CreatedBy = photo.CreatedBy,
+                ModifiedOn = photo.ModifiedOn,
+                ModifiedBy = photo.ModifiedBy
             };
         }
 

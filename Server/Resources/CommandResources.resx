@@ -123,6 +123,9 @@
   <data name="commands" xml:space="preserve">
     <value>commands;list-commands;</value>
   </data>
+  <data name="disconnect" xml:space="preserve">
+    <value>disconnect;exit;shutdown;</value>
+  </data>
   <data name="ignore" xml:space="preserve">
     <value>ignore;block;</value>
   </data>

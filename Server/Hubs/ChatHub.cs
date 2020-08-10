@@ -266,7 +266,7 @@ namespace Oqtane.ChatHubs.Hubs
 
         private async Task<bool> ExecuteCommandManager(ChatHubUser chatHubUser, string message, int roomId)
         {
-            var commandManager = new CommandManager(chatHubUser.UserId, Context.ConnectionId, roomId, this, chatHubService, chatHubRepository, userManager);
+            var commandManager = new CommandManager(Context.ConnectionId, roomId, chatHubUser, this, chatHubService, chatHubRepository, userManager);
             return await commandManager.TryHandleCommand(message);
         }
 

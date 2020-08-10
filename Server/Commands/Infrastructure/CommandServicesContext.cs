@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Localization;
 using Oqtane.ChatHubs.Hubs;
 using Oqtane.ChatHubs.Repository;
 using Oqtane.ChatHubs.Services;
