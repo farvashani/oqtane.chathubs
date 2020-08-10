@@ -57,13 +57,13 @@ namespace Oqtane.ChatHubs.Services
 
         private Timer GetLobbyRoomsTimer = new Timer();
 
-        public ChatHubService(HttpClient http, SiteState sitestate, NavigationManager NavigationManager, IJSRuntime JSRuntime, int ModuleId) : base(http)
+        public ChatHubService(HttpClient httpClient, SiteState siteState, NavigationManager navigationManager, IJSRuntime JSRuntime, int moduleId) : base(httpClient)
         {
-            this.HttpClient = http;
-            this.SiteState = sitestate;
-            this.NavigationManager = NavigationManager;
+            this.HttpClient = httpClient;
+            this.SiteState = siteState;
+            this.NavigationManager = navigationManager;
             this.JSRuntime = JSRuntime;
-            this.ModuleId = ModuleId;
+            this.ModuleId = moduleId;
 
             this.OnConnectedEvent += OnConnectedExecute;
             this.OnAddChatHubRoomEvent += OnAddChatHubRoomExecute;
@@ -491,7 +491,7 @@ namespace Oqtane.ChatHubs.Services
         private void HandleException(Exception exception)
         {
             this.OnExceptionEvent.Invoke(this, new { Exception = exception, ConnectedUser = this.ConnectedUser });
-        }        
+        }
 
         public async Task FixCorruptConnections(int ModuleId)
         {

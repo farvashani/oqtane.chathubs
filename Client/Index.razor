@@ -357,7 +357,7 @@
 
                                                 <div class="input-group">
 
-                                                    <input type="text" class="form-control" @bind-value="@room.MessageInput" @onkeyup="(e) => KeyDown(e, room)" placeholder="Tippe deinen Text ein.." />
+                                                    <input type="text" class="form-control" @bind-value="@room.MessageInput" @onkeyup="(e) => KeyDown(e, room)" placeholder="Type your message here" />
 
                                                     <div class="input-group-append">
                                                         <button type="button" class="btn btn-primary input-group-button mr-0 mr-sm-4" @onclick="() => SendMessage_Clicked(room.MessageInput, room)"><span class="oi oi-envelope-open"></span></button>

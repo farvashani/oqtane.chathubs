@@ -3,14 +3,14 @@
 @inherits SettingsModalBase
 
     <BSModal @ref="CenteredBSModal" IsCentered="true">
-        <BSModalHeader OnClick="@BSModalOnToggle">Profil/Einstellungen</BSModalHeader>
+        <BSModalHeader OnClick="@BSModalOnToggle">Account/Settings</BSModalHeader>
         <BSModalBody>
 
             <BSTabGroup>
                 <BSTabList>
 
                     <BSTab>
-                        <BSTabLabel>Profile Info</BSTabLabel>
+                        <BSTabLabel>Account Info</BSTabLabel>
                         <BSTabContent>
 
                             <div class="p-sm-3">
@@ -26,11 +26,11 @@
 
                             <div class="p-sm-3">
 
-                                <h5>Ignoliste</h5>
+                                <h5>Ignolist</h5>
 
                                 @if (ChatHubService.IgnoredUsers == null || !ChatHubService.IgnoredUsers.Any())
                                 {
-                                    <div class="alert alert-info"><small>Noch Niemanden gefunden bislang..</small></div>
+                                    <div class="alert alert-info"><small>No one found yet</small></div>
                                 }
                                 else
                                 {
@@ -64,11 +64,11 @@
 
                             <div class="p-sm-3">
 
-                                <h5>Ignoriert von Liste</h5>
+                                <h5>Ignored by list</h5>
 
                                 @if (ChatHubService.IgnoredByUsers == null || !ChatHubService.IgnoredByUsers.Any())
                                 {
-                                    <div class="alert alert-info"><small>Noch Niemanden gefunden bislang..</small></div>
+                                    <div class="alert alert-info"><small>No one found yet</small></div>
                                 }
                                 else
                                 {

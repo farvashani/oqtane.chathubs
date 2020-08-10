@@ -169,14 +169,14 @@ namespace Oqtane.ChatHubs.Hubs
             var rooms = chatHubRepository.GetChatHubRoomsByUser(user).Active();
             foreach (var room in await rooms.ToListAsync())
             {
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.Id.ToString());
-                await this.SendGroupNotification(string.Format("{0} disconnected from chat with client device {1}.", user.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.Id, Context.ConnectionId, user, ChatHubMessageType.Connect_Disconnect);
-
                 if (user.Connections.Active().Count() == 1)
                 {
                     var chatHubUserClientModel = this.chatHubService.CreateChatHubUserClientModel(user);
                     await Clients.Group(room.Id.ToString()).SendAsync("RemoveUser", chatHubUserClientModel, room.Id.ToString());
                 }
+
+                await this.SendGroupNotification(string.Format("{0} disconnected from chat with client device {1}.", user.DisplayName, this.MakeStringAnonymous(Context.ConnectionId, 7, '*')), room.Id, Context.ConnectionId, user, ChatHubMessageType.Connect_Disconnect);
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.Id.ToString());
             }
 
             var connection = await this.chatHubRepository.GetConnectionByConnectionId(Context.ConnectionId);
@@ -496,11 +496,7 @@ namespace Oqtane.ChatHubs.Hubs
         private async Task<ChatHubUser> GetChatHubUserAsync()
         {
             ChatHubUser user = await this.chatHubService.IdentifyUser(Context);
-            if (user != null)
-            {
-
-            }
-            else
+            if (user == null)
             {
                 user = await this.chatHubService.IdentifyGuest(Context.ConnectionId);
             }
