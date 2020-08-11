@@ -271,7 +271,7 @@
                                                                 @string.Format("[{0}]", item.CreatedOn.ToLocalTime().ToString(ChatWindowDatePattern))
                                                             </span>
                                                             <span>
-                                                                <strong><span class="bg-primary text-white">Enter/Leave</span>:</strong>
+                                                                <strong><span class="bg-success text-white">Enter/Leave</span>:</strong>
                                                             </span>
                                                             <span>
                                                                 @((MarkupString)HighlightOwnUsername(ReplaceYoutubeLinksAsync(HttpUtility.HtmlEncode(item.Content)), ChatHubService.ConnectedUser.DisplayName))
@@ -440,7 +440,7 @@
 
                                                         <div class="px-sm-1 py-3">
 
-                                                            <h5>Teile deine Bilder <span class="badge badge-success">NEW</span></h5>
+                                                            <h5>Share your pics <span class="badge badge-success">FREE</span></h5>
                                                             <FileReader ModuleId="@ModuleState.ModuleId.ToString()" ChatHubRoomId="@room.Id.ToString()" ChatHubService="ChatHubService"></FileReader>
 
                                                         </div>
@@ -457,18 +457,24 @@
 
                                                         <div class="px-sm-1 py-3">
 
-                                                            <h5>Invitations <span class="badge badge-warning">NEW</span></h5>
-                                                            @foreach (var item in ChatHubService.Invitations)
-                                                            {
-
-                                                                <div class="py-1">
-                                                                    <button type="button" @onclick="@(async () => await FollowInvitation_Clicked(item.Guid, item.RoomId))" class="btn btn-sm btn-link">@item.Hostname</button>
-
-                                                                    <button type="button" @onclick="@(() => RemoveInvitation_Clicked(item.Guid))" class="btn btn-sm btn-danger">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                            }
+                                                            <h5>All your Invitations <span class="badge badge-success">NEW</span></h5>
+                                                            
+                                                            <div class="container">
+                                                                @foreach (var item in ChatHubService.Invitations)
+                                                                {
+                                                                    <div class="row">
+                                                                        <div class="col-sm-9">
+                                                                            <button type="button" @onclick="@(async () => await FollowInvitation_Clicked(item.Guid, item.RoomId))" class="btn btn-sm btn-link">@item.Hostname</button>
+                                                                        </div>
+                                                                        <div class="col-sm-3">
+                                                                            <button type="button" @onclick="@(() => RemoveInvitation_Clicked(item.Guid))" class="btn btn-sm btn-danger">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                            
                                                             @if (!ChatHubService.Invitations.Any())
                                                             {
                                                                 <div class="alert alert-warning" role="alert">

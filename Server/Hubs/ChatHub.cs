@@ -366,8 +366,8 @@ namespace Oqtane.ChatHubs.Hubs
                 List<ChatHubUser> chatHubUserClientModel = new List<ChatHubUser>();
                 foreach (var ignoredUser in ignoredUsers)
                 {
-                    ChatHubUser viewModel = this.chatHubService.CreateChatHubUserClientModel(ignoredUser);
-                    chatHubUserClientModel.Add(viewModel);
+                    ChatHubUser clientModel = this.chatHubService.CreateChatHubUserClientModel(ignoredUser);
+                    chatHubUserClientModel.Add(clientModel);
                 }
 
                 return chatHubUserClientModel;

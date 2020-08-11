@@ -14,20 +14,19 @@ namespace Oqtane.Shared.Models
         public string Status { get; set; }
         public string OneVsOneId { get; set; }
 
-
-        [NotMapped]
-        public virtual ICollection<ChatHubRoomChatHubUser> RoomUsers { get; set; }
-        [NotMapped]
-        public virtual ICollection<ChatHubMessage> Messages { get; set; }
-
         [NotMapped]
         public string MessageInput { get; set; }
         [NotMapped]
         public int UnreadMessages { get; set; } = 0;
         [NotMapped]
         public bool ShowUserlist { get; set; }
+
         [NotMapped]
-        public virtual IList<ChatHubUser> Users { get; set; }
+        public virtual ICollection<ChatHubRoomChatHubUser> RoomUsers { get; set; }
+        [NotMapped]
+        public virtual ICollection<ChatHubMessage> Messages { get; set; }
+        [NotMapped]
+        public virtual ICollection<ChatHubUser> Users { get; set; }
 
     }
 }

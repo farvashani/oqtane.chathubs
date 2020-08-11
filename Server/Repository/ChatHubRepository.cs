@@ -48,7 +48,7 @@ namespace Oqtane.ChatHubs.Repository
         {
             try
             {
-                return db.ChatHubRoom.Where(item => item.Id == ChatHubRoomId).FirstOrDefault();
+                return db.ChatHubRoom.FirstOrDefault(room => room.Id == ChatHubRoomId);
             }
             catch
             {
@@ -66,11 +66,11 @@ namespace Oqtane.ChatHubs.Repository
                 throw;
             }
         }
-        public IQueryable<ChatHubMessage> GetChatHubMessages(int ChatHubRoomId)
+        public IQueryable<ChatHubMessage> GetChatHubMessages(int roomId, TimeSpan timespan)
         {
             try
             {
-                return db.ChatHubMessage.Where(item => item.ChatHubRoomId == ChatHubRoomId);
+                return db.ChatHubMessage.Where(message => message.ChatHubRoomId == roomId).Where(i => i.CreatedOn.Add(timespan) >= DateTime.Now).Include(message => message.User);
             }
             catch
             {
@@ -81,7 +81,7 @@ namespace Oqtane.ChatHubs.Repository
         {
             try
             {
-                return db.ChatHubMessage.Where(item => item.Id == ChatHubMessageId).Include(item => item.Photos).FirstOrDefault();
+                return db.ChatHubMessage.Where(item => item.Id == ChatHubMessageId).Include(item => item.User).Include(item => item.Photos).FirstOrDefault();
             }
             catch
             {
@@ -92,9 +92,9 @@ namespace Oqtane.ChatHubs.Repository
         {
             return db.ChatHubUser.Include(u => u.Connections).Where(u => u.Connections.Any(c => c.Status == Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active)));
         }
-        public IQueryable<ChatHubUser> GetOnlineUsers(ChatHubRoom room)
+        public IQueryable<ChatHubUser> GetOnlineUsers(int roomId)
         {
-            IQueryable<ChatHubUser> users = db.Entry(room).Collection(r => r.RoomUsers).Query().Include(ru => ru.User).ThenInclude(u => u.Connections).Select(ru => ru.User).Where(u => u.Connections.Any(c => c.Status == Enum.GetName(typeof(ChatHubConnectionStatus), ChatHubConnectionStatus.Active)));
+            IQueryable<ChatHubUser> users = db.ChatHubRoomChatHubUser.Where(room_user => room_user.ChatHubRoomId == roomId).Include(ru => ru.User).ThenInclude(u => u.Connections).Select(ru => ru.User).Where(u => u.Connections.Any(c => c.Status == ChatHubConnectionStatus.Active.ToString()));
             return users;
         }
         public IQueryable<ChatHubConnection> GetConnectionsByUserId(int userId)

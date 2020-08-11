@@ -27,9 +27,15 @@ namespace Oqtane.ChatHubs.Services
 
         public async Task<ChatHubRoom> CreateChatHubRoomClientModelAsync(ChatHubRoom room)
         {
-            var messages = !room.OneVsOne() ? new List<ChatHubMessage>() : this.chatHubRepository.GetChatHubMessages(room.Id).OrderByDescending(item => item.Id).Take(10).Select(item => this.CreateChatHubMessageClientModel(item)).ToList();
-            IList<ChatHubUser> onlineUsers = await this.chatHubRepository.GetOnlineUsers(room).ToListAsync();
-            onlineUsers = !onlineUsers.Any() ? new List<ChatHubUser>() : onlineUsers.Select(x => this.CreateChatHubUserClientModel(x)).ToList();
+            List<ChatHubMessage> lastMessages = new List<ChatHubMessage>();
+            if(room.OneVsOne())
+            {
+                lastMessages = await this.chatHubRepository.GetChatHubMessages(room.Id, new TimeSpan(24,0,0)).ToListAsync();
+                lastMessages = lastMessages != null && lastMessages.Any() ? lastMessages.Select(item => this.CreateChatHubMessageClientModel(item)).ToList() : new List<ChatHubMessage>();
+            }
+
+            List<ChatHubUser> onlineUsers = await this.chatHubRepository.GetOnlineUsers(room.Id).ToListAsync();
+            onlineUsers = onlineUsers != null && onlineUsers.Any() ? onlineUsers = onlineUsers.Select(item => this.CreateChatHubUserClientModel(item)).ToList() : new List<ChatHubUser>();
 
             return new ChatHubRoom()
             {
@@ -40,7 +46,7 @@ namespace Oqtane.ChatHubs.Services
                 ImageUrl = room.ImageUrl,
                 Type = room.Type,
                 Status = room.Status,
-                Messages = messages,
+                Messages = lastMessages,
                 Users = onlineUsers,
                 CreatedOn = room.CreatedOn,
                 CreatedBy = room.CreatedBy,
@@ -73,13 +79,14 @@ namespace Oqtane.ChatHubs.Services
         public ChatHubMessage CreateChatHubMessageClientModel(ChatHubMessage message)
         {
             List<ChatHubPhoto> photos = message.Photos != null && message.Photos.Any() ? message.Photos.Select(item => CreateChatHubPhotoClientModel(item)).ToList() : null;
+            ChatHubUser user = message.User != null ? this.CreateChatHubUserClientModel(message.User) : null;
 
             return new ChatHubMessage()
             {
                 Id = message.Id,
                 ChatHubRoomId = message.ChatHubRoomId,
                 ChatHubUserId = message.ChatHubUserId,
-                User = this.CreateChatHubUserClientModel(message.User),
+                User = user,
                 Content = message.Content,
                 Type = message.Type,
                 Photos = photos,

@@ -44,6 +44,14 @@ namespace Oqtane.ChatHubs.Repository
 
             // Relation
             // One-to-many
+            // ChatHubMessage / ChatHubRoom
+            modelBuilder.Entity<ChatHubMessage>()
+                .HasOne(m => m.Room)
+                .WithMany(r => r.Messages)
+                .HasForeignKey(m => m.ChatHubRoomId);
+
+            // Relation
+            // One-to-many
             // ChatHubConnection / ChatHubUser
             modelBuilder.Entity<ChatHubConnection>()
                 .HasOne(c => c.User)
