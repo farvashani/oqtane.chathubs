@@ -127,7 +127,7 @@
     <value>disconnect;exit;shutdown;</value>
   </data>
   <data name="flicker" xml:space="preserve">
-    <value>flicker;</value>
+    <value>flicker;flickr;</value>
   </data>
   <data name="ignore" xml:space="preserve">
     <value>ignore;block;</value>
@@ -140,6 +140,9 @@
   </data>
   <data name="message-color" xml:space="preserve">
     <value>message-color;msg-color;</value>
+  </data>
+  <data name="reverse" xml:space="preserve">
+    <value>reverse</value>
   </data>
   <data name="shuffle" xml:space="preserve">
     <value>shuffle</value>

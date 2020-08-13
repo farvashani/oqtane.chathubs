@@ -88,7 +88,7 @@ namespace Oqtane.ChatHubs.Server.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to flicker;.
+        ///   Looks up a localized string similar to flicker;flickr;.
         /// </summary>
         public static string flicker {
             get {
@@ -129,6 +129,15 @@ namespace Oqtane.ChatHubs.Server.Resources {
         public static string message_color {
             get {
                 return ResourceManager.GetString("message-color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to reverse.
+        /// </summary>
+        public static string reverse {
+            get {
+                return ResourceManager.GetString("reverse", resourceCulture);
             }
         }
         

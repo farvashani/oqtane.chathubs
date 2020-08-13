@@ -9,8 +9,8 @@ using Oqtane.Shared.Enums;
 namespace Oqtane.ChatHubs.Commands
 {
     [Export("ICommand", typeof(ICommand))]
-    [Command("shuffle", "[]", new string[] { Constants.AllUsersRole, Constants.AdminRole } , "Usage: /shuffle")]
-    public class ShuffleCommand : BaseCommand
+    [Command("reverse", "[]", new string[] { Constants.AllUsersRole, Constants.AdminRole } , "Usage: /reverse")]
+    public class ReverseCommand : BaseCommand
     {
         public override async Task Execute(CommandServicesContext context, CommandCallerContext callerContext, string[] args, ChatHubUser caller)
         {
@@ -21,9 +21,11 @@ namespace Oqtane.ChatHubs.Commands
                 return;
             }
 
-            for(var i = 0; i < args.Length; i++)
+            for (int i = 0; i < args.Length / 2; i++)
             {
-                args[i] = args[i].Shuffle();
+                string tmp = args[i];
+                args[i] = args[args.Length - i - 1];
+                args[args.Length - i - 1] = tmp;
             }
 
             string msg = String.Join(" ", args).Trim();
@@ -42,25 +44,6 @@ namespace Oqtane.ChatHubs.Commands
             var connectionsIds = context.ChatHubService.GetAllExceptConnectionIds(caller);
             await context.ChatHub.Clients.GroupExcept(callerContext.RoomId.ToString(), connectionsIds).SendAsync("AddMessage", chatHubMessageClientModel);
 
-        }
-    }
-
-    public static class ShuffleExtension
-    {
-        public static string Shuffle(this string str)
-        {
-            char[] array = str.ToCharArray();
-            Random rng = new Random();
-            int n = array.Length;
-            while (n > 1)
-            {
-                n--;
-                int k = rng.Next(n + 1);
-                var value = array[k];
-                array[k] = array[n];
-                array[n] = value;
-            }
-            return new string(array);
         }
     }
 }
