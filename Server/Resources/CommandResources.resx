@@ -126,6 +126,9 @@
   <data name="disconnect" xml:space="preserve">
     <value>disconnect;exit;shutdown;</value>
   </data>
+  <data name="flicker" xml:space="preserve">
+    <value>flicker;</value>
+  </data>
   <data name="ignore" xml:space="preserve">
     <value>ignore;block;</value>
   </data>

@@ -88,6 +88,15 @@ namespace Oqtane.ChatHubs.Server.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to flicker;.
+        /// </summary>
+        public static string flicker {
+            get {
+                return ResourceManager.GetString("flicker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ignore;block;.
         /// </summary>
         public static string ignore {
