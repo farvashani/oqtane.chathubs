@@ -12,6 +12,7 @@ using System.Resources;
 using Oqtane.ChatHubs.Server.Resources;
 using System.Globalization;
 using Oqtane.Shared.Models;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Oqtane.ChatHubs.Commands
 {
@@ -61,15 +62,20 @@ namespace Oqtane.ChatHubs.Commands
         }
         public async Task<bool> TryHandleCommand(string command)
         {
-            command = command.Trim();
-            if (!Regex.IsMatch(command, @"^\/[A-Za-z0-9?]+?"))
+            if (!string.IsNullOrEmpty(command))
             {
-                return false;
+                command = command.Trim();
+                if (!Regex.IsMatch(command, @"^\/[A-Za-z0-9?]+?"))
+                {
+                    return false;
+                }
+
+                string[] args;
+                var commandName = ParseCommand(command, out args);
+                return await TryHandleCommand(commandName, args);
             }
 
-            string[] args;
-            var commandName = ParseCommand(command, out args);
-            return await TryHandleCommand(commandName, args);
+            return false;
         }
 
         public async Task<bool> TryHandleCommand(string commandName, string[] args)
@@ -101,21 +107,14 @@ namespace Oqtane.ChatHubs.Commands
             };
 
             ICommand command;
-            try
+            command = MatchCommand(commandName);
+            if(command != null)
             {
-                command = MatchCommand(commandName);
                 await command.Execute(context, callerContext, args, _caller);
-            }
-            catch (CommandNotFoundException e)
-            {
-                throw new Exception(e.Message);
-            }
-            catch (CommandAmbiguityException e)
-            {
-                throw new Exception(e.Message);
+                return true;
             }
 
-            return true;
+            throw new HubException(string.Format("No command found that called like {0}", commandName));
         }
 
         public ICommand MatchCommand(string commandName)
@@ -151,10 +150,6 @@ namespace Oqtane.ChatHubs.Commands
                         commandName = candidates[0];
                         break;
                     }
-                    else if(candidates.Count == 0)
-                        throw new CommandNotFoundException();
-                    else
-                        throw new CommandAmbiguityException(candidates);
                 }
             }
 

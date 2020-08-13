@@ -15,6 +15,7 @@ namespace Oqtane.ChatHubs.Commands
     {
         public override async Task Execute(CommandServicesContext context, CommandCallerContext callerContext, string[] args, ChatHubUser caller)
         {
+
             if (args.Length == 0)
             {
                 await context.ChatHub.SendClientNotification("No arguments found.", callerContext.RoomId, callerContext.ConnectionId, caller, ChatHubMessageType.System);
