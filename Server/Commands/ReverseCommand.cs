@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Oqtane.Shared;
 using System;
 using Oqtane.Shared.Enums;
+using System.Linq;
 
 namespace Oqtane.ChatHubs.Commands
 {
@@ -24,8 +25,8 @@ namespace Oqtane.ChatHubs.Commands
             for (int i = 0; i < args.Length / 2; i++)
             {
                 string tmp = args[i];
-                args[i] = args[args.Length - i - 1];
-                args[args.Length - i - 1] = tmp;
+                args[i] = args[args.Length - i - 1].Reverse();
+                args[args.Length - i - 1] = tmp.Reverse();
             }
 
             string msg = String.Join(" ", args).Trim();
@@ -44,6 +45,16 @@ namespace Oqtane.ChatHubs.Commands
             var connectionsIds = context.ChatHubService.GetAllExceptConnectionIds(caller);
             await context.ChatHub.Clients.GroupExcept(callerContext.RoomId.ToString(), connectionsIds).SendAsync("AddMessage", chatHubMessageClientModel);
 
+        }
+    }
+
+    public static class ReverseExtension
+    {
+        public static string Reverse(this string content)
+        {
+            char[] charArray = content.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
         }
     }
 }
