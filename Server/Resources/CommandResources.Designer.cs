@@ -133,6 +133,15 @@ namespace Oqtane.ChatHubs.Server.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to shuffle.
+        /// </summary>
+        public static string shuffle {
+            get {
+                return ResourceManager.GetString("shuffle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to unignore;unblock;.
         /// </summary>
         public static string unignore {
