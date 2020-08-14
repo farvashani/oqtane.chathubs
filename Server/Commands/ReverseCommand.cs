@@ -22,11 +22,10 @@ namespace Oqtane.ChatHubs.Commands
                 return;
             }
 
-            for (int i = 0; i < args.Length / 2; i++)
+            args.Reverse();                        
+            for (int i = 0; i < args.Length; i++)
             {
-                string tmp = args[i];
-                args[i] = args[args.Length - i - 1].Reverse();
-                args[args.Length - i - 1] = tmp.Reverse();
+                args[i] = args[i].Reverse();
             }
 
             string msg = String.Join(" ", args).Trim();
@@ -50,6 +49,12 @@ namespace Oqtane.ChatHubs.Commands
 
     public static class ReverseExtension
     {
+        public static string[] Reverse(this string[] content)
+        {
+            Array.Reverse(content);
+            return content;
+        }
+
         public static string Reverse(this string content)
         {
             char[] charArray = content.ToCharArray();
