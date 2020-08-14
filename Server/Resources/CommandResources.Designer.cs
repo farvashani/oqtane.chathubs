@@ -133,6 +133,15 @@ namespace Oqtane.ChatHubs.Server.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to past.
+        /// </summary>
+        public static string past {
+            get {
+                return ResourceManager.GetString("past", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to reverse.
         /// </summary>
         public static string reverse {

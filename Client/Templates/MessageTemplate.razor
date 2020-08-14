@@ -80,6 +80,6 @@
     public RenderFragment<ChatHubMessage> CommandsTemplate { get; set; }
 
     [Parameter]
-    public ICollection<ChatHubMessage> Messages { get; set; }
+    public IOrderedEnumerable<ChatHubMessage> Messages { get; set; }
 
 }

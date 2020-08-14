@@ -141,6 +141,9 @@
   <data name="message-color" xml:space="preserve">
     <value>message-color;msg-color;</value>
   </data>
+  <data name="past" xml:space="preserve">
+    <value>past</value>
+  </data>
   <data name="reverse" xml:space="preserve">
     <value>reverse</value>
   </data>

@@ -186,7 +186,7 @@
 
                                                 <br />
 
-                                                <MessageTemplate Messages="@room.Messages" Context="item">
+                                                <MessageTemplate Messages="@room.Messages.OrderBy(item => item.ModifiedOn).ThenBy(item => item.Id)" Context="item">
                                                     <SystemTemplate>
                                                         <div>
                                                             <span class="text-muted">
