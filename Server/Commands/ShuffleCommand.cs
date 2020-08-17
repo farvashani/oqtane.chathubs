@@ -9,7 +9,7 @@ using Oqtane.Shared.Enums;
 namespace Oqtane.ChatHubs.Commands
 {
     [Export("ICommand", typeof(ICommand))]
-    [Command("shuffle", "[]", new string[] { Constants.AllUsersRole, Constants.AdminRole } , "Usage: /shuffle")]
+    [Command("shuffle", "[message]", new string[] { Constants.AllUsersRole, Constants.AdminRole } , "Usage: /shuffle")]
     public class ShuffleCommand : BaseCommand
     {
         public override async Task Execute(CommandServicesContext context, CommandCallerContext callerContext, string[] args, ChatHubUser caller)

@@ -10,7 +10,7 @@ using Oqtane.Shared.Enums;
 namespace Oqtane.ChatHubs.Commands
 {
     [Export("ICommand", typeof(ICommand))]
-    [Command("flicker", "[]", new string[] { Constants.AllUsersRole, Constants.AdminRole } , "Usage: /flickr | /flicker")]
+    [Command("flicker", "[message]", new string[] { Constants.AllUsersRole, Constants.AdminRole } , "Usage: /flickr | /flicker")]
     public class FlickerCommand : BaseCommand
     {
         public override async Task Execute(CommandServicesContext context, CommandCallerContext callerContext, string[] args, ChatHubUser caller)

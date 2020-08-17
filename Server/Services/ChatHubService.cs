@@ -56,6 +56,7 @@ namespace Oqtane.ChatHubs.Services
         public ChatHubUser CreateChatHubUserClientModel(ChatHubUser user)
         {
             IEnumerable<ChatHubConnection> activeConnections = user.Connections.Active();
+            var connections = activeConnections != null && !activeConnections.Any() ? new List<ChatHubConnection>() : activeConnections.Select(item => CreateChatHubConnectionClientModel(item)).ToList();
 
             ChatHubSetting chatHubSettings = this.chatHubRepository.GetChatHubSetting(user.UserId);
             ChatHubSetting chatHubSettingClientModel = this.CreateChatHubSettingClientModel(chatHubSettings);
@@ -65,7 +66,7 @@ namespace Oqtane.ChatHubs.Services
                 UserId = user.UserId,
                 Username = user.Username,
                 DisplayName = user.DisplayName,
-                Connections = activeConnections.Any() ? new List<ChatHubConnection>() : activeConnections.Select(item => CreateChatHubConnectionClientModel(item)).ToList(),
+                Connections = connections,
                 Settings = chatHubSettingClientModel ?? null,
                 CreatedOn = user.CreatedOn,
                 CreatedBy = user.CreatedBy,

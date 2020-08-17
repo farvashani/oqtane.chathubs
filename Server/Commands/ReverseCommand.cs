@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 using Oqtane.Shared;
 using System;
 using Oqtane.Shared.Enums;
-using System.Linq;
 
 namespace Oqtane.ChatHubs.Commands
 {
     [Export("ICommand", typeof(ICommand))]
-    [Command("reverse", "[]", new string[] { Constants.AllUsersRole, Constants.AdminRole } , "Usage: /reverse")]
+    [Command("reverse", "[message]", new string[] { Constants.AllUsersRole, Constants.AdminRole } , "Usage: /reverse")]
     public class ReverseCommand : BaseCommand
     {
         public override async Task Execute(CommandServicesContext context, CommandCallerContext callerContext, string[] args, ChatHubUser caller)
@@ -49,15 +48,15 @@ namespace Oqtane.ChatHubs.Commands
 
     public static class ReverseExtension
     {
-        public static string[] Reverse(this string[] content)
+        public static string[] Reverse(this string[] stringArray)
         {
-            Array.Reverse(content);
-            return content;
+            Array.Reverse(stringArray);
+            return stringArray;
         }
 
-        public static string Reverse(this string content)
+        public static string Reverse(this string str)
         {
-            char[] charArray = content.ToCharArray();
+            char[] charArray = str.ToCharArray();
             Array.Reverse(charArray);
             return new string(charArray);
         }

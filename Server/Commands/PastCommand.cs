@@ -9,7 +9,7 @@ using Oqtane.Shared.Enums;
 namespace Oqtane.ChatHubs.Commands
 {
     [Export("ICommand", typeof(ICommand))]
-    [Command("past", "[]", new string[] { Constants.AllUsersRole, Constants.AdminRole } , "Usage: /past")]
+    [Command("past", "[message]", new string[] { Constants.AllUsersRole, Constants.AdminRole } , "Usage: /past")]
     public class PastCommand : BaseCommand
     {
         public override async Task Execute(CommandServicesContext context, CommandCallerContext callerContext, string[] args, ChatHubUser caller)
